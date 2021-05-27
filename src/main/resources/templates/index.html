@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head th:replace="fragments.html :: head"></head>
+<body>
+<div th:replace="fragments.html :: main-nav"></div>
+<table class="table table-striped text-center">
+    <thead>
+    <tr>
+        <th scope="col">NO.</th>
+        <th scope="col">포트폴리오 주인</th>
+        <th scope="col" colspan="2">이메일</th>
+        <th scope="col" colspan="2">포트 폴리오</th>
+    </tr>
+    </thead>
+    <tbody id="main_list"></tbody>
+</table>
+<div th:replace="fragments.html :: footer"></div>
+</body>
+<script type="application/javascript" th:inline="javascript">
+    $(function() {
+        $.ajax({
+            type:"GET",
+            url: "/main/list",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
+        }).done(function (response) {
+            for(let i = 0; i < response.length; i++) {
+                let appendInfo = `<tr>
+                                    <th scope="row">${i+1}</th>
+                                    <td>${response[i].personName}</td>
+                                    <td>${response[i].personEmail}</td>
+                                    <td colSpan="2"><a href="/api/dreams/${response[i].personEmail}">포트폴리오 보러 가기</a></td>
+                                  </tr>`
+                $("#main_list").append(appendInfo);
+            }
+        })
+    })
+
+    function dateToFormatDate(data) {
+        if(String(data[1]).length < 2) {
+            data[1] = '0' + data[1]
+        }
+       return data[0] + '-' + data[1] + '-' + data[2] + ' ' + data[3] + ':' + data[4]
+    }
+</script>
+</html>

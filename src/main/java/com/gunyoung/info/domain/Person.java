@@ -2,64 +2,83 @@ package com.gunyoung.info.domain;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.gunyoung.info.validator.Password;
+
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name="person")
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Person {
 	
 	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long person_id;
+	@Column(name = "person_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
-	@Column
-	@NotNull
+	@Column(length=50)
+	@NotEmpty(message="{email.notEmpty}")
+	@Email(message="{email.email}")
 	private String email;
 	
 	@Version
 	@Column
 	private int version;
 	
-	@NotNull
+	@NotEmpty(message="{password.notEmpty}")
+	@Column(length=50)
+	@Password(message="{password.password}")
 	private String password;
 	
 	@CreatedDate
 	private LocalDateTime createdAt;
 	
-	@NotEmpty(message="{}")
-	@Size(max =60, message="")
+	@NotEmpty(message="{firstName.notEmpty}")
+	@Size(max =60, message="{firstName.size}")
 	@Column
 	private String firstName;
 	
-	@NotEmpty(message="")
-	@Size(max=60, message="")
+	@NotEmpty(message="{lastName.notEmpty}")
+	@Size(max=60, message="{lastName.size}")
 	@Column
 	private String lastName;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="space_id")
 	private Space space;
-
-	public Long getPerson_id() {
-		return person_id;
+	
+	public Person() {
+		
 	}
 
-	public void setPerson_id(Long person_id) {
-		this.person_id = person_id;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -117,5 +136,11 @@ public class Person {
 	public void setSpace(Space space) {
 		this.space = space;
 	}
+	
+	@Transient
+	public String getFullName() {
+		return this.firstName +" " + this.lastName;
+	}
+	
 	
 }
