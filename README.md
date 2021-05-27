@@ -31,6 +31,17 @@
 
 ## 3. 화면 설계
 
+- 메인 화면 
+
+<img width="1440" alt="info_main" src="https://user-images.githubusercontent.com/60494603/119880342-1d5b6e00-bf67-11eb-8b98-ee4b03e5f4f8.png">
+
+- 회원 가입 화면
+
+<img width="1440" alt="info_join" src="https://user-images.githubusercontent.com/60494603/119880332-1a607d80-bf67-11eb-9b19-766937fb4e3d.png">
+
+- 로그인 화면
+
+<img width="1440" alt="Info_login" src="https://user-images.githubusercontent.com/60494603/119880334-1c2a4100-bf67-11eb-9a36-0bda996bb1c6.png">
 
 ---
 
