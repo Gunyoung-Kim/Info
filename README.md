@@ -20,7 +20,9 @@
 
 ---
 
-## 1. 테이블 설계
+## 1. DB 테이블 설계
+
+<img width="703" alt="스크린샷 2021-05-28 오후 6 34 00" src="https://user-images.githubusercontent.com/60494603/119963791-7668e780-bfe3-11eb-8da9-02e4b2976ff0.png">
 
 ---
 
