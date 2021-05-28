@@ -1,6 +1,8 @@
 package com.gunyoung.info.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -31,8 +34,8 @@ public class Space {
 	@LastModifiedDate
 	private LocalDateTime modifiedAt;
 	
-	@Column
-	private String content;
+	@OneToMany(mappedBy="space")
+	private List<Content> contents = new ArrayList<>();
 	
 	@OneToOne(mappedBy="space")
 	private Person person;
@@ -61,12 +64,12 @@ public class Space {
 		this.modifiedAt = modifiedAt;
 	}
 
-	public String getContent() {
-		return content;
+	public List<Content> getContents() {
+		return contents;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setContents(List<Content> contents) {
+		this.contents = contents;
 	}
 
 	public Person getPerson() {

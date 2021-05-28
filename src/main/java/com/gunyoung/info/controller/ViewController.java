@@ -3,6 +3,7 @@ package com.gunyoung.info.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +25,9 @@ public class ViewController {
 	
 	@Autowired
 	SpaceService spaceService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
 	public String index() {
@@ -56,6 +60,7 @@ public class ViewController {
 	public ModelAndView join_post(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav) {
 		ModelAndView res = null;
 		if(!result.hasErrors()) {
+			person.setPassword(passwordEncoder.encode(person.getPassword())); //-> password validation 문제로 나중에 넣자
 			personService.save(person);
 			res = new ModelAndView("redirect:/");
 		} else {

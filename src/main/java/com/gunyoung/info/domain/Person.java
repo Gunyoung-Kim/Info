@@ -47,8 +47,8 @@ public class Person {
 	private int version;
 	
 	@NotEmpty(message="{password.notEmpty}")
-	@Column(length=50)
-	@Password(message="{password.password}")
+	@Column
+	//@Password(message="{password.password}")
 	private String password;
 	
 	@CreatedDate
