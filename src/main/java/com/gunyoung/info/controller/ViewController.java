@@ -1,5 +1,7 @@
 package com.gunyoung.info.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.services.PersonService;
 import com.gunyoung.info.services.SpaceService;
 
@@ -71,7 +75,18 @@ public class ViewController {
 	}
 	
 	@RequestMapping(value="/space/{email}")
-	public String space(@PathVariable String email) {
-		return "";
+	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
+		mav.setViewName("portfolio");
+		Person person = personService.findByEmail(email);
+		if(person == null) {
+			// failed page
+		}
+		mav.addObject("person", person);
+		
+		Space space = person.getSpace();
+		List<Content> contents = space.getContents();
+		mav.addObject("contents",contents);
+		
+		return mav;
 	}
 }

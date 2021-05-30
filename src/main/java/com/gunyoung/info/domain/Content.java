@@ -47,6 +47,9 @@ public class Content {
 	private Date endAt;
 	
 	@Column
+	private String skillstacks;
+	
+	@Column
 	@NotEmpty
 	private String contributors;
 	
@@ -106,6 +109,14 @@ public class Content {
 
 	public void setEndAt(Date endAt) {
 		this.endAt = endAt;
+	}
+
+	public String getSkillstacks() {
+		return skillstacks;
+	}
+
+	public void setSkillstacks(String skillstacks) {
+		this.skillstacks = skillstacks;
 	}
 
 	public String getContributors() {

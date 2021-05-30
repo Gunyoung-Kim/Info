@@ -5,12 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.gunyoung.info.security.SecurityAuthenticationFilter;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 @Configuration
 @EnableWebSecurity
@@ -21,28 +18,47 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http
 			.cors().and()
 			.csrf().disable()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
 			.authorizeRequests()
+			.antMatchers("/admin")
+			.hasAnyRole("USER")
 			.anyRequest()
 			.permitAll()
 			.and()
 			.formLogin()
 			.loginPage("/login")
-			.successForwardUrl("/index")
-			.failureForwardUrl("/login")
+			.defaultSuccessUrl("/")
 			.permitAll()
 			.and()
-			.addFilterBefore(securityAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+			.logout()
+			.logoutSuccessUrl("/")
+			.permitAll()
+			;
 	}
 	
+	// for thymeleaf <sec:authorize>
+	@Bean
+	public SpringSecurityDialect springSecurityDialect() {
+		return new SpringSecurityDialect();
+	}
+	
+	/*
+	@Override 
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+	}
+	*/
+	
+	// for password Encoding
 	@Bean 
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
+	/*
 	@Bean
 	public SecurityAuthenticationFilter securityAuthenticationFilter() {
 		return new SecurityAuthenticationFilter();
 	}
+	*/
+	
 }

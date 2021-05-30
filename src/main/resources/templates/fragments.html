@@ -20,18 +20,49 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item"></li>
         </ul>
         <ul class="navbar-nav justify-content-end">
-          <li class="nav-item">
+          <li sec:authorize="!isAuthenticated()" class="nav-item">
             <a class="nav-link" href="/login">로그인</a>
           </li>
-          <li class="nav-item">
+           <li sec:authorize="isAuthenticated()" class="nav-item">
+          	<a class="nav-link" href="/">포트폴리오</a>
+          </li>
+          <li sec:authorize="!isAuthenticated()" class="nav-item">
             <a class="nav-link" href="/join">회원가입</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+          	<a class="nav-link" href="/logout">로그아웃</a>
           </li>
         </ul>
     </div>
-</nav>
+  </nav>
+  <nav th:fragment="main-nav-port" class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a class="navbar-brand" href="/" th:href="@{/}">
+        INFO
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li sec:authorize="isAuthenticated()" class="nav-item">
+              <a class =href="">포트폴리오 추가</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+          <li sec:authorize="!isAuthenticated()" class="nav-item">
+            <a class="nav-link" href="/login">로그인</a>
+          </li>
+           <li sec:authorize="isAuthenticated()" class="nav-item">
+          	<a class="nav-link" href="/">포트폴리오</a>
+          </li>
+          <li sec:authorize="!isAuthenticated()" class="nav-item">
+            <a class="nav-link" href="/join">회원가입</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+          	<a class="nav-link" href="/logout">로그아웃</a>
+          </li>
+        </ul>
+    </div>
+  </nav>
 <footer th:fragment="footer">
     <div class="row justify-content-center">
         <small class="d-block mb-3 text-muted">&copy; INFO</small>

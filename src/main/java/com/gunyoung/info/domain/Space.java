@@ -39,6 +39,10 @@ public class Space {
 	
 	@OneToOne(mappedBy="space")
 	private Person person;
+	
+	public Space() {
+		
+	}
 
 	public Long getId() {
 		return id;

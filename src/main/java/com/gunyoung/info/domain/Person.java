@@ -68,8 +68,9 @@ public class Person {
 	@JoinColumn(name="space_id")
 	private Space space;
 	
-	public Person() {
-		
+	protected Person() {
+		Space space = new Space();
+		this.space = space;
 	}
 
 

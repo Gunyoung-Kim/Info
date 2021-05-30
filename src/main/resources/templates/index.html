@@ -14,8 +14,10 @@
     </thead>
     <tbody id="main_list"></tbody>
 </table>
-<div th:replace="fragments.html :: footer"></div>
 </body>
+<footer>
+	<div th:replace="fragments.html :: footer"></div>
+</footer>
 <script type="application/javascript" th:inline="javascript">
     $(function() {
         $.ajax({
@@ -29,7 +31,7 @@
                                     <th scope="row">${i+1}</th>
                                     <td>${response[i].personName}</td>
                                     <td>${response[i].personEmail}</td>
-                                    <td colSpan="2"><a href="/api/dreams/${response[i].personEmail}">포트폴리오 보러 가기</a></td>
+                                    <td colSpan="2"><a href="/space/${response[i].personEmail}">포트폴리오 보러 가기</a></td>
                                   </tr>`
                 $("#main_list").append(appendInfo);
             }
