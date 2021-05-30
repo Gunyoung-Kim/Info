@@ -20,7 +20,9 @@
 
 ---
 
-## 1. 테이블 설계
+## 1. DB 테이블 설계
+
+<img width="703" alt="스크린샷 2021-05-28 오후 6 34 00" src="https://user-images.githubusercontent.com/60494603/119963791-7668e780-bfe3-11eb-8da9-02e4b2976ff0.png">
 
 ---
 
@@ -70,12 +72,22 @@
 
 4. 메인 뷰, 로그인 뷰, 회원 가입 뷰 템플릿 생성
  
+### 2021.5.28
+
+1. Security Config, SecurityAuthenticationFilter, UserDetails, UserDetailsService 구현
+
+2. 비밀 번호 암호화로 DB 저장
+
+3. Content 도메인 추가 및 Content Repository, Service 구현
+
 ---
 
 ### To do List
 
-- security
+- security 완성
 
 - space template view 
+
+- 인증 토큰 보유 여부에 따른 뷰 구현 
 
 - junit
