@@ -14,7 +14,7 @@
 
 - 프로젝트 주요 기능: 포트폴리오 열람, 포트폴리오 작성, 로그인기능, 회원가입 기능
 
-- 사용 기술 스택: JAVA SPRING , SPRING JPA, Thymleaf
+- 사용 기술 스택: JAVA SPRING , SPRING JPA, Thymleaf, Spring Security
 
 - 사용 데이터베이스: Mysql
 
@@ -44,6 +44,10 @@
 - 로그인 화면
 
 <img width="1440" alt="Info_login" src="https://user-images.githubusercontent.com/60494603/119880334-1c2a4100-bf67-11eb-9a36-0bda996bb1c6.png">
+
+- 포트폴리오 화면
+
+
 
 ---
 
@@ -80,14 +84,20 @@
 
 3. Content 도메인 추가 및 Content Repository, Service 구현
 
+### 2021.5.30
+
+1. 포트폴리오 전용 뷰 생성, 포트폴리오 전용 뷰 컨트롤러 생성
+
+2. Spring Security와 thymeleaf extras Spring Security 를 이용한 로그인, 로그아웃 구현
+
 ---
 
 ### To do List
 
-- security 완성
+- content 추가 뷰
 
-- space template view 
-
-- 인증 토큰 보유 여부에 따른 뷰 구현 
+- fragment -> navbar -> 포트폴리오 href
 
 - junit
+
+
