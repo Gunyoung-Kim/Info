@@ -22,7 +22,7 @@
 
 ## 1. DB 테이블 설계
 
-<img width="703" alt="스크린샷 2021-05-28 오후 6 34 00" src="https://user-images.githubusercontent.com/60494603/119963791-7668e780-bfe3-11eb-8da9-02e4b2976ff0.png">
+<img width="752" alt="infodb_table_2" src="https://user-images.githubusercontent.com/60494603/120187085-4f165280-c24f-11eb-95f0-e7002e86aa8e.png">
 
 ---
 
