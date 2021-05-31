@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head th:include="fragments.html :: head"></head>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style>
+      body {
+          font-family: "Lato", sans-serif;
+      }
+
+      .main-head{
+          height: 150px;
+          background: #FFF;
+
+      }
+
+      .sidenav {
+          height: 100%;
+          background-color: #000;
+          overflow-x: hidden;
+          padding-top: 20px;
+      }
+
+
+      .main {
+          padding: 0px 10px;
+      }
+
+      @media screen and (max-height: 450px) {
+          .sidenav {padding-top: 15px;}
+      }
+
+      @media screen and (max-width: 450px) {
+          .login-form{
+              margin-top: 10%;
+          }
+
+          .register-form{
+              margin-top: 10%;
+          }
+      }
+
+      @media screen and (min-width: 768px){
+          .main{
+              margin-left: 40%;
+          }
+
+          .sidenav{
+              width: 40%;
+              position: fixed;
+              z-index: 1;
+              top: 0;
+              left: 0;
+          }
+
+          .login-form{
+              margin-top: 80%;
+          }
+
+          .register-form{
+              margin-top: 20%;
+          }
+      }
+
+
+      .login-main-text{
+          margin-top: 20%;
+          padding: 60px;
+          color: #fff;
+      }
+
+      .login-main-text h2{
+          font-weight: 300;
+      }
+
+      .btn-black{
+          background-color: #000 !important;
+          color: #fff;
+      }
+
+      .err {
+        color:red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidenav">
+         <div class="login-main-text">
+            <h2>INFO<br> 개인 프로필 변경 </h2>
+         </div>
+    </div>
+    <div class="main">
+      <div class="col-md-6 col-sm-12">
+        <div class="login-form">
+          <form method="post" th:object="${formModel}">
+            <div class="form-group">
+              <label>이메일</label>
+              <input type="email" name="email" th:field="*{email}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>이름</label>
+              <input type="text" name="firstName" th:field="*{firstName}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>성</label>
+              <input type="text" name="lastName" th:field="*{lastName}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>소개글</label>
+              <input type="text" name="description" th:field="*{description}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>github 주소</label>
+              <input type="text" name="github" th:field="*{github}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>instagram 주소</label>
+              <input type="text" name="instagram" th:field="*{instagram}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>tweeter 주소</label>
+              <input type="text" name="tweeter" th:field="*{tweeter}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>facebook 주소</label>
+              <input type="text" name="facebook" th:field="*{facebook}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-black">정보 수정</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,5 +1,7 @@
 package com.gunyoung.info.services;
 
-public interface ContentService {
+import com.gunyoung.info.domain.Content;
 
+public interface ContentService {
+	public Content save(Content content);
 }

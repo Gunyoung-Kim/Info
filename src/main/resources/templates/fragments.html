@@ -42,17 +42,20 @@
         INFO
     </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li sec:authorize="isAuthenticated()" class="nav-item">
-              <a class =href="">포트폴리오 추가</a>
-            </li>
+        <ul class="navbar-nav mr-auto" th:object="${profile}">
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+            <a class ="nav-link" th:href="@{'/space/updateprofile/'+*{email}}">개인 프로필 수정</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+            <a class ="nav-link" th:href="@{'/space/makecontent/'+*{email}}">포트폴리오 추가</a>
+          </li>
         </ul>
         <ul class="navbar-nav justify-content-end">
           <li sec:authorize="!isAuthenticated()" class="nav-item">
             <a class="nav-link" href="/login">로그인</a>
           </li>
            <li sec:authorize="isAuthenticated()" class="nav-item">
-          	<a class="nav-link" href="/">포트폴리오</a>
+          	<a class="nav-link" th:href="@{'/space/' + *{email}}">포트폴리오</a>
           </li>
           <li sec:authorize="!isAuthenticated()" class="nav-item">
             <a class="nav-link" href="/join">회원가입</a>

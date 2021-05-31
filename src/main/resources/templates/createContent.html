@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link th:href="@{/css/createContentstyles.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <div th:replace="fragments.html :: main-nav"></div>
+    <form method="post" th:object="${formModel}">
+      <div class="mb-3">
+        <label for="title" class="form-label">프로젝트 명</label>
+        <input type="text" th:field="*{title}" class="form-control" name="title">
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">한줄 소개</label>
+        <input type="text" th:field="*{description}" class="form-control" name="description">
+      </div>
+      <div class="mb-3">
+        <label for="contributors" class="form-label">참가자</label>
+        <input type="text" th:field="*{contributors}" class="form-control" name="contributors">
+      </div>
+      <div class="mb-3">
+        <label for="skillstacks" class="form-label">사용 기술</label>
+        <input type="text" th:field="*{skillstacks}" class="form-control" name="skillstacks">
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="startedAt">시작일</label>
+          <input type="date" th:field="*{startedAt}" name ="startedAt" class="form-control" aria-label="시작일">
+        </div>
+        <div class="col">
+          <label for="endAt">종료일</label>
+          <input type="date" th:field="*{endAt}" name="endAt" class="form-control" aria-label="종료일">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="contents" class="form-label">프로젝트 소개 및 기여 사항</label>
+        <textarea th:field="*{contents}" class="form-control content-area" name="contents" rows="20" onKeyUp="javascript:fnChkByte(this,'2500')"></textarea>
+        <br />
+        <span style="color:#aaa;" id="counter">(0 / 최대 2500자)</span>
+      </div>
+      <div class="mb-3">
+        <label for="links" class="form-label">깃허브 주소 및 관련 URL</label>
+        <textarea th:field="*{links}" class="form-control" name="links" rows="10"></textarea>
+      </div>
+      <button type="submit" class="btn btn-black">프로젝트 추가</button>
+    </form>
+  </body>
+  <script type="text/javascript">
+    $('.content-area').keyup(function (e){
+    var content = $(this).val();
+    $('#counter').html("("+content.length+" / 최대 2500자)");
+
+    if (content.length > 2500){
+        alert("최대 2500자까지 입력 가능합니다.");
+        $(this).val(content.substring(0, 2500));
+        $('#counter').html("(2500 / 최대 2500자)");
+    }
+  });
+
+  </script>
+</html>

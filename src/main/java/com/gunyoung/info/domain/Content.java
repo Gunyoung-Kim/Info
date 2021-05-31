@@ -12,12 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="content")
@@ -28,6 +30,10 @@ public class Content {
 	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Version
+	@Column
+	private int version;
 	
 	@Column
 	@NotEmpty
@@ -41,9 +47,14 @@ public class Content {
 	private LocalDateTime modifiedAt;
 	
 	@Column
+	private String description;
+	
+	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date startedAt;
 	
 	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endAt;
 	
 	@Column
@@ -53,22 +64,34 @@ public class Content {
 	@NotEmpty
 	private String contributors;
 	
-	@Column
+	@Column(columnDefinition="TEXT")
 	private String links;
 	
-	@Column
+	@Column(columnDefinition="TEXT NOT NULL")
 	private String contents;
 	
 	@ManyToOne
 	@JoinColumn(name = "space_id")
 	private Space space;
 
+	protected Content() {
+		
+	}
+	
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public String getTitle() {
@@ -93,6 +116,15 @@ public class Content {
 
 	public void setModifiedAt(LocalDateTime modifiedAt) {
 		this.modifiedAt = modifiedAt;
+	}
+	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Date getStartedAt() {

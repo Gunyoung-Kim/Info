@@ -18,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
+import com.gunyoung.info.dto.ProfileObject;
+import com.gunyoung.info.services.ContentService;
 import com.gunyoung.info.services.PersonService;
 import com.gunyoung.info.services.SpaceService;
 
@@ -29,6 +31,9 @@ public class ViewController {
 	
 	@Autowired
 	SpaceService spaceService;
+	
+	@Autowired
+	ContentService contentService;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -51,7 +56,6 @@ public class ViewController {
 		else 
 			return "login";
 	}
-
 	
 	@RequestMapping(value="/join" , method = RequestMethod.GET)
 	public ModelAndView join(@ModelAttribute("formModel") Person person, ModelAndView mav) {
@@ -61,7 +65,7 @@ public class ViewController {
 	}
 	
 	@RequestMapping(value="/join", method = RequestMethod.POST)
-	public ModelAndView join_post(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav) {
+	public ModelAndView joinPost(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav) {
 		ModelAndView res = null;
 		if(!result.hasErrors()) {
 			person.setPassword(passwordEncoder.encode(person.getPassword())); //-> password validation 문제로 나중에 넣자
@@ -81,12 +85,83 @@ public class ViewController {
 		if(person == null) {
 			// failed page
 		}
-		mav.addObject("person", person);
 		
 		Space space = person.getSpace();
+		ProfileObject profile = new ProfileObject();
+		profile.settingByPersonAndSpace(person, space);
+		mav.addObject("profile", profile);
 		List<Content> contents = space.getContents();
 		mav.addObject("contents",contents);
 		
 		return mav;
+	}
+	
+	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
+	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
+		mav.setViewName("createContent");
+		Person person = personService.findByEmail(email);
+		if(person == null) {
+			// failed page
+		}
+		mav.addObject("person",person);
+		mav.addObject("formModel", content);
+		
+		return mav;
+	}
+	
+	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
+	public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
+		Person person = personService.findByEmail(email);
+		if(person == null) {
+			// failed page
+		}
+		Space space = person.getSpace();
+		content.setSpace(space);
+		contentService.save(content);
+		
+		space.getContents().add(content); // 이거 없으면 어떻게 되나?
+		
+		return new ModelAndView("redirect:/");
+	}
+	
+	@RequestMapping(value="/space/updateprofile/{email}", method = RequestMethod.GET)
+	public ModelAndView updateProfile(@PathVariable String email, @ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
+		Person person = personService.findByEmail(email);
+		if(person == null) {
+			
+		}
+		
+		mav.setViewName("updateProfile");
+		Space space = person.getSpace();
+		
+		profileObject.settingByPersonAndSpace(person, space);
+		
+		mav.addObject("formModel", profileObject);
+		
+		return mav;
+	}
+	
+	@RequestMapping(value="/space/updateprofile/{email}", method = RequestMethod.POST)
+	public ModelAndView updateProfilePost(@PathVariable String email, @ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
+		Person person = personService.findByEmail(email);
+		if(person == null) {
+			
+		}
+		
+		mav.setViewName("updateProfile");
+		
+		person.setFirstName(profileObject.getFirstName());
+		person.setLastName(profileObject.getLastName());
+		personService.save(person);
+		
+		Space space = person.getSpace();
+		space.setDescription(profileObject.getDescription());
+		space.setGithub(profileObject.getGithub());
+		space.setFacebook(profileObject.getFacebook());
+		space.setInstagram(profileObject.getInstagram());
+		space.setTweeter(profileObject.getTweeter());
+		spaceService.save(space);
+		
+		return updateProfile(email,profileObject, mav);
 	}
 }

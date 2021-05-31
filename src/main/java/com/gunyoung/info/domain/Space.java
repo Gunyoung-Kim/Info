@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,11 +29,30 @@ public class Space {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
 	
+	@Version
+	@Column
+	private int version;
+	
 	@CreatedDate
 	private LocalDateTime createdAt;
 	
 	@LastModifiedDate
 	private LocalDateTime modifiedAt;
+	
+	@Column(columnDefinition="TEXT")
+	private String description = "";
+	
+	@Column
+	private String github = "";
+	
+	@Column 
+	private String instagram = "";
+	
+	@Column
+	private String tweeter = "";
+	
+	@Column
+	private String facebook = ""; 
 	
 	@OneToMany(mappedBy="space")
 	private List<Content> contents = new ArrayList<>();
@@ -51,6 +71,14 @@ public class Space {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
@@ -66,6 +94,46 @@ public class Space {
 
 	public void setModifiedAt(LocalDateTime modifiedAt) {
 		this.modifiedAt = modifiedAt;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getGithub() {
+		return github;
+	}
+
+	public void setGithub(String github) {
+		this.github = github;
+	}
+
+	public String getInstagram() {
+		return instagram;
+	}
+
+	public void setInstagram(String instagram) {
+		this.instagram = instagram;
+	}
+
+	public String getTweeter() {
+		return tweeter;
+	}
+
+	public void setTweeter(String tweeter) {
+		this.tweeter = tweeter;
+	}
+
+	public String getFacebook() {
+		return facebook;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
 	}
 
 	public List<Content> getContents() {
