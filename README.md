@@ -45,9 +45,21 @@
 
 <img width="1440" alt="Info_login" src="https://user-images.githubusercontent.com/60494603/119880334-1c2a4100-bf67-11eb-9a36-0bda996bb1c6.png">
 
-- 포트폴리오 화면
+- 포트폴리오-프로필 화면
 
+<img width="1440" alt="profile" src="https://user-images.githubusercontent.com/60494603/120186150-12962700-c24e-11eb-959e-a31490d95617.png">
 
+- 포트폴리오-프로젝트 화면
+
+<img width="1440" alt="content_view" src="https://user-images.githubusercontent.com/60494603/120186145-1164fa00-c24e-11eb-9f33-d6434cb2525c.png">
+
+- 프로젝트 생성 화면
+
+<img width="1440" alt="create_content" src="https://user-images.githubusercontent.com/60494603/120186156-145fea80-c24e-11eb-820e-ba6e58ff1c0a.png">
+
+- 개인 정보 수정 화면
+
+<img width="1440" alt="update_profile" src="https://user-images.githubusercontent.com/60494603/120186152-13c75400-c24e-11eb-9615-7dec6001681c.png">
 
 ---
 
@@ -90,13 +102,23 @@
 
 2. Spring Security와 thymeleaf extras Spring Security 를 이용한 로그인, 로그아웃 구현
 
+### 2021.5.31
+
+1. 프로필 수정 뷰 및 관련 뷰 컨트롤러 구현
+
+2. 프로젝트 생성 뷰 및 관련 뷰 컨트롤러 구현
+
+3. Space 엔티티에 필드(SNS 주소, Description) 추가
+
+4. 프로젝트 열람 뷰 구현
+
 ---
 
 ### To do List
 
-- content 추가 뷰
+- <pre> 태그 폰트 
 
-- fragment -> navbar -> 포트폴리오 href
+- 뷰 별 권한 제한
 
 - junit
 
