@@ -112,6 +112,12 @@
 
 4. 프로젝트 열람 뷰 구현
 
+### 2021.6.1
+
+1. AuthenticationProvider 추가
+
+2. 개인 정보 수정 URL 변경 ( 기존: url에 해당 email 노출, 해당 email 사용 -> 현재: SecurityContext에서 Authentication 가져와서 이를 활용(url에 email 노출 안되게))
+
 ---
 
 ### To do List
