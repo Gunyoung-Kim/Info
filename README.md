@@ -57,6 +57,10 @@
 
 <img width="1440" alt="ceate_content" src="https://user-images.githubusercontent.com/60494603/120320356-0b8a1a00-c31d-11eb-99c2-78e12b6193c3.png">
 
+- 프로젝트 수정 화면
+
+<img width="1440" alt="update_content" src="https://user-images.githubusercontent.com/60494603/120320662-64f24900-c31d-11eb-8a3e-c8a56b118b11.png">
+
 - 개인 정보 수정 화면
 
 <img width="1440" alt="update_profile" src="https://user-images.githubusercontent.com/60494603/120186152-13c75400-c24e-11eb-9615-7dec6001681c.png">
@@ -128,9 +132,15 @@
 
 ### To do List
 
-- <pre> 태그 폰트 
+- 프로젝트 삭제는 프론트에서 어떻게 할지 고민
 
-- 뷰 별 권한 제한
+- 아이디 중복확인 프론트에 적용
+
+- DB 자동 삭제 for 개인 정보 보호 
+
+- 프로젝트 화면에 기간 추가 
+
+- 메인 페이지 Pageable 추가
 
 - junit
 
