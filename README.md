@@ -20,18 +20,22 @@
 
 ---
 
-## 1. DB 테이블 설계
+## DB 테이블 설계
 
 <img width="752" alt="infodb_table_2" src="https://user-images.githubusercontent.com/60494603/120187085-4f165280-c24f-11eb-95f0-e7002e86aa8e.png">
 
 ---
 
 
-## 2. API 설계
+## API 설계
 
 ---
 
-## 3. 화면 설계
+## 테스트 코드
+
+---
+
+## 화면 설계
 
 - 메인 화면 
 
