@@ -14,4 +14,5 @@ public interface PersonService {
 	public Space makeSpace(Person person);
 	public void deleteSpace(Person person);
 	public Person findByEmail(String email);
+	public boolean existsByEmail(String email);
 }

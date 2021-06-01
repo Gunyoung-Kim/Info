@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
+import com.gunyoung.info.dto.ContentDTO;
 import com.gunyoung.info.dto.ProfileObject;
 import com.gunyoung.info.services.ContentService;
 import com.gunyoung.info.services.PersonService;
@@ -70,7 +71,7 @@ public class ViewController {
 	public ModelAndView joinPost(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav) {
 		ModelAndView res = null;
 		if(!result.hasErrors()) {
-			person.setPassword(passwordEncoder.encode(person.getPassword())); //-> password validation 문제로 나중에 넣자
+			person.setPassword(passwordEncoder.encode(person.getPassword()));
 			personService.save(person);
 			res = new ModelAndView("redirect:/");
 		} else {
@@ -80,7 +81,13 @@ public class ViewController {
 		return res;
 	}
 	
-	@RequestMapping(value="/space/{email}")
+	@RequestMapping(value="/space", method= RequestMethod.GET)
+	public ModelAndView myspace(ModelAndView mav) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return space(auth.getName(), mav);
+	}
+	
+	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
 	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
 		mav.setViewName("portfolio");
 		Person person = personService.findByEmail(email);
@@ -95,16 +102,27 @@ public class ViewController {
 		List<Content> contents = space.getContents();
 		mav.addObject("contents",contents);
 		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		mav.addObject("isHost", email.equals(auth.getName()));
+		
 		return mav;
 	}
 	
+	
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
 	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
+		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(!email.equals(auth.getName())) {
+			return new ModelAndView("redirect:/");   // 접속자가 해당 컨텐츠의 주인이 아니라면 홈으로 보내버림 -> 나중에 전용 에러 페이지 만들자
+		}
+		
 		mav.setViewName("createContent");
 		Person person = personService.findByEmail(email);
 		if(person == null) {
 			// failed page
 		}
+		
 		mav.addObject("person",person);
 		mav.addObject("formModel", content);
 		
@@ -113,10 +131,17 @@ public class ViewController {
 	
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
 	public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
+		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(!email.equals(auth.getName())) {
+			return new ModelAndView("redirect:/");   // 접속자가 해당 컨텐츠의 주인이 아니라면 홈으로 보내버림 -> 나중에 전용 에러 페이지 만들자
+		}
+		
 		Person person = personService.findByEmail(email);
 		if(person == null) {
 			// failed page
 		}
+		
 		Space space = person.getSpace();
 		content.setSpace(space);
 		contentService.save(content);
@@ -125,6 +150,63 @@ public class ViewController {
 		
 		return new ModelAndView("redirect:/");
 	}
+	
+	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
+	public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
+		Content content = contentService.findById(id);
+		if(content == null) {
+			// 잘못된 URL 접근으로 해당 id의 Content가 없을
+		}
+		
+		// 해당 컨텐트가 현재 접속자의 것인지 확인하는 작업
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String contentUserEmail = content.getSpace().getPerson().getEmail();
+		
+		if(!contentUserEmail.equals(auth.getName())) {
+			return new ModelAndView("redirect:/");   // 접속자가 해당 컨텐츠의 주인이 아니라면 홈으로 보내버림 -> 나중에 전용 에러 페이지 만들자
+		}
+		
+		contentDto.settingByEmailAndContent(contentUserEmail, content);
+		mav.setViewName("updateContent");
+		mav.addObject("formModel", contentDto);
+		
+		return mav;
+	}
+	
+	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.POST) 
+	public ModelAndView updateContentPost(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
+		Content content = contentService.findById(id);
+		if(content == null) {
+			// 잘못된 URL 접근으로 해당 id의 Content가 없을
+		}
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String hostEmail = contentDto.getHostEmail();
+		if(!hostEmail.equals(auth.getName())) {
+			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 -> 나중에 전용 에러 페이지 만들자
+			return new ModelAndView("redirect:/"); 
+		}
+		
+		content.setTitle(contentDto.getTitle());
+		content.setDescription(contentDto.getDescription());
+		content.setContributors(contentDto.getContributors());
+		content.setSkillstacks(contentDto.getSkillstacks());
+		content.setStartedAt(contentDto.getStartedAt());
+		content.setEndAt(contentDto.getEndAt());
+		content.setContents(contentDto.getContents());
+		content.setLinks(contentDto.getLinks());
+		
+		contentService.save(content);
+		
+		return new ModelAndView("redirect:/space");
+	}
+	
+	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.POST)
+	public ModelAndView deleteContent(@PathVariable long id) {
+		contentService.deleteContentById(id);
+		return new ModelAndView("redirect:/");
+	}
+	
 	
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
 	public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {

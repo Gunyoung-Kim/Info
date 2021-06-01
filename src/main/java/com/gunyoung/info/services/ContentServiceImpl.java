@@ -18,5 +18,24 @@ public class ContentServiceImpl implements ContentService{
 	public Content save(Content content) {
 		return contentRepository.save(content);
 	}
+
+	@Override
+	@Transactional(readOnly= true)
+	public Content findById(Long id) {
+		return contentRepository.getById(id);
+	}
+
+	@Override
+	public void deleteContent(Content content) {
+		contentRepository.delete(content);
+	}
+
+	@Override
+	public void deleteContentById(Long id) {
+		Content content = contentRepository.getById(id);
+		if(content != null) {
+			contentRepository.delete(content);
+		}
+	}
 	
 }

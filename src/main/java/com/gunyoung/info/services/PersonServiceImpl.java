@@ -67,6 +67,11 @@ public class PersonServiceImpl implements PersonService {
 	public List<Person> getAllOrderByCreatedAtDesc() {
 		return personRepository.findAllByOrderByCreatedAtDesc();
 	}
+
+	@Override
+	public boolean existsByEmail(String email) {
+		return personRepository.existsByEmail(email);
+	}
 	
 	
 }

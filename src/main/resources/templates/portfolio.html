@@ -61,6 +61,9 @@
             <pre th:text="${content.links}">links</pre>
           </div>
         </section>
+        <footer th:if="${isHost}">
+         <a th:href="@{'/space/updatecontent/' + ${content.id}}">프로젝트 수정</a>
+        </footer>
         <hr class="m-0" />
       </div>
       <footer>

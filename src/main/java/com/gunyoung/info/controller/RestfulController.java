@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.info.domain.Person;
@@ -13,7 +14,7 @@ import com.gunyoung.info.services.PersonService;
 import com.gunyoung.info.services.SpaceService;
 
 @RestController
-public class GetController {
+public class RestfulController {
 	@Autowired
 	PersonService personService;
 	
@@ -32,5 +33,10 @@ public class GetController {
 		}
 		
 		return result;
+	}
+	
+	@GetMapping("/join/idverification/{email}")
+	public boolean idVerification(@PathVariable String email) {
+		return personService.existsByEmail(email);
 	}
 }
