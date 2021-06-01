@@ -35,7 +35,7 @@
 
 - 메인 화면 
 
-<img width="1440" alt="info_main" src="https://user-images.githubusercontent.com/60494603/119880342-1d5b6e00-bf67-11eb-8b98-ee4b03e5f4f8.png">
+<img width="1440" alt="main_view" src="https://user-images.githubusercontent.com/60494603/120320355-0a58ed00-c31d-11eb-84b9-8250e7bbbdee.png">
 
 - 회원 가입 화면
 
@@ -55,7 +55,7 @@
 
 - 프로젝트 생성 화면
 
-<img width="1440" alt="create_content" src="https://user-images.githubusercontent.com/60494603/120186156-145fea80-c24e-11eb-820e-ba6e58ff1c0a.png">
+<img width="1440" alt="ceate_content" src="https://user-images.githubusercontent.com/60494603/120320356-0b8a1a00-c31d-11eb-99c2-78e12b6193c3.png">
 
 - 개인 정보 수정 화면
 
