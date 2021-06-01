@@ -118,6 +118,12 @@
 
 2. 개인 정보 수정 URL 변경 ( 기존: url에 해당 email 노출, 해당 email 사용 -> 현재: SecurityContext에서 Authentication 가져와서 이를 활용(url에 email 노출 안되게))
 
+3. Email 중복 확인 컨트롤러 구현
+
+4. content 생성 컨트롤러에 유저 확인 코드 추가, content 생성 뷰 수정(보기 편하게)
+
+5. content 수정 뷰 및 컨트롤러 구현, 해당 뷰에서 사용할 DTO 구현(ContentDTO)
+
 ---
 
 ### To do List
