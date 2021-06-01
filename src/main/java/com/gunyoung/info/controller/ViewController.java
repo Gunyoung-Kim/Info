@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -124,8 +126,10 @@ public class ViewController {
 		return new ModelAndView("redirect:/");
 	}
 	
-	@RequestMapping(value="/space/updateprofile/{email}", method = RequestMethod.GET)
-	public ModelAndView updateProfile(@PathVariable String email, @ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
+	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
+	public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
 		Person person = personService.findByEmail(email);
 		if(person == null) {
 			
@@ -141,9 +145,9 @@ public class ViewController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/space/updateprofile/{email}", method = RequestMethod.POST)
-	public ModelAndView updateProfilePost(@PathVariable String email, @ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
-		Person person = personService.findByEmail(email);
+	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
+	public ModelAndView updateProfilePost(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
+		Person person = personService.findByEmail(profileObject.getEmail());
 		if(person == null) {
 			
 		}
@@ -162,6 +166,6 @@ public class ViewController {
 		space.setTweeter(profileObject.getTweeter());
 		spaceService.save(space);
 		
-		return updateProfile(email,profileObject, mav);
+		return updateProfile(profileObject, mav);
 	}
 }

@@ -1,7 +1,9 @@
 package com.gunyoung.info.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -9,9 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
+import com.gunyoung.info.security.UserAuthenticationProvider;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+    private UserAuthenticationProvider authenticationProvider;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -19,20 +26,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.cors().and()
 			.csrf().disable()
 			.authorizeRequests()
-			.antMatchers("/space/makecontent/**")
-			.hasAnyRole("USER")
+			.antMatchers("/css/**", "/js/**", "/img/**").permitAll()
+			.antMatchers("/space/makecontent/**","/space/updateprofile").hasAnyRole("USER")
 			.anyRequest()
-			.permitAll()
-			.and()
-			.formLogin()
+			.permitAll();
+			
+		http.formLogin()
 			.loginPage("/login")
 			.defaultSuccessUrl("/")
-			.permitAll()
-			.and()
-			.logout()
+			.permitAll();
+			
+		http.logout()
 			.logoutSuccessUrl("/")
-			.permitAll()
-			;
+			.permitAll();
 	}
 	
 	// for thymeleaf <sec:authorize>
@@ -41,12 +47,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return new SpringSecurityDialect();
 	}
 	
-	/*
+	
 	@Override 
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		 auth.authenticationProvider(authenticationProvider);
 	}
-	*/
+	
 	
 	// for password Encoding
 	@Bean 

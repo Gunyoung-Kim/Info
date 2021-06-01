@@ -11,6 +11,7 @@ public class UserDetailsVO implements UserDetails {
 
 	private String email;
 	private String password;
+	
 	private Collection<? extends GrantedAuthority> authorities;
 	
 	public UserDetailsVO(String email,String password) {
@@ -29,6 +30,10 @@ public class UserDetailsVO implements UserDetails {
 		return this.password;
 	}
 
+	public void setPassword(String password) {
+		this.password = null;
+	}
+	
 	@Override
 	public String getUsername() {
 		return this.email;

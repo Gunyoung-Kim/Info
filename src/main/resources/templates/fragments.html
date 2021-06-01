@@ -44,7 +44,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto" th:object="${profile}">
           <li sec:authorize="isAuthenticated()" class="nav-item">
-            <a class ="nav-link" th:href="@{'/space/updateprofile/'+*{email}}">개인 프로필 수정</a>
+            <a class ="nav-link" th:href="@{/space/updateprofile/}">개인 프로필 수정</a>
           </li>
           <li sec:authorize="isAuthenticated()" class="nav-item">
             <a class ="nav-link" th:href="@{'/space/makecontent/'+*{email}}">포트폴리오 추가</a>

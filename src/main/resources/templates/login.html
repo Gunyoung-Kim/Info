@@ -8,12 +8,16 @@
   <link th:href="@{/css/login_style.css}" rel="stylesheet" />
 </head>
   <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
     <div class="sidenav">
          <div class="login-main-text">
             <h2><a href="/">INFO</a><br> Login Page</h2>
             <p>Login or register from here to access.</p>
          </div>
     </div>
+
       <div class="main">
          <div class="col-md-6 col-sm-12">
             <div class="login-form">
@@ -32,7 +36,11 @@
             </div>
          </div>
       </div>
+
   </body>
+  <footer>
+    <div th:replace="fragments.html :: footer"></div>
+  </footer>
   <script type="application/javascript" th:inline="javascript">
 
   </script>

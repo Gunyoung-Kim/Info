@@ -3,9 +3,12 @@
   <head th:include="fragments.html :: head"></head>
   <head>
     <link th:href="@{/css/createContentstyles.css}" rel="stylesheet" />
+    <link th:href="@{/css/login_style.css}" rel="stylesheet" />
   </head>
   <body>
+    <header>
     <div th:replace="fragments.html :: main-nav"></div>
+    </header>
     <form method="post" th:object="${formModel}">
       <div class="mb-3">
         <label for="title" class="form-label">프로젝트 명</label>
@@ -45,6 +48,9 @@
       </div>
       <button type="submit" class="btn btn-black">프로젝트 추가</button>
     </form>
+    <footer>
+    	<div th:replace="fragments.html :: footer"></div>
+    </footer>
   </body>
   <script type="text/javascript">
     $('.content-area').keyup(function (e){
