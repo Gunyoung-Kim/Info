@@ -43,7 +43,7 @@
 
 - 회원 가입 화면
 
-<img width="1440" alt="info_join" src="https://user-images.githubusercontent.com/60494603/119880332-1a607d80-bf67-11eb-9b19-766937fb4e3d.png">
+<img width="1440" alt="Join" src="https://user-images.githubusercontent.com/60494603/120502631-8e82a180-c3fd-11eb-8969-f413acafd575.png">
 
 - 로그인 화면
 
@@ -55,7 +55,7 @@
 
 - 포트폴리오-프로젝트 화면
 
-<img width="1440" alt="content_view" src="https://user-images.githubusercontent.com/60494603/120186145-1164fa00-c24e-11eb-9f33-d6434cb2525c.png">
+<img width="1440" alt="portfolio" src="https://user-images.githubusercontent.com/60494603/120502626-8d517480-c3fd-11eb-81dc-c1f916997f24.png">
 
 - 프로젝트 생성 화면
 
@@ -140,17 +140,17 @@
 
 3. Error 페이지 및 컨트롤러 구현
 
+4. 이메일 중복확인 프론트 구현
+
+5. 프로젝트 뷰에 프로젝트 기간 추가
+
 ---
 
 ### To do List
 
 - 프로젝트 삭제는 프론트에서 어떻게 할지 고민
 
-- 아이디 중복확인 프론트에 적용
-
 - DB 자동 삭제 for 개인 정보 보호 
-
-- 프로젝트 화면에 기간 추가 
 
 - 메인 페이지 Pageable 추가
 
