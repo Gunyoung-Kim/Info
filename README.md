@@ -20,22 +20,26 @@
 
 ---
 
-## 1. DB 테이블 설계
+## DB 테이블 설계
 
 <img width="752" alt="infodb_table_2" src="https://user-images.githubusercontent.com/60494603/120187085-4f165280-c24f-11eb-95f0-e7002e86aa8e.png">
 
 ---
 
 
-## 2. API 설계
+## API 설계
 
 ---
 
-## 3. 화면 설계
+## 테스트 코드
+
+---
+
+## 화면 설계
 
 - 메인 화면 
 
-<img width="1440" alt="info_main" src="https://user-images.githubusercontent.com/60494603/119880342-1d5b6e00-bf67-11eb-8b98-ee4b03e5f4f8.png">
+<img width="1440" alt="main_view" src="https://user-images.githubusercontent.com/60494603/120320355-0a58ed00-c31d-11eb-84b9-8250e7bbbdee.png">
 
 - 회원 가입 화면
 
@@ -55,7 +59,11 @@
 
 - 프로젝트 생성 화면
 
-<img width="1440" alt="create_content" src="https://user-images.githubusercontent.com/60494603/120186156-145fea80-c24e-11eb-820e-ba6e58ff1c0a.png">
+<img width="1440" alt="ceate_content" src="https://user-images.githubusercontent.com/60494603/120320356-0b8a1a00-c31d-11eb-99c2-78e12b6193c3.png">
+
+- 프로젝트 수정 화면
+
+<img width="1440" alt="update_content" src="https://user-images.githubusercontent.com/60494603/120320662-64f24900-c31d-11eb-8a3e-c8a56b118b11.png">
 
 - 개인 정보 수정 화면
 
@@ -118,14 +126,26 @@
 
 2. 개인 정보 수정 URL 변경 ( 기존: url에 해당 email 노출, 해당 email 사용 -> 현재: SecurityContext에서 Authentication 가져와서 이를 활용(url에 email 노출 안되게))
 
+3. Email 중복 확인 컨트롤러 구현
+
+4. content 생성 컨트롤러에 유저 확인 코드 추가, content 생성 뷰 수정(보기 편하게)
+
+5. content 수정 뷰 및 컨트롤러 구현, 해당 뷰에서 사용할 DTO 구현(ContentDTO)
+
 ---
 
 ### To do List
 
-- <pre> 태그 폰트 
+- 프로젝트 삭제는 프론트에서 어떻게 할지 고민
 
-- 뷰 별 권한 제한
+- 아이디 중복확인 프론트에 적용
 
-- junit
+- DB 자동 삭제 for 개인 정보 보호 
+
+- 프로젝트 화면에 기간 추가 
+
+- 메인 페이지 Pageable 추가
+
+- 컨트롤러 분기 후 -> 테스트 코드 작성
 
 
