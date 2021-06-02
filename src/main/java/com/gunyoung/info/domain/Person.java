@@ -22,8 +22,6 @@ import javax.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.gunyoung.info.validator.Password;
-
 import lombok.AllArgsConstructor;
 
 @Entity
