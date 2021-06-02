@@ -31,7 +31,7 @@
                      <input type="password" name ="password" class="form-control" placeholder="Password">
                   </div>
                   <button type="submit" name ="action" class="btn btn-black" value="login">로그인</button>
-                  <button type="submit" name ="action" class="btn btn-secondary" value="join">회원 가입</button>
+                  <button type="button" id="moveToJoin" class="btn btn-secondary" value="join" onclick="">회원 가입</button>
                </form>
             </div>
          </div>
@@ -42,6 +42,10 @@
     <div th:replace="fragments.html :: footer"></div>
   </footer>
   <script type="application/javascript" th:inline="javascript">
-
+    $(document).ready(function(){
+      $('#moveToJoin').on('click', function() {
+        location.href = 'join';
+      });
+    });
   </script>
 </html>

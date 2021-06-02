@@ -49,12 +49,15 @@
       </div>
       <!-- Page Content Projects-->
       <div class="container-fluid p-0" th:each="content:${contents}" th:inline="text">
+        <header>
+          <p class="mt-2 text-center">프로젝트 기간: [[${#strings.substring(content.startedAt,0,10)}]] ~ [[${#strings.substring(content.endAt,0,10)}]]</p>
+        </header>
         <section class="resume-section" th:id="${content.title}">
           <div class="resume-section-content">
-            <h2 class="mb-2" th:text="${content.title}">Title</h2>
+            <h2 class="mb-2">[[${content.title}]]</h2>
             <h4 class="mb-3" th:text="${content.description}">Description</h4>
-            <h5 class="mb-2">참여자:   [[${content.contributors}]]</h4>
-            <h5 class="mb-2">사용 기술:   [[${content.skillstacks}]]</h4>
+            <h5 class="mb-2">참여자: &nbsp;&nbsp;[[${content.contributors}]]</h4>
+            <h5 class="mb-2">사용 기술: &nbsp;&nbsp;[[${content.skillstacks}]]</h4>
             <h5 class="mb-1">프로젝트 소개 및 기여 사항</h4>
             <pre class="mb-5" th:text="${content.contents}">내용</pre>
             <h5>프로젝트 관련 링크</h5>

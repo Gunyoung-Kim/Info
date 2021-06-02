@@ -55,18 +55,6 @@ public class PersonController {
 	}
 	
 	/*
-	 * 
-	 */
-	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String loginToJoinPage( @RequestParam(value="action", required=true) String action) {
-		if(action.equals("join")) {
-			return "redirect:/join";
-		}
-		else 
-			return "login";
-	}
-	
-	/*
 	 *  - 기능: 회원 가입 뷰를 반환하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
@@ -89,6 +77,9 @@ public class PersonController {
 	public ModelAndView joinPost(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav) {
 		ModelAndView res = null;
 		if(!result.hasErrors()) {
+			if(personService.existsByEmail(person.getEmail())) {
+				return new ModelAndView("redirect:/errorpage"); // 여기 오는 경우는 회원가입 폼이 아닌 잘못된 방식
+			};
 			person.setPassword(passwordEncoder.encode(person.getPassword()));
 			personService.save(person);
 			res = new ModelAndView("redirect:/");
