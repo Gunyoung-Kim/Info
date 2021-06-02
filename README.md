@@ -132,6 +132,14 @@
 
 5. content 수정 뷰 및 컨트롤러 구현, 해당 뷰에서 사용할 DTO 구현(ContentDTO)
 
+### 2021.6.2
+
+1. ViewController -> 3개의 Controller(ContentController, PersonController, SpaceController)로 분기
+
+2. Controller 설명 주석 추가
+
+3. Error 페이지 및 컨트롤러 구현
+
 ---
 
 ### To do List
@@ -146,6 +154,6 @@
 
 - 메인 페이지 Pageable 추가
 
-- 컨트롤러 분기 후 -> 테스트 코드 작성
+- 테스트 코드 작성
 
 
