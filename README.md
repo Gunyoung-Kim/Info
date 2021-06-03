@@ -144,6 +144,10 @@
 
 5. 프로젝트 뷰에 프로젝트 기간 추가
 
+### 2021.6.3
+
+1. DbConfig 삭제 -> DB 연결 정보 application.properties로 이동
+
 ---
 
 ### To do List
