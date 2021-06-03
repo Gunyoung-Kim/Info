@@ -81,9 +81,9 @@ public class ContentControllerTest {
 		}
 		
 		//2번쨰 회원 등록
-		if(!personService.existsByEmail("bad@naver.com")) {
+		if(!personService.existsByEmail("second@naver.com")) {
 			Person person2 = new Person();
-			person2.setEmail("bad@naver.com");
+			person2.setEmail("second@naver.com");
 			person2.setPassword("abcd1234");
 			person2.setFirstName("로그");
 			person2.setLastName("블");
@@ -98,7 +98,6 @@ public class ContentControllerTest {
 	
 	@AfterEach
 	void tearDown() {
-		System.out.println("method Done!");
 	}
 	
 	@AfterAll
@@ -106,7 +105,13 @@ public class ContentControllerTest {
 		System.out.println("---------------- ContentController Test Done ----------------");
 	}
 	
-	@WithMockUser(username="bad@naver.com", roles= {"USER"})
+	/*
+	 *  - 대상 메소드: 
+	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
+	 *  	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav)
+	 */
+	
+	@WithMockUser(username="second@naver.com", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 추가 (실패-로그인 계정과 일치하지 않음)")
 	public void createContentTestEmailNotMatch() throws Exception {
@@ -131,6 +136,12 @@ public class ContentControllerTest {
 				.andExpect(view().name("createContent"));
 	}
 	
+	/*
+	 *  - 대상 메소드:
+	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
+	 *      public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav)
+	 */
+	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 추가 POST (실패-콘텐트 유효성 검사 통과 못함)")
@@ -151,7 +162,7 @@ public class ContentControllerTest {
 		assertEquals(contentService.countAll(),contentNum);
 	}
 	
-	@WithMockUser(username="bad@naver.com", roles= {"USER"})
+	@WithMockUser(username="second@naver.com", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 추가 POST (실패-로그인 계정과 일치하지 않음)")
 	public void createContentPostTestEmailNotMatch() throws Exception {
@@ -216,6 +227,12 @@ public class ContentControllerTest {
 		
 	}
 	
+	/*
+	 *  - 대상 메소드: 
+	 *  	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
+	 *		public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
+	 */
+	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 (실패-입력된 id에 해당하는 content가 DB에 없을때)")
@@ -224,7 +241,7 @@ public class ContentControllerTest {
 				.andExpect(redirectedUrl("/errorpage"));
 	}
 	
-	@WithMockUser(username="bad@naver.com", roles={"USER"})
+	@WithMockUser(username="second@naver.com", roles={"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
 	public void updateContentWrongUser() throws Exception {
@@ -240,6 +257,12 @@ public class ContentControllerTest {
 				.andExpect(view().name("updateContent"));
 	}
 	
+	/*
+	 *  - 대상 메소드: 
+	 *  	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.POST) 
+	 *		public ModelAndView updateContentPost(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
+	 */
+	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 POST (실패-입력된 id에 해당하는 content가 DB에 없을때")
@@ -254,7 +277,7 @@ public class ContentControllerTest {
 				.andExpect(redirectedUrl("/errorpage"));
 	}
 	
-	@WithMockUser(username="bad@naver.com", roles={"USER"})
+	@WithMockUser(username="second@naver.com", roles={"USER"})
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 업데이트 POST(실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
@@ -300,7 +323,13 @@ public class ContentControllerTest {
 		assertEquals(content.getContents(),"changed test contents");
 	}
 	
-	@WithMockUser(username="bad@naver.com", roles= {"USER"})
+	/*
+	 *  - 대상 메소드:
+	 *  	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
+	 * 		public ModelAndView deleteContent(@PathVariable long id)
+	 */
+	
+	@WithMockUser(username="second@naver.com", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 삭제 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
 	public void deleteContentWrongUser() throws Exception {

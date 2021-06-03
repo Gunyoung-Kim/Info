@@ -2,6 +2,8 @@ package com.gunyoung.info.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,13 +37,13 @@ public class SpaceController {
 	 *  - 기능: 현재 로그인되있는 사용자 본인의 포트폴리오 페이지 반환
 	 *  - 반환: 
 	 *  	- 성공
-	 *  	View: portfolio.html (현재 로그인 유저의 포트폴리오)
+	 *  	View: portfolio.html (현재 로그인 유저의 포트폴리오), login.html(로그인 안되있으면)
 	 *  	- 실패 
 	 */
 	@RequestMapping(value="/space", method= RequestMethod.GET)
 	public ModelAndView myspace(ModelAndView mav) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return space(auth.getName(), mav);
+		return new ModelAndView("redirect:/space/"+auth.getName());
 	}
 	
 	/*
@@ -57,11 +59,12 @@ public class SpaceController {
 	 */
 	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
 	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
-		mav.setViewName("portfolio");
-		Person person = personService.findByEmail(email);
-		if(person == null) {
+		if(!personService.existsByEmail(email)) {
 			return new ModelAndView("redirect:/errorpage");
 		}
+		
+		Person person = personService.findByEmail(email);
+		mav.setViewName("portfolio");
 		
 		Space space = person.getSpace();
 		ProfileObject profile = new ProfileObject();
@@ -89,10 +92,12 @@ public class SpaceController {
 	public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
-		Person person = personService.findByEmail(email);
-		if(person == null) {
+		
+		if(!personService.existsByEmail(email)) {
 			return new ModelAndView("redirect:/errorpage");
 		}
+		
+		Person person = personService.findByEmail(email);
 		
 		mav.setViewName("updateProfile");
 		Space space = person.getSpace();
@@ -111,20 +116,21 @@ public class SpaceController {
 	 * 		View: updateProfile.html (입력된 프로필 정보로 다시 전송)
 	 * 		DB: ProfileObject에서 Person 및 Space의 변경 사항 추출 후 save
 	 * 		- 실패
+	 * 		ProfileObject의 유효성 불통과 
 	 * 	    전달된 ProfileObject에 있는 이메일이 DB에 존재하지 않을때 실패페이지 반환 -> 템플릿에서는 막음
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
-	public ModelAndView updateProfilePost(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
-		Person person = personService.findByEmail(profileObject.getEmail());
-		if(person == null) {
+	public ModelAndView updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject, ModelAndView mav) {
+		if(!personService.existsByEmail(profileObject.getEmail())) {
 			return new ModelAndView("redirect:/errorpage");
 		}
+		
+		Person person = personService.findByEmail(profileObject.getEmail());
 		
 		mav.setViewName("updateProfile");
 		
 		person.setFirstName(profileObject.getFirstName());
 		person.setLastName(profileObject.getLastName());
-		personService.save(person);
 		
 		Space space = person.getSpace();
 		space.setDescription(profileObject.getDescription());
@@ -132,8 +138,9 @@ public class SpaceController {
 		space.setFacebook(profileObject.getFacebook());
 		space.setInstagram(profileObject.getInstagram());
 		space.setTweeter(profileObject.getTweeter());
-		spaceService.save(space);
 		
-		return updateProfile(profileObject, mav);
+		personService.save(person);
+		
+		return new ModelAndView("redirect:/space/updateprofile");
 	}
 }

@@ -16,10 +16,12 @@ public class ContentDTO {
 	@Size(max=50)
 	private String hostEmail;
 	
+	@NotEmpty
 	private String title;
 	
 	private String description;
 	
+	@NotEmpty
 	private String contributors;
 	
 	private String skillstacks;
@@ -30,6 +32,7 @@ public class ContentDTO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endAt;
 	
+	@NotEmpty
 	private String contents;
 	
 	private String links;
