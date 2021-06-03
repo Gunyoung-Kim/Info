@@ -31,7 +31,24 @@
 
 ---
 
-## 테스트 코드
+## 테스트
+
+- 테스트 단위: 통합 단위 테스트
+
+- 전용 데이터베이스: H2 - 임베디드 데이터베이스
+
+- ContentController Test 
+
+<img width="737" alt="ContentCotrollerTest" src="https://user-images.githubusercontent.com/60494603/120661338-21394400-c4c3-11eb-92d0-0a88a3eb81e5.png">
+
+-> 2021.6.3 작성
+
+- PersonController Test
+
+- SpaceController Test
+
+- RestfulController Test
+
 
 ---
 
@@ -148,6 +165,11 @@
 
 1. DbConfig 삭제 -> DB 연결 정보 application.properties로 이동
 
+2. Test 용 데이터베이스 설정 분리 -> application-test.properties, h2 임베디드 데이터베잇 사용
+
+3. ContentController- deleteContent 실패 처리 코드 추가
+
+4. ContentController 전용 Test 코드 작성
 ---
 
 ### To do List
@@ -157,7 +179,5 @@
 - DB 자동 삭제 for 개인 정보 보호 
 
 - 메인 페이지 Pageable 추가
-
-- 테스트 코드 작성
 
 
