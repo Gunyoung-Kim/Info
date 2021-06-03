@@ -22,8 +22,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Builder;
+
 @Entity
 @Table(name="content")
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class Content {
 	
