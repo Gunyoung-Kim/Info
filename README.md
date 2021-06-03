@@ -14,9 +14,13 @@
 
 - 프로젝트 주요 기능: 포트폴리오 열람, 포트폴리오 작성, 로그인기능, 회원가입 기능
 
-- 사용 기술 스택: JAVA SPRING , SPRING JPA, Thymleaf, Spring Security
+- 사용 기술 스택: JAVA SPRING , SPRING JPA, Thymleaf, Spring Security, JUnit5
 
-- 사용 데이터베이스: Mysql
+- 사용 데이터베이스
+
+ - Prod: Mysql
+
+ - Test: H2
 
 ---
 
