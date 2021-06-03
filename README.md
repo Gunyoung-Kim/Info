@@ -47,9 +47,13 @@
 
 -> 2021.6.3 작성
 
-- PersonController Test
-
 - SpaceController Test
+
+<img width="641" alt="spacecontrollertest" src="https://user-images.githubusercontent.com/60494603/120682681-b21a1a80-c4d7-11eb-996a-aae5b3c2c54a.png">
+
+-> 2021.6.4 작성
+
+- PersonController Test
 
 - RestfulController Test
 
@@ -174,6 +178,13 @@
 3. ContentController- deleteContent 실패 처리 코드 추가
 
 4. ContentController 전용 Test 코드 작성
+
+### 2021.6.4
+
+1. DTO 객체들 Validation 적용
+
+2. SpaceController Test Code 작성
+
 ---
 
 ### To do List
