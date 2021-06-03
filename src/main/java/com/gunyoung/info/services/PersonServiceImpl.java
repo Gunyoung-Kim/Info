@@ -72,6 +72,11 @@ public class PersonServiceImpl implements PersonService {
 	public boolean existsByEmail(String email) {
 		return personRepository.existsByEmail(email);
 	}
+
+	@Override
+	public long countAll() {
+		return personRepository.count();
+	}
 	
 	
 }

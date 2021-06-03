@@ -15,4 +15,5 @@ public interface PersonService {
 	public void deleteSpace(Person person);
 	public Person findByEmail(String email);
 	public boolean existsByEmail(String email);
+	public long countAll();
 }

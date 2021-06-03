@@ -5,11 +5,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Person;
@@ -72,21 +70,18 @@ public class PersonController {
 	 *  - 반환:
 	 *  	- 성공
 	 * 		View: join.html 
+	 *  	- 실패
+	 *  	이미 존재하는 이메일로 들어옴 -> 프론트에서 막았지만 뷰가 아닌 잘못된 경로로 들어올 때 대비
+	 *  	formModel이 유효성 검증(검증은 백에서 실행) 실패 
 	 */
 	@RequestMapping(value="/join", method = RequestMethod.POST)
-	public ModelAndView joinPost(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav) {
-		ModelAndView res = null;
-		if(!result.hasErrors()) {
-			if(personService.existsByEmail(person.getEmail())) {
-				return new ModelAndView("redirect:/errorpage"); // 여기 오는 경우는 회원가입 폼이 아닌 잘못된 방식
-			};
-			person.setPassword(passwordEncoder.encode(person.getPassword()));
-			personService.save(person);
-			res = new ModelAndView("redirect:/");
-		} else {
-			mav.setViewName("join");
-			res = mav;
-		}
-		return res;
+	public ModelAndView joinPost(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav) {
+		if(personService.existsByEmail(person.getEmail())) {
+			return new ModelAndView("redirect:/errorpage"); 
+		};
+		
+		person.setPassword(passwordEncoder.encode(person.getPassword()));
+		personService.save(person);
+		return new ModelAndView("redirect:/");
 	}
 }

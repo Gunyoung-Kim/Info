@@ -88,7 +88,7 @@ public class SpaceControllerTest {
 	
 	@AfterAll
 	static void done() {
-		System.out.println("---------------- ContentController Test Done ----------------");
+		System.out.println("---------------- SpaceController Test Done ----------------");
 	}
 	
 	/*

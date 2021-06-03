@@ -10,4 +10,5 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	public Person getByEmail(String email);
 	public List<Person> findAllByOrderByCreatedAtDesc();
 	public boolean existsByEmail(String email);
+	public long count();
 }
