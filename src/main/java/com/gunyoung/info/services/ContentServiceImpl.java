@@ -27,15 +27,29 @@ public class ContentServiceImpl implements ContentService{
 
 	@Override
 	public void deleteContent(Content content) {
+		content.getSpace().getContents().remove(content);
 		contentRepository.delete(content);
 	}
 
 	@Override
 	public void deleteContentById(Long id) {
-		Content content = contentRepository.getById(id);
-		if(content != null) {
-			contentRepository.delete(content);
+		if(!contentRepository.existsById(id)) {
+			return;
 		}
+		Content content = contentRepository.getById(id);
+		content.getSpace().getContents().remove(content);
+		contentRepository.delete(content);
+		
+	}
+
+	@Override
+	public long countAll() {
+		return contentRepository.count();
+	}
+
+	@Override
+	public boolean existsById(Long id) {
+		return contentRepository.existsById(id);
 	}
 	
 }

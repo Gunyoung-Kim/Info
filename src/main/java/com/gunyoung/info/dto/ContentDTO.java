@@ -2,11 +2,18 @@ package com.gunyoung.info.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.gunyoung.info.domain.Content;
 
 public class ContentDTO {
+	@NotEmpty
+	@Email
+	@Size(max=50)
 	private String hostEmail;
 	
 	private String title;

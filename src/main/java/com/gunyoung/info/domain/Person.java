@@ -68,9 +68,17 @@ public class Person {
 	@JoinColumn(name="space_id")
 	private Space space;
 	
-	protected Person() {
+	public Person() {
 		Space space = new Space();
 		this.space = space;
+	}
+	
+	public Person(String email, String password, String firstName, String lastName) {
+		this();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 

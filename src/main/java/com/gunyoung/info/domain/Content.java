@@ -78,7 +78,7 @@ public class Content {
 	@JoinColumn(name = "space_id")
 	private Space space;
 
-	protected Content() {
+	public Content() {
 		
 	}
 	

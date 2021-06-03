@@ -50,7 +50,7 @@ public class ContentController {
 		}
 		
 		mav.setViewName("createContent");
-		if(personService.existsByEmail(email)) {
+		if(!personService.existsByEmail(email)) {
 			return new ModelAndView("redirect:/errorpage");
 		};
 
@@ -69,6 +69,7 @@ public class ContentController {
 	 *  	- 실패
 	 *   	로그인된 정보가 해당 포트폴리오 주인이 아닐때 -> 실패 페이지 반환
 	 *   	일치하지만 데이터베이스에 저장되지 않은 이메일이면 실패 페이지 반환 -> 실제로 일어나지 않을 상황이지 않을까?
+	 *   	Model 이 validation 통과 못함
 	 */
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
 	public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
@@ -90,9 +91,9 @@ public class ContentController {
 		content.setSpace(space);
 		contentService.save(content);
 		
-		space.getContents().add(content); // 이거 없으면 어떻게 되나?
+		space.getContents().add(content);
 		
-		return new ModelAndView("redirect:/");
+		return new ModelAndView("redirect:/space");
 	}
 	
 	/*
@@ -107,11 +108,10 @@ public class ContentController {
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
 	public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
-		Content content = contentService.findById(id);
-		if(content == null) {
-			// 해당 id에 해당하는 content가 DB에 없을 때
+		if(!contentService.existsById(id)) {
 			return new ModelAndView("redirect:/errorpage");
 		}
+		Content content = contentService.findById(id);
 		
 		// 해당 컨텐트가 현재 접속자의 것인지 확인하는 작업
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -140,11 +140,10 @@ public class ContentController {
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.POST) 
 	public ModelAndView updateContentPost(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
-		Content content = contentService.findById(id);
-		if(content == null) {
-			// 잘못된 URL 접근으로 해당 id의 Content가 없을
+		if(!contentService.existsById(id)) {
 			return new ModelAndView("redirect:/errorpage");
 		}
+		Content content = contentService.findById(id);
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String hostEmail = contentDto.getHostEmail();
@@ -168,11 +167,29 @@ public class ContentController {
 	}
 	
 	/*
-	 * 
+	 *  - 기능: url에 명시된 id의 콘텐트 삭제하는 컨트롤러
+	 *  - 반환:
+	 *  	- 성공
+	 *  	View: /space(현재 접속자의 포트폴리오) 로 redirect
+	 *  	DB: content 삭제
+	 *  	- 실패
+	 *  	입력된 id에 해당하는 content가 DB 테이블에 없을때 -> 실패 페이지 반환
+	 *		현재 로그인 유저 != 해당 프로젝트 작성자 -> 실패 페이지 반환
 	 */
 	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
 	public ModelAndView deleteContent(@PathVariable long id) {
-		contentService.deleteContentById(id);
-		return new ModelAndView("redirect:/");
+		if(!contentService.existsById(id)) {
+			return new ModelAndView("redirect:/errorpage");
+		}
+		Content targetContent = contentService.findById(id);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String hostEmail = targetContent.getSpace().getPerson().getEmail();
+		if(!hostEmail.equals(auth.getName())) {
+			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
+			return new ModelAndView("redirect:/errorpage");
+		}
+		
+		contentService.deleteContent(targetContent);
+		return new ModelAndView("redirect:/space");
 	}
 }

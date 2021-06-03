@@ -7,4 +7,6 @@ public interface ContentService {
 	public Content findById(Long id);
 	public void deleteContent(Content content);
 	public void deleteContentById(Long id);
+	public long countAll();
+	public boolean existsById(Long id);
 }
