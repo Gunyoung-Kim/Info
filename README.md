@@ -55,6 +55,10 @@
 
 - PersonController Test
 
+<img width="612" alt="personcontrollertest" src="https://user-images.githubusercontent.com/60494603/120689662-4dfb5480-c4df-11eb-9df7-e619c2387341.png">
+
+-> 2021.6.4 작성
+
 - RestfulController Test
 
 
@@ -184,6 +188,8 @@
 1. DTO 객체들 Validation 적용
 
 2. SpaceController Test Code 작성
+
+3. PersonController Test Code 작성
 
 ---
 
