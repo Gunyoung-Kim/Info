@@ -64,6 +64,9 @@
 
 - RestfulController Test
 
+<img width="626" alt="restfulcontrollertest" src="https://user-images.githubusercontent.com/60494603/120881239-b561f300-c60a-11eb-8fb6-0a4b2c4fb237.png">
+
+-> 2021.6.5 작성
 
 ---
 
@@ -184,7 +187,7 @@
 
 3. ContentController- deleteContent 실패 처리 코드 추가
 
-4. ContentController 전용 Test 코드 작성
+4. ContentController Test Code 작성
 
 ### 2021.6.4
 
@@ -194,6 +197,9 @@
 
 3. PersonController Test Code 작성
 
+### 2021.6.5
+
+1. RestfulController Test Code 작성
 ---
 
 ### To do List
