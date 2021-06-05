@@ -21,6 +21,11 @@ public class RestfulController {
 	@Autowired
 	SpaceService spaceService;
 	
+	/*
+	 *  - 기능: main 화면에서 노출할 리스트를 반환하는 컨트롤러
+	 *  - 반환:
+	 *  	List<MainObject>, MainObject(DTO 객체) -> Person.fullname + Person.email
+	 */
 	
 	@GetMapping("/main/list")
 	public List<MainListObject> index() {
@@ -35,8 +40,13 @@ public class RestfulController {
 		return result;
 	}
 	
-	@GetMapping("/join/idverification")
-	public String idVerification(@RequestParam("email") String email) {
+	/*
+	 *  - 기능: 회원가입할때 Email 중복 여부 반환하는 컨트롤러
+	 *  - 반환: 
+	 *  	True or False
+	 */
+	@GetMapping("/join/emailverification")
+	public String emailVerification(@RequestParam("email") String email) {
 		return String.valueOf(personService.existsByEmail(email));
 	}
 }
