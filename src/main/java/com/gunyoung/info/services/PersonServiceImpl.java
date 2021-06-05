@@ -3,6 +3,8 @@ package com.gunyoung.info.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,8 @@ import com.gunyoung.info.repos.PersonRepository;
 @Service("personService")
 @Transactional
 public class PersonServiceImpl implements PersonService {
+	
+	private static final int PAGE_SIZE = 10;
 	
 	@Autowired
 	PersonRepository personRepository;
@@ -76,6 +80,12 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public long countAll() {
 		return personRepository.count();
+	}
+
+	@Override
+	public Page<Person> getAllInPage(Integer pageNumber) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1 , PAGE_SIZE);
+		return personRepository.findAll(pageRequest);
 	}
 	
 	

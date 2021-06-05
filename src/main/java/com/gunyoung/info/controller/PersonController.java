@@ -1,16 +1,22 @@
 package com.gunyoung.info.controller;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.MainListObject;
 import com.gunyoung.info.services.ContentService;
 import com.gunyoung.info.services.PersonService;
 import com.gunyoung.info.services.SpaceService;
@@ -36,10 +42,29 @@ public class PersonController {
 	 *  	- 성공
 	 *  	View: index.html
 	 */
+	
+	private static final int PAGE_SIZE = 5;
+	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
-	public String index() {
-		return "index";
+	public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) {
+		Page<Person> pageResult = personService.getAllInPage(page);
+		long totalPageNum = personService.countAll()/PAGE_SIZE +1;
+		
+		List<MainListObject> resultList = new LinkedList<>();
+		
+		for(Person p : pageResult) {
+			resultList.add(new MainListObject(p.getFullName(),p.getEmail()));
+		}
+		
+		mav.addObject("listObject",resultList);
+		mav.addObject("currentPage",page);
+		mav.addObject("startIndex",(page/PAGE_SIZE)*PAGE_SIZE+1);
+		mav.addObject("lastIndex",(page/PAGE_SIZE)*PAGE_SIZE+PAGE_SIZE-1 > totalPageNum ? totalPageNum : (page/PAGE_SIZE)*PAGE_SIZE+PAGE_SIZE-1);
+		mav.setViewName("index");
+		
+		return mav;
 	}
+	
 	
 	/*
 	 *  - 기능: 로그인 뷰를 반환하는 컨트롤

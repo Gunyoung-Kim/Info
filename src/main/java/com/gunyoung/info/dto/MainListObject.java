@@ -4,16 +4,16 @@ public class MainListObject {
 	private String personName;
 	private String personEmail;
 	
-	public String getpersonName() {
+	public String getPersonName() {
 		return personName;
 	}
-	public void setpersonName(String personName) {
+	public void setPersonName(String personName) {
 		this.personName = personName;
 	}
-	public String getpersonEmail() {
+	public String getPersonEmail() {
 		return personEmail;
 	}
-	public void setpersonEmail(String personEmail) {
+	public void setPersonEmail(String personEmail) {
 		this.personEmail = personEmail;
 	}
 	

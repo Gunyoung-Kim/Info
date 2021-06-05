@@ -4,50 +4,66 @@
 <body>
 <header>
   <div th:replace="fragments.html :: main-nav"></div>
+  <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css">
+  <style media="screen">
+  .pagination {
+    display: inline-block;
+  }
+
+  .pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  }
+  </style>
 </header>
 <div id="main-title" class="py-5 text-center">
   <h2>INFO</h2>
 </div>
-<table class="table table-striped text-center">
-    <thead>
-    <tr>
-        <th scope="col">NO.</th>
-        <th scope="col">포트폴리오 주인</th>
-        <th scope="col" colspan="2">이메일</th>
-        <th scope="col" colspan="2">포트 폴리오</th>
-    </tr>
-    </thead>
-    <tbody id="main_list"></tbody>
-</table>
+<div class="justify-content-center">
+  <table class="table table-striped text-center">
+      <thead>
+      <tr>
+          <th scope="col">포트폴리오 주인</th>
+          <th scope="col" colspan="2">이메일</th>
+          <th scope="col" colspan="2">포트 폴리오</th>
+      </tr>
+      </thead>
+      <tbody id="main_list">
+        <tr th:each="object:${listObject}">
+          <td th:text="${object.personName}"></td>
+          <td th:text="${object.personEmail}"></td>
+          <td colSpan="2"><a th:href="@{'/space/' + ${object.personEmail}}">포트폴리오 보러 가기</a></td>
+        </tr>
+      </tbody>
+  </table>
+  <div class="row justify-content-center">
+    <nav>
+      <ul class="pagination justify-content-center"
+          th:with="start=${startIndex},
+                    last=${lastIndex}">
+         <li th:unless="${currentPage} == 1">
+           <a th:href="@{/(page=${currentPage}-1)}">
+             <span aria-hidden="true">&lt;</span>
+           </a>
+         </li>
+
+         <li th:each="page: ${#numbers.sequence(start, last)}"  >
+          <a th:text="${page}" th:href="@{/(page=${page})}"></a>
+         </li>
+
+        <li th:unless="${currentPage} == ${lastIndex}">
+          <a th:href="@{/(page=${currentPage}+1)}">
+            <span aria-hidden="true">&gt;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
 </body>
 <footer>
 	<div th:replace="fragments.html :: footer"></div>
 </footer>
-<script type="application/javascript" th:inline="javascript">
-    $(function() {
-        $.ajax({
-            type:"GET",
-            url: "/main/list",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8"
-        }).done(function (response) {
-            for(let i = 0; i < response.length; i++) {
-                let appendInfo = `<tr>
-                                    <th scope="row">${i+1}</th>
-                                    <td>${response[i].personName}</td>
-                                    <td>${response[i].personEmail}</td>
-                                    <td colSpan="2"><a href="/space/${response[i].personEmail}">포트폴리오 보러 가기</a></td>
-                                  </tr>`
-                $("#main_list").append(appendInfo);
-            }
-        })
-    })
-
-    function dateToFormatDate(data) {
-        if(String(data[1]).length < 2) {
-            data[1] = '0' + data[1]
-        }
-       return data[0] + '-' + data[1] + '-' + data[2] + ' ' + data[3] + ':' + data[4]
-    }
-</script>
 </html>

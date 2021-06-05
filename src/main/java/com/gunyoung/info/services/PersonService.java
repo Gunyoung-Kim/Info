@@ -2,6 +2,8 @@ package com.gunyoung.info.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 
@@ -16,4 +18,5 @@ public interface PersonService {
 	public Person findByEmail(String email);
 	public boolean existsByEmail(String email);
 	public long countAll();
+	public Page<Person> getAllInPage(Integer pageNumber);
 }

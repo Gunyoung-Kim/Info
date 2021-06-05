@@ -21,6 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.services.ContentService;
@@ -69,13 +73,26 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value ="/", method =RequestMethod.GET)
-	 * 		public String index() 
+	 * 		public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) 
 	 */
 	
 	@Test
 	@DisplayName("메인 화면 (성공)")
 	public void indexTest() throws Exception {
 		mockMvc.perform(get("/"))
+				.andExpect(view().name("index"));
+		
+		mockMvc.perform(get("/?page=1"))
+				.andExpect(view().name("index"));
+	}
+	
+	/*
+	 *  
+	 */
+	@Test
+	@DisplayName("메인 화면 페이지 (성공)")
+	public void indexPageTest() throws Exception {
+		mockMvc.perform(get("/").param("page", "1"))
 				.andExpect(view().name("index"));
 	}
 	
