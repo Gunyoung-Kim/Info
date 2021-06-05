@@ -45,28 +45,36 @@
 
 <img width="737" alt="ContentCotrollerTest" src="https://user-images.githubusercontent.com/60494603/120661338-21394400-c4c3-11eb-92d0-0a88a3eb81e5.png">
 
--> 2021.6.3 작성
 
 
 - SpaceController Test
 
 <img width="641" alt="spacecontrollertest" src="https://user-images.githubusercontent.com/60494603/120682681-b21a1a80-c4d7-11eb-996a-aae5b3c2c54a.png">
 
--> 2021.6.4 작성
-
 
 - PersonController Test
 
 <img width="612" alt="personcontrollertest" src="https://user-images.githubusercontent.com/60494603/120689662-4dfb5480-c4df-11eb-9df7-e619c2387341.png">
 
--> 2021.6.4 작성
-
-
 - RestfulController Test
 
 <img width="626" alt="restfulcontrollertest" src="https://user-images.githubusercontent.com/60494603/120881239-b561f300-c60a-11eb-8fb6-0a4b2c4fb237.png">
 
--> 2021.6.5 작성
+
+- SpaceService Test
+
+<img width="573" alt="spaceservicetest" src="https://user-images.githubusercontent.com/60494603/120897430-15838400-c661-11eb-9bf0-93f7c1a4e996.png">
+
+
+- ContentService Test
+
+<img width="607" alt="contentServiceTest" src="https://user-images.githubusercontent.com/60494603/120897419-03a1e100-c661-11eb-9da5-0f70c8d1e6fd.png">
+
+
+- PersonService Test
+
+<img width="586" alt="personServiceTest" src="https://user-images.githubusercontent.com/60494603/120897414-000e5a00-c661-11eb-8e4d-e2bf783f58a6.png">
+
 
 ---
 
@@ -204,12 +212,17 @@
 2. 메인 페이지 리스트 페이지 구현
 
 3. 회원 탈퇴 컨트롤러 및 테스트 코드 구현
+
+### 2021.6.6
+
+1. Domain 관련 Service 클래스들 (PersonService, SpaceService, ContentService) Test Code 작성
+
 ---
 
 ### To do List
 
-- 프로젝트 삭제는 프론트에서 어떻게 할지 고민
+- 프로젝트,회원 삭제는 프론트에서 어떻게 할지 고민
 
 - DB 자동 삭제 for 개인 정보 보호 
 
-
+- 배포 준비
