@@ -74,7 +74,7 @@
 
 - 메인 화면 
 
-<img width="1440" alt="main_view" src="https://user-images.githubusercontent.com/60494603/120320355-0a58ed00-c31d-11eb-84b9-8250e7bbbdee.png">
+<img width="1440" alt="mainView" src="https://user-images.githubusercontent.com/60494603/120885865-15b25e00-c626-11eb-829b-1a32b336597f.png">
 
 - 회원 가입 화면
 
@@ -200,6 +200,8 @@
 ### 2021.6.5
 
 1. RestfulController Test Code 작성
+
+2. 메인 페이지 리스트 페이지 구현
 ---
 
 ### To do List
@@ -207,7 +209,5 @@
 - 프로젝트 삭제는 프론트에서 어떻게 할지 고민
 
 - DB 자동 삭제 for 개인 정보 보호 
-
-- 메인 페이지 Pageable 추가
 
 
