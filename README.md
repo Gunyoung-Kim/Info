@@ -202,6 +202,8 @@
 1. RestfulController Test Code 작성
 
 2. 메인 페이지 리스트 페이지 구현
+
+3. 회원 탈퇴 컨트롤러 및 테스트 코드 구현
 ---
 
 ### To do List
