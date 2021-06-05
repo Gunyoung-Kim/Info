@@ -1,6 +1,8 @@
 package com.gunyoung.info.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.services.ContentService;
 import com.gunyoung.info.services.PersonService;
 import com.gunyoung.info.services.SpaceService;
@@ -58,7 +63,43 @@ public class PersonControllerTest {
 			person.setLastName("테");
 										
 			personService.save(person);
+			
+			// space 내용 설정
+			Space space = person.getSpace();
+			space.setDescription("test용 자기소개입니다.");
+			space.setGithub("https://github.com/Gunyoung-Kim");
+			
+			// content 들 설정
+			int contentsNumber = 1;
+			for(int i=0;i<=contentsNumber;i++) {
+				Content content = new Content();
+				content.setTitle(i+" 번째 타이틀");
+				content.setDescription(i+" 번째 프로젝트 설명");
+				content.setContributors(i+" 번째 기여자들");
+				content.setContents(i+ " 번째 프로젝트 내용");
+				content.setSpace(space);
+				contentService.save(content);
+				
+				space.getContents().add(content);
+			}
+			
+			spaceService.save(space);
 		}
+		//2번쨰 유저 등록
+		if(!personService.existsByEmail("second@naver.com")) {
+			Person person2 = new Person();				
+			person2.setEmail("second@naver.com");	
+			person2.setPassword("abcd1234");
+			person2.setFirstName("로그");
+			person2.setLastName("블");
+							
+			// space 내용 설정
+			Space space2 = person2.getSpace();
+			space2.setDescription("test2222용 자기소개입니다.");
+			space2.setGithub("https://github.com/Gunyoung-Kim");
+							
+			personService.save(person2);
+		}	
 	}
 	
 	@AfterEach
@@ -196,7 +237,7 @@ public class PersonControllerTest {
 	public void joinPostTest() throws Exception {
 		long personNum = personService.countAll();
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("email", "second@naver.com"); 
+		map.add("email", "third@naver.com"); 
 		map.add("password", "abcd1234");
 		map.add("firstName", "first");
 		map.add("lastName", "last");
@@ -208,5 +249,43 @@ public class PersonControllerTest {
 		assertEquals(personNum+1,personService.countAll());
 		assertEquals(personService.existsByEmail("second@naver.com"),true);
 	
+	}
+	
+	/*
+	 *  - 대상 메소드: 
+	 *  	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
+	 * 		public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav)
+	 */
+	
+	@WithMockUser(username="none@google.com", roles= {"USER"})
+	@Test
+	@DisplayName("회원탈퇴 DELETE (실패-해당 계정이 DB에 존재하지 않을때)")
+	public void personWithdrawNonExist() throws Exception {
+		mockMvc.perform(delete("/withdraw")
+				.param("email", "none@google.com"))
+				.andExpect(redirectedUrl("/errorpage"));
+	}
+	
+	@WithMockUser(username="second@naver.com", roles= {"USER"})
+	@Test
+	@DisplayName("회원탈퇴 DELETE (실패-로그인 계정이 탈퇴 계정과 일치하지 않을때")
+	public void personWithdrawNotMatch() throws Exception {
+		mockMvc.perform(delete("/withdraw")
+				.param("email", "test@google.com"))
+				.andExpect(redirectedUrl("/errorpage"));
+	}
+	
+	
+	@WithMockUser(username="test@google.com", roles= {"USER"})
+	@Test
+	@DisplayName("회원탈퇴 DELETE (성공)")
+	public void personWithdrawTest() throws Exception {
+		mockMvc.perform(delete("/withdraw")
+				.param("email", "test@google.com"))
+				.andExpect(redirectedUrl("/logout"));
+		
+		assertEquals(personService.existsByEmail("test@google.com"),false);
+		assertEquals(spaceService.existsById(Long.valueOf(1)),false);
+		assertEquals(contentService.existsById(Long.valueOf(1)),false);
 	}
 }

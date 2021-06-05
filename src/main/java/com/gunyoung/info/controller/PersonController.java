@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -108,5 +110,33 @@ public class PersonController {
 		person.setPassword(passwordEncoder.encode(person.getPassword()));
 		personService.save(person);
 		return new ModelAndView("redirect:/");
+	}
+	
+	/*
+	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤러
+	 *  - 반환:
+	 *  	- 성공
+	 *  	View: index.html
+	 *  	DB: 해당 person 삭제
+	 *  	- 실패
+	 *  	해당 계정이 DB에 존재하지 않을 때
+	 *  	로그인 계정이 탈퇴 계정과 일치하지 않을 때
+	 */
+	
+	@RequestMapping(value="space/updateprofile/withdraw", method=RequestMethod.DELETE)
+	public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav) {
+		if(!personService.existsByEmail(email)) {
+			return new ModelAndView("redirect:/errorpage");
+		}
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		if(!auth.getName().equals(email)) {
+			return new ModelAndView("redirect:/errorpage");
+		}
+		
+		personService.deletePerson(personService.findByEmail(email));
+		
+		return new ModelAndView("redirect:/logout");
 	}
 }

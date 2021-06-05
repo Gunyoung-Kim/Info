@@ -9,4 +9,5 @@ public interface SpaceService {
 	public Space findById(Long id);
 	public Space save(Space space);
 	public void deleteSpace(Space space);
+	public boolean existsById(Long id);
 }
