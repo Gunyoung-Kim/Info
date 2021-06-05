@@ -13,8 +13,6 @@ public interface PersonService {
 	public Person findById(Long id);
 	public Person save(Person person);
 	public void deletePerson(Person person);
-	public Space makeSpace(Person person);
-	public void deleteSpace(Person person);
 	public Person findByEmail(String email);
 	public boolean existsByEmail(String email);
 	public long countAll();

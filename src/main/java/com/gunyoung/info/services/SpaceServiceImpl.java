@@ -34,11 +34,6 @@ public class SpaceServiceImpl implements SpaceService {
 	}
 
 	@Override
-	public void deleteSpace(Space space) {
-		spaceRepository.delete(space);
-	}
-
-	@Override
 	public boolean existsById(Long id) {
 		return spaceRepository.existsById(id);
 	}

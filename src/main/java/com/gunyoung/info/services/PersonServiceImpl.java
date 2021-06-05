@@ -45,21 +45,7 @@ public class PersonServiceImpl implements PersonService {
 	public void deletePerson(Person person) {
 		personRepository.delete(person);
 	}
-
-	@Override
-	public Space makeSpace(Person person) {
-		Space space = new Space();
-		
-		return space;
-	}
-
-	@Override
-	public void deleteSpace(Person person) {
-		Space space = person.getSpace();
-		if(space != null)
-			spaceService.deleteSpace(space);
-	}
-
+	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmail(String email) {
