@@ -31,7 +31,15 @@
 ---
 
 
-## API 설계
+## Controller 설계
+
+<img width="886" alt="SpaceControllerAPI" src="https://user-images.githubusercontent.com/60494603/120898420-c4c25a00-c665-11eb-96a8-5fb1841a74b0.png">
+
+
+<img width="879" alt="ContentController" src="https://user-images.githubusercontent.com/60494603/120898424-c724b400-c665-11eb-9a24-7a353915a5d8.png">
+
+
+<img width="883" alt="PersonController" src="https://user-images.githubusercontent.com/60494603/120898425-c855e100-c665-11eb-93cd-05f59780e1db.png">
 
 ---
 
