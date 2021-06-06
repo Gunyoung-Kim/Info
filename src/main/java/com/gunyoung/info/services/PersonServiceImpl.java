@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.PersonRepository;
 
 @Service("personService")

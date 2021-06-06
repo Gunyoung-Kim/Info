@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.domain.Space;
 
 public interface PersonService {
 	public List<Person> getAll();

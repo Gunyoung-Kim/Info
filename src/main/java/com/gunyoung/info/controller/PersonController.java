@@ -123,7 +123,7 @@ public class PersonController {
 	 *  	로그인 계정이 탈퇴 계정과 일치하지 않을 때
 	 */
 	
-	@RequestMapping(value="space/updateprofile/withdraw", method=RequestMethod.DELETE)
+	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
 	public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav) {
 		if(!personService.existsByEmail(email)) {
 			return new ModelAndView("redirect:/errorpage");

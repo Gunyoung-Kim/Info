@@ -11,14 +11,11 @@
     <header>
       <div th:replace="fragments.html :: main-nav"></div>
     </header>
-    <div class="sidenav">
-         <div class="login-main-text">
-            <h2>INFO<br> 개인 프로필 변경 </h2>
-         </div>
+    <div id="main-title" class="py-5 text-center">
+      <h2>프로필 변경</h2>
     </div>
-    <div class="main">
+    <div class="row justify-content-center">
       <div class="col-md-6 col-sm-12">
-        <div class="login-form">
           <form method="post" th:object="${formModel}">
             <div class="form-group">
               <label>이메일</label>
@@ -54,7 +51,6 @@
             </div>
             <button type="submit" class="btn btn-black">정보 수정</button>
           </form>
-        </div>
       </div>
     </div>
     <footer>
