@@ -225,6 +225,9 @@
 
 1. Domain 관련 Service 클래스들 (PersonService, SpaceService, ContentService) Test Code 작성
 
+2. Login, Join, ProfileUpdate 뷰 깔끔하게 정리
+
+
 ---
 
 ### To do List
