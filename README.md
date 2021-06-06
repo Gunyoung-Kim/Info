@@ -22,7 +22,7 @@
 
    - Test: H2
    
-- 접속 URL : [INFO](http://ec2-3-37-122-20.ap-northeast-2.compute.amazonaws.com:8080/,"INFO")
+- 접속 URL : [INFO](http://ec2-3-37-122-20.ap-northeast-2.compute.amazonaws.com:8080/)
 
 ---
 
