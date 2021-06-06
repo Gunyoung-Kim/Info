@@ -227,7 +227,7 @@
 
 2. Login, Join, ProfileUpdate 뷰 깔끔하게 정리
 
-
+3. AWS EC2 인스턴스와 연결
 ---
 
 ### To do List
