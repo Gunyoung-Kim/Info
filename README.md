@@ -21,6 +21,8 @@
    - Prod: Mysql
 
    - Test: H2
+   
+- 접속 URL : [INFO](http://ec2-3-37-122-20.ap-northeast-2.compute.amazonaws.com:8080/)
 
 ---
 
@@ -227,17 +229,22 @@
 
 2. Login, Join, ProfileUpdate 뷰 깔끔하게 정리
 
-
+3. AWS EC2 인스턴스와 연결
 ---
 
 ### To do List
 
 - 프로젝트,회원 삭제는 프론트에서 어떻게 할지 고민
 
-- DB 자동 삭제 for 개인 정보 보호 
+- 개인정보 처리 방침
+
+- 소셜 로그인 (구글, 네이버 , 카카오)
 
 - ssl
 
+- 자동 배포,빌드 스크립트 작성
+
 - content 개수 제한
 
-- 배포 준비
+- 구글 ad 추가 
+
