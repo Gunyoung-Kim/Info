@@ -46,6 +46,10 @@ public class ContentControllerTest {
 	@Autowired
 	ContentService contentService;
 	
+	public static final int MAX_CONTENT_NUM = 50;
+	
+	private static final int INIT_CONTENT_NUM = 3;
+	
 	@BeforeEach
 	void setup() {
 		// 유저 등록
@@ -64,7 +68,7 @@ public class ContentControllerTest {
 			space.setGithub("https://github.com/Gunyoung-Kim");
 			
 			// content 들 설정
-			int contentsNumber = 1;
+			int contentsNumber = INIT_CONTENT_NUM;
 			for(int i=0;i<=contentsNumber;i++) {
 				Content content = new Content();
 				content.setTitle(i+" 번째 타이틀");
@@ -125,6 +129,26 @@ public class ContentControllerTest {
 	public void createContentEmailNotExists() throws Exception {
 		mockMvc.perform(get("/space/makecontent/nonexist@daum.net"))
 				.andExpect(redirectedUrl("/errorpage"));
+	}
+	
+	@WithMockUser(username="test@google.com", roles= {"USER"})
+	@Test
+	@Transactional
+	@DisplayName("콘텐트 추가 (실패-개인 최대 프로젝트 개수 초과)")
+	public void createContentEmailOverLimit() throws Exception {
+		Person person = personService.findByEmail("test@google.com");
+		Space space = person.getSpace();
+		for(int i=INIT_CONTENT_NUM;i<=MAX_CONTENT_NUM;i++) {
+			Content content = new Content();
+			content.setTitle(i+" 번째 타이틀");
+			content.setDescription(i+" 번째 프로젝트 설명");
+			content.setContributors(i+" 번째 기여자들");
+			content.setContents(i+ " 번째 프로젝트 내용");
+			spaceService.addContent(space, content);
+		}
+		
+		mockMvc.perform(get("/space/makecontent/test@google.com"))
+				.andExpect(redirectedUrl("/space"));
 	}
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -200,6 +224,36 @@ public class ContentControllerTest {
 		assertEquals(contentService.countAll(),contentNum);
 	}
 	
+	@WithMockUser(username="test@google.com" , roles= {"USER"})
+	@Test
+	@Transactional
+	@DisplayName("콘텐트 추가 POST (실패-개인 최대 프로젝트 개수 초과)")
+	public void createContentPostOverLimit() throws Exception {
+		Person person = personService.findByEmail("test@google.com");
+		Space space = person.getSpace();
+		for(int i=INIT_CONTENT_NUM;i<=MAX_CONTENT_NUM;i++) {
+			Content content = new Content();
+			content.setTitle(i+" 번째 타이틀");
+			content.setDescription(i+" 번째 프로젝트 설명");
+			content.setContributors(i+" 번째 기여자들");
+			content.setContents(i+ " 번째 프로젝트 내용");
+			spaceService.addContent(space, content);
+		}
+		
+		long contentNum = contentService.countAll();
+		
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("title", "testTitle");
+		map.add("contributors", "test contributors");
+		map.add("contents", "test contents");
+		
+		mockMvc.perform(post("/space/makecontent/test@google.com")
+				.params(map))
+				.andExpect(redirectedUrl("/errorpage"));
+		
+		assertEquals(contentService.countAll(),contentNum);
+	}
+	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
 	@Transactional
@@ -251,9 +305,13 @@ public class ContentControllerTest {
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
+	@Transactional
 	@DisplayName("콘텐트 업데이트 (정상)")
 	public void updateContentTest() throws Exception {
-		mockMvc.perform(get("/space/updatecontent/1"))
+		Person p = personService.findByEmail("test@google.com");
+		Space space = p.getSpace();
+		Long contentId = space.getContents().get(0).getId();
+		mockMvc.perform(get("/space/updatecontent/" + contentId.intValue()))
 				.andExpect(view().name("updateContent"));
 	}
 	
@@ -282,7 +340,11 @@ public class ContentControllerTest {
 	@Transactional
 	@DisplayName("콘텐트 업데이트 POST(실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
 	public void updateContentPostWrongUser() throws Exception {
-		Content content = contentService.findById(Long.valueOf(1));
+		
+		Person p = personService.findByEmail("test@google.com");
+		Space space = p.getSpace();
+		Content content = space.getContents().get(0);
+		Long contentId = content.getId();
 		String title = content.getTitle();
 		
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -291,11 +353,11 @@ public class ContentControllerTest {
 		map.add("contributors", "changed test contributors");
 		map.add("contents", "changed test contents");
 		
-		mockMvc.perform(post("/space/updatecontent/1")
+		mockMvc.perform(post("/space/updatecontent/" + contentId.intValue())
 				.params(map))
 				.andExpect(redirectedUrl("/errorpage"));
 		
-		content = contentService.findById(Long.valueOf(1));
+		content = contentService.findById(contentId);
 		assertEquals(content.getTitle(),title);
 	}
 	
@@ -304,7 +366,11 @@ public class ContentControllerTest {
 	@Transactional
 	@DisplayName("콘텐트 업데이트 POST(정상)")
 	public void updateContentPostTest() throws Exception {
-		Content content = contentService.findById(Long.valueOf(1));
+		
+		Person p = personService.findByEmail("test@google.com");
+		Space space = p.getSpace();
+		Content content = space.getContents().get(0);
+		Long contentId = content.getId();
 		
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("hostEmail", "test@google.com");
@@ -312,11 +378,11 @@ public class ContentControllerTest {
 		map.add("contributors", "changed test contributors");
 		map.add("contents", "changed test contents");
 		
-		mockMvc.perform(post("/space/updatecontent/1")
+		mockMvc.perform(post("/space/updatecontent/" + contentId.intValue())
 				.params(map))
 				.andExpect(redirectedUrl("/space"));
 		
-		content = contentService.findById(Long.valueOf(1));
+		content = contentService.findById(contentId);
 		
 		assertEquals(content.getTitle(),"changed title");
 		assertEquals(content.getContributors(),"changed test contributors");
@@ -331,12 +397,18 @@ public class ContentControllerTest {
 	
 	@WithMockUser(username="second@naver.com", roles= {"USER"})
 	@Test
+	@Transactional
 	@DisplayName("콘텐트 삭제 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
 	public void deleteContentWrongUser() throws Exception {
-		mockMvc.perform(delete("/space/deletecontent/1"))
+		Person p = personService.findByEmail("test@google.com");
+		Space space = p.getSpace();
+		Content content = space.getContents().get(0);
+		Long contentId = content.getId();
+		
+		mockMvc.perform(delete("/space/deletecontent/" + contentId.intValue()))
 				.andExpect(redirectedUrl("/errorpage"));
 		
-		assertEquals(contentService.existsById(Long.valueOf(1)),true);
+		assertEquals(contentService.existsById(contentId),true);
 	}
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -353,10 +425,14 @@ public class ContentControllerTest {
 	@DisplayName("콘텐트 삭제 (정상)")
 	public void deleteContentTest() throws Exception {
 		long num = contentService.countAll();
-		Content content = contentService.findById(Long.valueOf(1));
-		Space space = content.getSpace();
+		
+		Person p = personService.findByEmail("test@google.com");
+		Space space = p.getSpace();
+		Content content = space.getContents().get(0);
+		Long contentId = content.getId();
+		
 		int contentsListSize = space.getContents().size();
-		mockMvc.perform(delete("/space/deletecontent/1"))
+		mockMvc.perform(delete("/space/deletecontent/" + contentId.intValue()))
 				.andExpect(redirectedUrl("/space"));
 		
 		assertEquals(contentsListSize-1, space.getContents().size());

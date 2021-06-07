@@ -31,6 +31,8 @@ public class ContentController {
 	@Autowired
 	ContentService contentService;
 	
+	public static final int MAX_CONTENT_NUM = 50;
+	
 	/*
 	 *  - 기능: url에 담긴 이메일 유저의 포트폴리오에 프로젝트 추가하는 페이지 반환하는 컨트롤러
 	 *  - 반환:
@@ -41,6 +43,7 @@ public class ContentController {
 	 *  	로그인된 계정과 일치하지 않으면 메인 홈으로 redirect
 	 *  	일치하지만 데이터베이스에 저장되지 않은 이메일이면 실패 페이지 반환 -> 실제로 일어나지 않을 상황이지 않을까?
 	 */
+	
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
 	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
@@ -53,7 +56,12 @@ public class ContentController {
 		if(!personService.existsByEmail(email)) {
 			return new ModelAndView("redirect:/errorpage");
 		};
-
+		
+		Space space = personService.findByEmail(email).getSpace();
+		
+		if(space.getContents().size() >= MAX_CONTENT_NUM) {
+			return new ModelAndView("redirect:/space");
+		}
 		
 		mav.addObject("formModel", content);
 		
@@ -70,6 +78,7 @@ public class ContentController {
 	 *   	로그인된 정보가 해당 포트폴리오 주인이 아닐때 -> 실패 페이지 반환
 	 *   	일치하지만 데이터베이스에 저장되지 않은 이메일이면 실패 페이지 반환 -> 실제로 일어나지 않을 상황이지 않을까?
 	 *   	Model 이 validation 통과 못함
+	 *   	개인 최대 프로젝트 개수 초과 -> 실패 페이지 반환
 	 */
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
 	public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
@@ -88,10 +97,12 @@ public class ContentController {
 		}
 		
 		Space space = person.getSpace();
-		content.setSpace(space);
-		contentService.save(content);
 		
-		space.getContents().add(content);
+		if(space.getContents().size() >= MAX_CONTENT_NUM) {
+			return new ModelAndView("redirect:/errorpage");
+		}
+		
+		spaceService.addContent(space, content);
 		
 		return new ModelAndView("redirect:/space");
 	}

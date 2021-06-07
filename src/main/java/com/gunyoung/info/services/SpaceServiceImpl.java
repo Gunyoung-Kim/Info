@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.SpaceRepository;
 
@@ -15,6 +16,9 @@ public class SpaceServiceImpl implements SpaceService {
 	
 	@Autowired
 	SpaceRepository spaceRepository;
+	
+	@Autowired 
+	ContentService contentService;
 
 	@Override
 	@Transactional(readOnly=true)
@@ -36,6 +40,14 @@ public class SpaceServiceImpl implements SpaceService {
 	@Override
 	public boolean existsById(Long id) {
 		return spaceRepository.existsById(id);
+	}
+
+	@Override
+	public void addContent(Space space, Content content) {
+		content.setSpace(space);
+		contentService.save(content);
+		
+		space.getContents().add(content);
 	}
 	
 	
