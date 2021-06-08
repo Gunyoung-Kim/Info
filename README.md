@@ -1,4 +1,5 @@
 # INFO
+[![Build Status](https://travis-ci.com/Gunyoung-Kim/Info.svg?branch=master)](https://travis-ci.com/Gunyoung-Kim/Info)
 
 ## 프로젝트 목적
 
@@ -241,6 +242,7 @@
 
 1. 배포 스크립트 (deploy.sh) 작성
 
+2. travisCI 설정 파일 작성(.travis.yml) 및 연결 
 
 ---
 
