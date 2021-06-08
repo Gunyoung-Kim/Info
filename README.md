@@ -245,6 +245,8 @@
 
 3. travisCI 와 S3 연결 
 
+4. S3와 CodeDeploy 연결
+
 ---
 
 ### To do List

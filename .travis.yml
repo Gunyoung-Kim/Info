@@ -31,6 +31,19 @@ deploy:
     on:
       repo: Gunyoung-Kim/Info
       branch: master
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: info-gunyoung-deploy
+    key: info.zip
+    bundle_type: zip
+    application: Info
+    deployment_group: Info-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: Gunyoung-Kim/Info
+      branch: master
 
 notifications:
   email:
