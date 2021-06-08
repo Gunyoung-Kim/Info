@@ -22,7 +22,7 @@
 
    - Test: H2
    
-- 접속 URL : [INFO](http://ec2-3-37-122-20.ap-northeast-2.compute.amazonaws.com:8080/)
+- 접속 URL : [INFO](http://www.info-gun.net:8080/)
 
 ---
 
@@ -230,6 +230,12 @@
 2. Login, Join, ProfileUpdate 뷰 깔끔하게 정리
 
 3. AWS EC2 인스턴스와 연결
+
+### 2021.6.7
+
+1. 개인 프로젝트 개수 제한 - 최대 50개
+
+2. 도메인 네임 등록 (www.info-gun.net:8080)
 ---
 
 ### To do List
@@ -243,8 +249,6 @@
 - ssl
 
 - 자동 배포,빌드 스크립트 작성
-
-- content 개수 제한
 
 - 구글 ad 추가 
 
