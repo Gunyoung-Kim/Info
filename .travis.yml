@@ -13,11 +13,17 @@ cache:
 
 script: "./mvnw clean package"
 
+before_deploy:
+  - zip -r info *
+  - mkdir -p deploy
+  - mv info.zip deploy/info.zip
+
 deploy:
   - provider: s3 
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
     bucket: info-gunyoung-deploy
+    local_dir: deploy
     region: ap-northeast-2
     skip_cleanup: true
     acl: public_read
