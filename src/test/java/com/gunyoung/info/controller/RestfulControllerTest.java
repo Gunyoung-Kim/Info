@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.MainListObject;
@@ -51,14 +52,30 @@ public class RestfulControllerTest {
 			person.setPassword("abcd1234");
 			person.setFirstName("스트");
 			person.setLastName("테");
-						
+			
+			personService.save(person);
 							
 			// space 내용 설정
 			Space space = person.getSpace();
 			space.setDescription("test용 자기소개입니다.");
 			space.setGithub("https://github.com/Gunyoung-Kim");
-					
-			personService.save(person);
+			
+			// content 들 설정
+			int contentsNumber = 1;
+			for(int i=0;i<=contentsNumber;i++) {
+				Content content = new Content();
+				content.setTitle(i+" 번째 타이틀");
+				content.setDescription(i+" 번째 프로젝트 설명");
+				content.setContributors(i+" 번째 기여자들");
+				content.setContents(i+ " 번째 프로젝트 내용");
+				content.setSpace(space);
+				contentService.save(content);
+							
+				space.getContents().add(content);
+			}
+						
+			spaceService.save(space);
+			
 		}
 				
 		//2번쨰 유 등록
