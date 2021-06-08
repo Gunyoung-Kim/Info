@@ -13,6 +13,19 @@ cache:
 
 script: "./mvnw clean package"
 
+deploy:
+  - provider: s3 
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: info-gunyoung-deploy
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deploy: true
+    on:
+      repo: Gunyoung-Kim/Info
+      branch: master
+
 notifications:
   email:
     recipients:
