@@ -49,6 +49,9 @@ public class ContentServiceTest {
 	
 	@BeforeEach
 	void setup() {
+		System.out.println(personRepository.count());
+		System.out.println(spaceRepository.count());
+		System.out.println(contentRepository.count());
 		// 유저 등록
 		if(!personService.existsByEmail("test@google.com")) {
 			Person person = new Person();
@@ -94,7 +97,7 @@ public class ContentServiceTest {
 			space2.setGithub("https://github.com/Gunyoung-Kim");
 							
 			personService.save(person2);
-		}	
+		}
 	}
 	
 	/*
