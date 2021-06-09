@@ -1,3 +1,5 @@
+## 수동 배포용 쉘 스크립트
+
 REPOSITORY=/home/ec2-user/info/git
 
 cd $REPOSITORY/Info/

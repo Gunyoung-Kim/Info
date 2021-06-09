@@ -27,7 +27,7 @@ deploy:
     region: ap-northeast-2
     skip_cleanup: true
     acl: public_read
-    wait-until-deploy: true
+    wait_until_deploy: true
     on:
       repo: Gunyoung-Kim/Info
       branch: master
@@ -40,7 +40,7 @@ deploy:
     application: Info
     deployment_group: Info-group
     region: ap-northeast-2
-    wait-until-deployed: true
+    wait_until_deployed: true
     on:
       repo: Gunyoung-Kim/Info
       branch: master
@@ -48,4 +48,4 @@ deploy:
 notifications:
   email:
     recipients:
-      - gun025bba@daum.net 
+       gun025bba@daum.net 
