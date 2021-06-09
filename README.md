@@ -12,17 +12,25 @@
 
 - 프로젝트 참여 인원: 1명 (김건영)
 
+- 개발 기간: 2021.05.26 ~ 2021.06.09 (첫 버전 배포일)
+
 - 프로젝트 주요 기능: 포트폴리오 열람, 포트폴리오 작성, 로그인기능, 회원가입 기능
 
-- 사용 기술 스택: JAVA SPRING , SPRING JPA, Spring Security, JUnit5, Thymleaf, HTML, CSS, Javascript
+- 사용 기술, 개발 환경 : SPRING Boot , SPRING JPA, Spring Security, JUnit5, Thymleaf, Maven, open-jdk8, HTML, CSS, Javascript
 
 - 사용 데이터베이스
 
-   - Prod: Mysql
+   - Prod: Mysql 8.0
 
    - Test: H2
    
 - 접속 URL : [INFO](http://www.info-gun.net:8080/)
+
+---
+
+## 코드 배포 구조 
+
+![info_deploy_structure_2](https://user-images.githubusercontent.com/60494603/121388460-7921f000-c986-11eb-820c-0dd44783fc6f.png)
 
 ---
 
@@ -31,7 +39,6 @@
 <img width="752" alt="infodb_table_2" src="https://user-images.githubusercontent.com/60494603/120187085-4f165280-c24f-11eb-95f0-e7002e86aa8e.png">
 
 ---
-
 
 ## Controller 설계
 
@@ -54,7 +61,6 @@
 - ContentController Test 
 
 <img width="737" alt="ContentCotrollerTest" src="https://user-images.githubusercontent.com/60494603/120661338-21394400-c4c3-11eb-92d0-0a88a3eb81e5.png">
-
 
 
 - SpaceController Test
@@ -253,6 +259,16 @@
 
 2. 코드 자동 배포 구현 
 
+3. 첫 배포 (ver 0.0.2)
+
+---
+
+## 버전 관리 
+
+- ver 0.0.2
+
+   - 첫 배포 버전   
+
 ---
 
 ### To do List
@@ -267,3 +283,4 @@
 
 - 구글 ad 추가 
 
+- 무중단 배포로의 변경 

@@ -48,4 +48,4 @@ deploy:
 notifications:
   email:
     recipients:
-       gun025bba@daum.net 
+       - gun025bba@daum.net 
