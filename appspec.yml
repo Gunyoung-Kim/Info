@@ -5,7 +5,7 @@ files:
     destination: /home/ec2-user/info/travis/build/
 
 hooks:
-  ApplicationStart: 
+  AfterInstall: 
     - location: execute-deploy.sh
       timeout: 300
-      runas: root
+      runas: ec2-user
