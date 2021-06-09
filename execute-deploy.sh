@@ -1,2 +1,2 @@
 #!/bin/bash
-/home/ec2-user/info/travis/deploy.sh
+sudo /home/ec2-user/info/travis/deploy.sh
