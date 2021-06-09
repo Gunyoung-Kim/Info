@@ -13,9 +13,5 @@ target/
 .springBeans
 .sts4-cache
 
-*.css
-*.png
-*.jpeg
-
 ### application properties ###
 application.properties
