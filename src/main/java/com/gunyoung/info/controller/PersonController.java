@@ -1,5 +1,6 @@
 package com.gunyoung.info.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,7 +8,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,9 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.dto.MainListObject;
-import com.gunyoung.info.services.ContentService;
-import com.gunyoung.info.services.PersonService;
-import com.gunyoung.info.services.SpaceService;
+import com.gunyoung.info.dto.OAuth2Join;
+import com.gunyoung.info.security.UserDetailsVO;
+import com.gunyoung.info.services.domain.ContentService;
+import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.services.domain.SpaceService;
 
 @Controller
 public class PersonController {
@@ -49,6 +55,10 @@ public class PersonController {
 	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
 	public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) {
+		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"))) {
+			return new ModelAndView("redirect:/oauth2/join");
+		}
+		
 		Page<Person> pageResult = personService.getAllInPage(page);
 		long totalPageNum = personService.countAll()/PAGE_SIZE +1;
 		
@@ -113,6 +123,56 @@ public class PersonController {
 	}
 	
 	/*
+	 *  - 기능: 소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반 
+	 *  - 반환:
+	 *  	- 성공: 
+	 *  	View: joinOAuth.html
+	 *  	- 실패: 
+	 */
+	
+	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
+	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav) {
+		mav.setViewName("joinOAuth");
+		
+		formModel.setEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+		
+		mav.addObject("formModel", formModel);
+		
+		return mav;
+	}
+	
+	/*
+	 *  - 기능: 소셜 로그인한 이메일 회원 가입 처리하는 컨트롤러
+	 *  - 반환:
+	 *  	 - 성공:
+	 *  	View: redirect -> index.html
+	 *   	DB: 해당 person 추가
+	 *   	- 실패
+	 */
+	
+	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
+	public ModelAndView oAuth2JoinPost(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
+		
+		Person person = new Person();
+		person.setEmail(formModel.getEmail());
+		person.setPassword(passwordEncoder.encode(formModel.getPassword()));
+		person.setFirstName(formModel.getFirstName());
+		person.setLastName(formModel.getLastName());
+		
+		personService.save(person);
+		
+		List<GrantedAuthority> newAuthorityList = new ArrayList<>();
+		
+		newAuthorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
+		
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(new UserDetailsVO(person.getEmail(),person.getPassword()),null,newAuthorityList);
+		
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
+		
+		return new ModelAndView("redirect:/");
+	}
+	
+	/*
 	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
@@ -125,11 +185,13 @@ public class PersonController {
 	
 	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
 	public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav) {
+		
 		if(!personService.existsByEmail(email)) {
 			return new ModelAndView("redirect:/errorpage");
 		}
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		
 		if(!auth.getName().equals(email)) {
 			return new ModelAndView("redirect:/errorpage");

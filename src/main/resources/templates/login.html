@@ -6,6 +6,30 @@
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link th:href="@{/css/login_style.css}" rel="stylesheet" />
+  <style media="screen">
+    .googleImage {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+    }
+
+    .socialBtn {
+        display: flex;
+        margin-top: 16px;
+        padding-right: 80px;
+        padding-left: 16px;
+        align-items: center;
+        width: 322px;
+        height: 40px;
+        background: rgb(220, 78, 65);
+        justify-content: space-between;
+    }
+
+    .socialText {
+      color: white;
+      font-size: 15px;
+    }
+  </style>
 </head>
   <body>
     <header>
@@ -28,6 +52,10 @@
                   <button type="submit" name ="action" class="btn btn-black" value="login">로그인</button>
                   <button type="button" id="moveToJoin" class="btn btn-secondary" value="join" onclick="">회원 가입</button>
                </form>
+               <a href="/oauth2/authorization/google" class="socialBtn">
+                 <img th:src="@{/img/google.png}" class="googleImage">
+                 <span class="socialText">구글 계정으로 시작하기</span>
+               </a>
          </div>
       </div>
 

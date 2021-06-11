@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link th:href="@{/css/login_style.css}" rel="stylesheet" />
+</head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+    <div id="main-title" class="py-5 text-center">
+      <h2>회원 가입</h2>
+    </div>
+      <div class="row justify-content-center">
+         <div class="col-md-6 col-sm-12">
+               <form method="post" action="/oauth2/join" th:object="${formModel}">
+                  <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" id= "email" name="email" th:field="*{email}" class="form-control" readonly>
+                  </div>
+                  <div class="form-group">
+                     <label>비밀 번호<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:errorclass="err"></label>
+                     <input type="password" name="password" th:field="*{password}" class="form-control" aria-describedby="passwordHelp" placeholder="Password">
+                     <small id="passwordHelp" class="form-text text-muted">
+                       비밀번호를 입력해주세요.
+                     </small>
+                  </div>
+                  <div class="form-group">
+                    <label>이름<div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" th:errorclass="err"></label>
+                    <input type="text" name="firstName" th:field="*{firstName}" class="form-control" aria-describedby="firstNameHelp" placeholder="First Name">
+                    <small id="firstNameHelp" class="form-text text-muted">
+                      이름을 입력해주세요.
+                    </small>
+                  </div>
+                  <div class="form-group">
+                    <label>성<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" th:errorclass="err"></label>
+                    <input type="text" name="lastName" th:field="*{lastName}" class="form-control" aria-describedby="lastNameHelp" placeholder="Last Name">
+                    <small id="lastNameHelp" class="form-text text-muted">
+                      성을 입력해주세요.
+                    </small>
+                  </div>
+                  <button type="submit" id="submitButton"class="btn btn-black">회원가입</button>
+               </form>
+         </div>
+      </div>
+      <footer>
+      	<div th:replace="fragments.html :: footer"></div>
+      </footer>
+  </body>
+</html>

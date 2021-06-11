@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import com.gunyoung.info.security.UserAuthenticationProvider;
+import com.gunyoung.info.services.social.CustomOAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +20,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
     private UserAuthenticationProvider authenticationProvider;
+	
+	@Autowired
+	private CustomOAuth2UserService customOAuth2UserService;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -28,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 			.antMatchers("/css/**", "/js/**", "/img/**").permitAll()
 			.antMatchers("/space/makecontent/**","/space/updateprofile","/space","/space/updatecontent/**","/withdraw").hasAnyRole("USER")
+			.antMatchers("/oauth2/join").hasAnyRole("PRE")
 			.anyRequest()
 			.permitAll();
 			
@@ -35,6 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.loginPage("/login")
 			.defaultSuccessUrl("/")
 			.permitAll();
+		
+		http.oauth2Login()
+			.loginPage("/login")
+			.userInfoEndpoint()
+			.userService(customOAuth2UserService);
 			
 		http.logout()
 			.logoutSuccessUrl("/")

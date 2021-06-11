@@ -1,4 +1,4 @@
-package com.gunyoung.info.services;
+package com.gunyoung.info.services.domain;
 
 import java.util.List;
 

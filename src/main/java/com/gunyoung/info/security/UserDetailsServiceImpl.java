@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.services.PersonService;
+import com.gunyoung.info.services.domain.PersonService;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {

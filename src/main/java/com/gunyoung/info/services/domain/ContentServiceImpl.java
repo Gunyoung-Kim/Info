@@ -1,4 +1,4 @@
-package com.gunyoung.info.services;
+package com.gunyoung.info.services.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

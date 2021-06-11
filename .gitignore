@@ -15,3 +15,4 @@ target/
 
 ### application properties ###
 application.properties
+application-google.properties

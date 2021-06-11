@@ -19,9 +19,9 @@ import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.repos.SpaceRepository;
-import com.gunyoung.info.services.ContentService;
-import com.gunyoung.info.services.PersonService;
-import com.gunyoung.info.services.SpaceService;
+import com.gunyoung.info.services.domain.ContentService;
+import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.services.domain.SpaceService;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
