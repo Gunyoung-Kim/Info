@@ -1,12 +1,15 @@
 package com.gunyoung.info.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import javax.validation.Valid;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -23,10 +26,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
+import com.gunyoung.info.dto.OAuth2Join;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
@@ -122,14 +130,19 @@ public class PersonControllerTest {
 				.andExpect(view().name("index"));
 	}
 	
-	/*
-	 *  
-	 */
 	@Test
 	@DisplayName("메인 화면 페이지 (성공)")
 	public void indexPageTest() throws Exception {
 		mockMvc.perform(get("/").param("page", "1"))
 				.andExpect(view().name("index"));
+	}
+	
+	@WithMockUser(roles= {"PRE"})
+	@Test
+	@DisplayName("메인 화면 페이지 (성공- 소셜로그인했지만 아직 회원가입이 안되있을)")
+	public void indexWithPreUser() throws Exception {
+		mockMvc.perform(get("/").param("page", "1"))
+				.andExpect(redirectedUrl("/oauth2/join"));
 	}
 	
 	/*
@@ -245,6 +258,67 @@ public class PersonControllerTest {
 		assertEquals(personService.existsByEmail("second@naver.com"),true);
 	
 	}
+	
+	/* 
+	 *  - 대상 메소드: 
+	 *  	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
+	 *		public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
+	 */
+	@WithMockUser(username="test@google.com", roles= {"PRE"})
+	@Test
+	@DisplayName("소셜 로그인 회원가입 (실패-이미 회원가입 되어있는 회원의 접근)")
+	public void oAuth2JoinAlreadyJoin() throws Exception {
+		mockMvc.perform(get("/oauth2/join"))
+				.andExpect(redirectedUrl("/errorpage"));
+		
+	}
+	
+	/*
+	 *  - 대상 메소드: 
+	 *  	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
+	 * 		public ModelAndView oAuth2JoinPost(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
+	 */
+	@WithMockUser(username="none@google.com", roles= {"PRE"})
+	@Test
+	@DisplayName("소셜로그인 계정 회원가입 POST (실패- 이메일이 입력된 사항과 불일치)")
+	public void oAuth2JoinPostEmailNotMatch() throws Exception{
+		
+		long personNum = personService.countAll();
+		
+		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+		map.add("email","oAuth2JoinPostEmailNotMatch@mail.com");
+		map.add("firstName", "new");
+		map.add("lastName", "one");
+		map.add("password", "abcd1234");
+		
+		mockMvc.perform(post("/oauth2/join")
+				.params(map))
+				.andExpect(redirectedUrl("/errorpage"));
+		
+		assertEquals(personNum, personService.countAll());
+	}
+	
+	@WithMockUser(username="new@google.com" , roles= {"PRE"})
+	@Test
+	@DisplayName("소셜로그인 계정 회원가입 POST (성공)")
+	public void oAuth2JoinPostTest() throws Exception {
+		long personNum = personService.countAll();
+		
+		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+		map.add("email","new@google.com");
+		map.add("firstName", "new");
+		map.add("lastName", "one");
+		map.add("password", "abcd1234");
+		
+		mockMvc.perform(post("/oauth2/join")
+				.params(map))
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated().withRoles("USER").withUsername("new@google.com"));
+		
+		assertEquals(personNum+1,personService.countAll());
+		assertEquals(personService.existsByEmail("new@google.com"),true);
+	}
+	
 	
 	/*
 	 *  - 대상 메소드: 

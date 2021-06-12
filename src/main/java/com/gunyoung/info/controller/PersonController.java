@@ -128,13 +128,20 @@ public class PersonController {
 	 *  	- 성공: 
 	 *  	View: joinOAuth.html
 	 *  	- 실패: 
+	 *  	해당 접속자가 이미 가입되있는 사람일 경우 에러페이지 반환 -> (ver 0.0.3) 비즈니스로직 상 불가능한 케이스 
 	 */
 	
 	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
 	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav) {
+		String connectedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		if(personService.existsByEmail(connectedEmail)) {
+			return new ModelAndView("redirect:/errorpage");
+		}
+		
 		mav.setViewName("joinOAuth");
 		
-		formModel.setEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+		formModel.setEmail(connectedEmail);
 		
 		mav.addObject("formModel", formModel);
 		
@@ -148,10 +155,16 @@ public class PersonController {
 	 *  	View: redirect -> index.html
 	 *   	DB: 해당 person 추가
 	 *   	- 실패
-	 */
+	 *   	접속한 이메일과 전송된 이메일이 불일치할 때 
+	 */	
 	
 	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
 	public ModelAndView oAuth2JoinPost(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
+		String connectEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		if(!connectEmail.equals(formModel.getEmail())) {
+			return new ModelAndView("redirect:/errorpage");
+		}
 		
 		Person person = new Person();
 		person.setEmail(formModel.getEmail());

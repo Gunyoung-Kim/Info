@@ -20,8 +20,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "space")
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 public class Space {
 	
@@ -64,94 +69,5 @@ public class Space {
 	public Space() {
 		
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getModifiedAt() {
-		return modifiedAt;
-	}
-
-	public void setModifiedAt(LocalDateTime modifiedAt) {
-		this.modifiedAt = modifiedAt;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getGithub() {
-		return github;
-	}
-
-	public void setGithub(String github) {
-		this.github = github;
-	}
-
-	public String getInstagram() {
-		return instagram;
-	}
-
-	public void setInstagram(String instagram) {
-		this.instagram = instagram;
-	}
-
-	public String getTweeter() {
-		return tweeter;
-	}
-
-	public void setTweeter(String tweeter) {
-		this.tweeter = tweeter;
-	}
-
-	public String getFacebook() {
-		return facebook;
-	}
-
-	public void setFacebook(String facebook) {
-		this.facebook = facebook;
-	}
-
-	public List<Content> getContents() {
-		return contents;
-	}
-
-	public void setContents(List<Content> contents) {
-		this.contents = contents;
-	}
-
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-	
 	
 }

@@ -22,8 +22,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name="content")
+@Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 public class Content {
 	
@@ -77,112 +82,6 @@ public class Content {
 
 	public Content() {
 		
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getModifiedAt() {
-		return modifiedAt;
-	}
-
-	public void setModifiedAt(LocalDateTime modifiedAt) {
-		this.modifiedAt = modifiedAt;
-	}
-	
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getStartedAt() {
-		return startedAt;
-	}
-
-	public void setStartedAt(Date startedAt) {
-		this.startedAt = startedAt;
-	}
-
-	public Date getEndAt() {
-		return endAt;
-	}
-
-	public void setEndAt(Date endAt) {
-		this.endAt = endAt;
-	}
-
-	public String getSkillstacks() {
-		return skillstacks;
-	}
-
-	public void setSkillstacks(String skillstacks) {
-		this.skillstacks = skillstacks;
-	}
-
-	public String getContributors() {
-		return contributors;
-	}
-
-	public void setContributors(String contributors) {
-		this.contributors = contributors;
-	}
-
-	public String getLinks() {
-		return links;
-	}
-
-	public void setLinks(String links) {
-		this.links = links;
-	}
-
-	public String getContents() {
-		return contents;
-	}
-
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
-
-	public Space getSpace() {
-		return space;
-	}
-
-	public void setSpace(Space space) {
-		this.space = space;
-	}
-	
+	}	
 	
 }

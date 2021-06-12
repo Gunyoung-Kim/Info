@@ -102,11 +102,12 @@
 
 - 회원 가입 화면
 
-<img width="1440" alt="Join" src="https://user-images.githubusercontent.com/60494603/120502631-8e82a180-c3fd-11eb-8969-f413acafd575.png">
+<img width="1440" alt="join" src="https://user-images.githubusercontent.com/60494603/121712081-49095700-cb16-11eb-8f7b-c97df8682196.png">
 
 - 로그인 화면
 
-<img width="1440" alt="Info_login" src="https://user-images.githubusercontent.com/60494603/119880334-1c2a4100-bf67-11eb-9a36-0bda996bb1c6.png">
+<img width="1440" alt="login" src="https://user-images.githubusercontent.com/60494603/121712089-4c9cde00-cb16-11eb-84ad-a000338d5673.png">
+
 
 - 포트폴리오-프로필 화면
 

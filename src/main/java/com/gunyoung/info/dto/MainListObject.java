@@ -1,21 +1,11 @@
 package com.gunyoung.info.dto;
 
+import lombok.Data;
+
+@Data
 public class MainListObject {
 	private String personName;
 	private String personEmail;
-	
-	public String getPersonName() {
-		return personName;
-	}
-	public void setPersonName(String personName) {
-		this.personName = personName;
-	}
-	public String getPersonEmail() {
-		return personEmail;
-	}
-	public void setPersonEmail(String personEmail) {
-		this.personEmail = personEmail;
-	}
 	
 	public MainListObject() {
 		

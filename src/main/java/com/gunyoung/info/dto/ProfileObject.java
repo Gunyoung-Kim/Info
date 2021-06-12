@@ -5,6 +5,9 @@ import javax.validation.constraints.NotEmpty;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 
+import lombok.Data;
+
+@Data
 public class ProfileObject {
 	@NotEmpty
 	private String email;
@@ -27,55 +30,6 @@ public class ProfileObject {
 	
 	public ProfileObject() {
 		
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public String getGithub() {
-		return github;
-	}
-	public void setGithub(String github) {
-		this.github = github;
-	}
-	public String getInstagram() {
-		return instagram;
-	}
-	public void setInstagram(String instagram) {
-		this.instagram = instagram;
-	}
-	public String getTweeter() {
-		return tweeter;
-	}
-	public void setTweeter(String tweeter) {
-		this.tweeter = tweeter;
-	}
-	public String getFacebook() {
-		return facebook;
-	}
-	public void setFacebook(String facebook) {
-		this.facebook = facebook;
 	}
 	
 	public void settingByPersonAndSpace(Person person, Space space) {
