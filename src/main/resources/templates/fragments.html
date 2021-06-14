@@ -12,6 +12,10 @@
        .container {
            max-width: 100%;
        }
+
+       .noUnderLine :hover {
+         text-decoration: none;
+       }
    </style>
   </head>
   <nav th:fragment="main-nav" class="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -69,6 +73,7 @@
 <footer th:fragment="footer">
     <div class="row justify-content-center">
         <small class="d-block mb-3 text-muted">&copy; INFO 2021</small>
+        <small class="ml-3"><a class="noUnderLine" href="/privacypolicy">개인정보 처리 방침</a></small>
     </div>
 </footer>
 </html>
