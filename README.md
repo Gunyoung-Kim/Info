@@ -102,11 +102,11 @@
 
 - 회원 가입 화면
 
-<img width="1440" alt="join" src="https://user-images.githubusercontent.com/60494603/121712081-49095700-cb16-11eb-8f7b-c97df8682196.png">
+<img width="1440" alt="join" src="https://user-images.githubusercontent.com/60494603/121858668-cf4db500-cd31-11eb-84a7-3b2072a23e6e.png">
 
 - 로그인 화면
 
-<img width="1440" alt="login" src="https://user-images.githubusercontent.com/60494603/121712089-4c9cde00-cb16-11eb-84ad-a000338d5673.png">
+<img width="1440" alt="login614" src="https://user-images.githubusercontent.com/60494603/121858696-d5dc2c80-cd31-11eb-89c3-6f029807598b.png">
 
 
 - 포트폴리오-프로필 화면
@@ -276,13 +276,17 @@
  
    - 소셜 로그인 (Google) 관련 테스트 코드 추가 
 
+- ver 0.0.4 (2021.6.14)
+
+   - 개인정보 처리방침 추가 
+
+   - 개인정보 처리방침 관련 컨트롤러, 테스트 코드 추가, 템플릿 수정 
+
 ---
 
 ### To do List
 
 - 프로젝트,회원 삭제는 프론트에서 어떻게 할지 고민
-
-- 개인정보 처리 방침
 
 - 소셜 로그인 (네이버 , 카카오)
 
