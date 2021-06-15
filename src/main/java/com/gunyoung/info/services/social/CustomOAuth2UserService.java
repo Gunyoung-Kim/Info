@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.gunyoung.info.dto.OAuth2Attributes;
+import com.gunyoung.info.dto.oauth2.OAuth2Attributes;
 import com.gunyoung.info.services.domain.PersonService;
 
 @Service

@@ -1,4 +1,4 @@
-package com.gunyoung.info.dto;
+package com.gunyoung.info.dto.oauth2;
 
 import lombok.Builder;
 import lombok.Data;

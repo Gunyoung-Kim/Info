@@ -23,14 +23,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.dto.MainListObject;
-import com.gunyoung.info.dto.OAuth2Join;
+import com.gunyoung.info.dto.email.EmailDTO;
+import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.security.UserDetailsVO;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.services.email.EmailService;
+
+import lombok.Setter;
 
 @Controller
+@Setter
 public class PersonController {
+	private static final int PAGE_SIZE = 5;
 	
 	@Autowired
 	PersonService personService;
@@ -44,14 +50,16 @@ public class PersonController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	/*
+	@Autowired
+	EmailService emailService;
+	
+	/**
 	 *  - 기능: 메인 뷰 반환하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: index.html
+	 *  @author kimgun-yeong
 	 */
-	
-	private static final int PAGE_SIZE = 5;
 	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
 	public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) {
@@ -78,22 +86,24 @@ public class PersonController {
 	}
 	
 	
-	/*
+	/**
 	 *  - 기능: 로그인 뷰를 반환하는 컨트롤
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: login.html
+	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "login";
 	}
 	
-	/*
+	/**
 	 *  - 기능: 회원 가입 뷰를 반환하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: join.html
+	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join" , method = RequestMethod.GET)
 	public ModelAndView join(@ModelAttribute("formModel") Person person, ModelAndView mav) {
@@ -102,7 +112,7 @@ public class PersonController {
 		return mav;
 	}
 	
-	/*
+	/**
 	 *  - 기능: 회원 가입 처리를 하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
@@ -110,6 +120,7 @@ public class PersonController {
 	 *  	- 실패
 	 *  	이미 존재하는 이메일로 들어옴 -> 프론트에서 막았지만 뷰가 아닌 잘못된 경로로 들어올 때 대비
 	 *  	formModel이 유효성 검증(검증은 백에서 실행) 실패 
+	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join", method = RequestMethod.POST)
 	public ModelAndView joinPost(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav) {
@@ -119,16 +130,19 @@ public class PersonController {
 		
 		person.setPassword(passwordEncoder.encode(person.getPassword()));
 		personService.save(person);
+		
+		 sendEmailForJoin(person.getEmail());
 		return new ModelAndView("redirect:/");
 	}
 	
-	/*
+	/**
 	 *  - 기능: 소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반 
 	 *  - 반환:
 	 *  	- 성공: 
 	 *  	View: joinOAuth.html
 	 *  	- 실패: 
-	 *  	해당 접속자가 이미 가입되있는 사람일 경우 에러페이지 반환 -> (ver 0.0.3) 비즈니스로직 상 불가능한 케이스 
+	 *  	해당 접속자가 이미 가입되있는 사람일 경우 에러페이지 반환 -> (ver 0.0.3) 비즈니스로직 상 불가능한 케이스
+	 *  @author kimgun-yeong 
 	 */
 	
 	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
@@ -148,7 +162,7 @@ public class PersonController {
 		return mav;
 	}
 	
-	/*
+	/**
 	 *  - 기능: 소셜 로그인한 이메일 회원 가입 처리하는 컨트롤러
 	 *  - 반환:
 	 *  	 - 성공:
@@ -156,6 +170,7 @@ public class PersonController {
 	 *   	DB: 해당 person 추가
 	 *   	- 실패
 	 *   	접속한 이메일과 전송된 이메일이 불일치할 때 
+	 *   @author kimgun-yeong
 	 */	
 	
 	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
@@ -182,10 +197,12 @@ public class PersonController {
 		
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 		
+		 sendEmailForJoin(formModel.getEmail());
+		
 		return new ModelAndView("redirect:/");
 	}
 	
-	/*
+	/**
 	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
@@ -194,6 +211,7 @@ public class PersonController {
 	 *  	- 실패
 	 *  	해당 계정이 DB에 존재하지 않을 때
 	 *  	로그인 계정이 탈퇴 계정과 일치하지 않을 때
+	 *  @author kimgun-yeong
 	 */
 	
 	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
@@ -213,5 +231,17 @@ public class PersonController {
 		personService.deletePerson(personService.findByEmail(email));
 		
 		return new ModelAndView("redirect:/logout");
+	}
+	
+	private void sendEmailForJoin(String receiveMail) {
+		EmailDTO email = EmailDTO.builder()
+								 .senderMail("gun025bba@google.com")
+								 .senderName("INFO")
+								 .receiveMail(receiveMail)
+								 .subject("INFO 가입을 환영합니다.")
+								 .message("INFO 가입을 굉장히 환영합니다.")
+								 .build();
+		
+		emailService.sendEmail(email);					
 	}
 }
