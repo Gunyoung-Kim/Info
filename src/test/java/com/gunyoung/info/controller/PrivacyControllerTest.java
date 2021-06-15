@@ -19,7 +19,6 @@ public class PrivacyControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 	
-	
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/privacypolicy/{version}", method = RequestMethod.GET)
