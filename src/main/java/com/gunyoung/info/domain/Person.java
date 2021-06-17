@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.gunyoung.info.enums.RoleType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +45,10 @@ public class Person {
 	@Column(name = "person_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name="role_type")
+	@Enumerated(EnumType.STRING)
+	private RoleType role = RoleType.USER; 
 	
 	@Column(length=50)
 	@NotEmpty(message="{email.notEmpty}")

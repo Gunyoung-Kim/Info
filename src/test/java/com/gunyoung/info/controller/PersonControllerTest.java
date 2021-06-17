@@ -29,6 +29,7 @@ import org.springframework.util.MultiValueMap;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
+import com.gunyoung.info.enums.RoleType;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
@@ -249,8 +250,8 @@ public class PersonControllerTest {
 				.andExpect(redirectedUrl("/"));
 		
 		assertEquals(personNum+1,personService.countAll());
-		assertEquals(personService.existsByEmail("second@naver.com"),true);
-	
+		assertEquals(personService.existsByEmail("third@naver.com"),true);
+		assertEquals(personService.findByEmail("third@naver.com").getRole(),RoleType.USER);
 	}
 	
 	/* 

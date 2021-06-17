@@ -39,7 +39,7 @@ public class LogAspect {
 	 * @throws Throwable
 	 * @author kimgun-yeong
 	 */
-	@Around("com.gunyoung.info.aop.LogAdvice.onRequest()")
+	@Around("com.gunyoung.info.aop.LogAspect.onRequest()")
 	public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		

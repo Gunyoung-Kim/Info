@@ -36,7 +36,7 @@ import lombok.Setter;
 @Controller
 @Setter
 public class PersonController {
-	private static final int PAGE_SIZE = 5;
+	private static final int PAGE_SIZE = 10;
 	
 	@Autowired
 	PersonService personService;
@@ -208,7 +208,7 @@ public class PersonController {
 		
 		newAuthorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
 		
-		Authentication newAuth = new UsernamePasswordAuthenticationToken(new UserDetailsVO(person.getEmail(),person.getPassword()),null,newAuthorityList);
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(new UserDetailsVO(person.getEmail(),person.getPassword(),person.getRole()),null,newAuthorityList);
 		
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 		

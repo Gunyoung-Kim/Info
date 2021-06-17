@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.gunyoung.info.enums.RoleType;
+
 @SuppressWarnings("serial")
 public class UserDetailsVO implements UserDetails {
 
@@ -15,11 +17,15 @@ public class UserDetailsVO implements UserDetails {
 	
 	private Collection<? extends GrantedAuthority> authorities;
 	
-	public UserDetailsVO(String email,String password) {
+	public UserDetailsVO(String email,String password,RoleType role) {
 		this.email = email;
 		this.password = password;
-		this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+		if(role == RoleType.USER)
+			this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+		else 
+			this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
+	
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
