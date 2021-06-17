@@ -7,6 +7,11 @@ import com.gunyoung.info.domain.Space;
 
 import lombok.Data;
 
+/**
+ * Person의 일부 필드 값 + Space의 일부 필드 값 (개인 포트폴리오 정보)을 변경하기 위한 DTO 객체
+ * @author kimgun-yeong
+ *
+ */
 @Data
 public class ProfileObject {
 	@NotEmpty

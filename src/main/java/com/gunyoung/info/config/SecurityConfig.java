@@ -14,6 +14,11 @@ import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import com.gunyoung.info.security.UserAuthenticationProvider;
 import com.gunyoung.info.services.social.CustomOAuth2UserService;
 
+/**
+ * Spring Security 설정을 위한 Configuration 클래스 (WebSecurityConfigurerAdapter 상속)
+ * @author kimgun-yeong
+ *
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
@@ -51,7 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.permitAll();
 	}
 	
-	// for thymeleaf <sec:authorize>
+	
+	/**
+	 * Thymeleaf에서 <sec:authorize> 네임 스페이스 같은 확장 기능을 사용하기 위한 Bean 
+	 * @return 
+	 * @author kimgun-yeong
+	 */
 	@Bean
 	public SpringSecurityDialect springSecurityDialect() {
 		return new SpringSecurityDialect();

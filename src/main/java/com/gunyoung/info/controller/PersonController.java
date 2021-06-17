@@ -54,10 +54,13 @@ public class PersonController {
 	EmailService emailService;
 	
 	/**
+	 * <pre>
 	 *  - 기능: 메인 뷰 반환하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: index.html
+	 *  </pre>
+	 *  @param page 메인 뷰에 보여줄 리스트의 페이지 값 (default=1)
 	 *  @author kimgun-yeong
 	 */
 	
@@ -87,10 +90,12 @@ public class PersonController {
 	
 	
 	/**
+	 * <pre>
 	 *  - 기능: 로그인 뷰를 반환하는 컨트롤
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: login.html
+	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -99,10 +104,12 @@ public class PersonController {
 	}
 	
 	/**
+	 * <pre>
 	 *  - 기능: 회원 가입 뷰를 반환하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: join.html
+	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join" , method = RequestMethod.GET)
@@ -113,6 +120,7 @@ public class PersonController {
 	}
 	
 	/**
+	 * <pre>
 	 *  - 기능: 회원 가입 처리를 하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
@@ -120,6 +128,8 @@ public class PersonController {
 	 *  	- 실패
 	 *  	이미 존재하는 이메일로 들어옴 -> 프론트에서 막았지만 뷰가 아닌 잘못된 경로로 들어올 때 대비
 	 *  	formModel이 유효성 검증(검증은 백에서 실행) 실패 
+	 *  </pre>
+	 *  @param person 회원가입을 위한 Person 객체
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join", method = RequestMethod.POST)
@@ -136,12 +146,14 @@ public class PersonController {
 	}
 	
 	/**
+	 * <pre>
 	 *  - 기능: 소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반 
 	 *  - 반환:
 	 *  	- 성공: 
 	 *  	View: joinOAuth.html
 	 *  	- 실패: 
 	 *  	해당 접속자가 이미 가입되있는 사람일 경우 에러페이지 반환 -> (ver 0.0.3) 비즈니스로직 상 불가능한 케이스
+	 *  </pre>
 	 *  @author kimgun-yeong 
 	 */
 	
@@ -163,6 +175,7 @@ public class PersonController {
 	}
 	
 	/**
+	 * <pre>
 	 *  - 기능: 소셜 로그인한 이메일 회원 가입 처리하는 컨트롤러
 	 *  - 반환:
 	 *  	 - 성공:
@@ -170,6 +183,8 @@ public class PersonController {
 	 *   	DB: 해당 person 추가
 	 *   	- 실패
 	 *   	접속한 이메일과 전송된 이메일이 불일치할 때 
+	 *  </pre>
+	 *   @param formModel 소셜 로그인한 주체의 회원가입을 위한 OAuth2Join DTO 객체
 	 *   @author kimgun-yeong
 	 */	
 	
@@ -203,6 +218,7 @@ public class PersonController {
 	}
 	
 	/**
+	 * <pre>
 	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
@@ -211,6 +227,8 @@ public class PersonController {
 	 *  	- 실패
 	 *  	해당 계정이 DB에 존재하지 않을 때
 	 *  	로그인 계정이 탈퇴 계정과 일치하지 않을 때
+	 *  </pre>
+	 *  @param email 회원 탈퇴하려는 주체의 email값
 	 *  @author kimgun-yeong
 	 */
 	
@@ -233,6 +251,13 @@ public class PersonController {
 		return new ModelAndView("redirect:/logout");
 	}
 	
+	/**
+	 * 회원 가입 후 축하 이메일 전송을 위한 메소드 <br>
+	 * 회원 가입 메소드 성공 이후 실행됨 
+	 * 
+	 * @param receiveMail mail을 받을 주체의 email 주소
+	 * @author kimgun-yeong
+	 */
 	private void sendEmailForJoin(String receiveMail) {
 		EmailDTO email = EmailDTO.builder()
 								 .senderMail("gun025bba@google.com")

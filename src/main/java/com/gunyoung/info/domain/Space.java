@@ -23,6 +23,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 개인의 포트폴리오 정보를 구성하는 객체
+ * @author kimgun-yeong
+ *
+ */
 @Entity
 @Table(name = "space")
 @Getter

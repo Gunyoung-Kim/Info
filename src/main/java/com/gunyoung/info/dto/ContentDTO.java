@@ -12,6 +12,11 @@ import com.gunyoung.info.domain.Content;
 
 import lombok.Data;
 
+/**
+ * 콘텐트 내용 수정을 위한 DTO 객체
+ * @author kimgun-yeong
+ *
+ */
 @Data
 public class ContentDTO {
 	@NotEmpty

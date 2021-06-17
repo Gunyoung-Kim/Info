@@ -22,6 +22,11 @@ import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
 
+/**
+ * Space 도메인 관련 처리를 담당하는 컨트롤러 클래스 
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 public class SpaceController {
 	@Autowired
@@ -33,12 +38,15 @@ public class SpaceController {
 	@Autowired
 	ContentService contentService;
 	
-	/*
+	/**
+	 * <pre>
 	 *  - 기능: 현재 로그인되있는 사용자 본인의 포트폴리오 페이지 반환
 	 *  - 반환: 
 	 *  	- 성공
 	 *  	View: portfolio.html (현재 로그인 유저의 포트폴리오), login.html(로그인 안되있으면)
 	 *  	- 실패 
+	 *  </pre>
+	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space", method= RequestMethod.GET)
 	public ModelAndView myspace(ModelAndView mav) {
@@ -46,7 +54,8 @@ public class SpaceController {
 		return new ModelAndView("redirect:/space/"+auth.getName());
 	}
 	
-	/*
+	/**
+	 * <pre>
 	 *  - 기능: 개인 포트폴리오 페이지 반환, url에 포트폴리오 주인 이메일
 	 *  - 반환:
 	 *  	- 성공
@@ -56,6 +65,9 @@ public class SpaceController {
 	 *  		   isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부-> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
 	 *  	- 실패
 	 *  	url에 입력된 email이 DB에 없으면 실패 페이지 반환
+	 *  </pre>
+	 *  @param email 열람하려는 포트폴리오 주인의 email 값
+	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
 	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
@@ -79,7 +91,8 @@ public class SpaceController {
 		return mav;
 	}
 	
-	/*
+	/** 
+	 * <pre>
 	 *  - 기능: 현재 로그인한 유저의 프로필을 변경하기 위한 뷰를 반환하는 컨트롤러
 	 *  - 반환: 
 	 *  	- 성공
@@ -87,6 +100,8 @@ public class SpaceController {
 	 *  	Model: formModel->ProfileObject(프로필 업데이트 사항 전달을 위한 DTO객체, Person+ Space 일부필드)
 	 *  	- 실패
 	 *  	현재 로그인된 유저의 이메일이 DB에 없으면 실패 페이지 반환 -> 일어나지 않을 확률 100에 수렴
+	 *  </pre>
+	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
 	public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
@@ -109,7 +124,8 @@ public class SpaceController {
 		return mav;
 	}
 	
-	/*
+	/**
+	 * <pre>
 	 *  - 기능: updateProfile이 반환한 뷰에서 작성한 프로필 변경 사항들을 유저가 POST Request로 보내면 이를 처리하기 위한 컨트롤러
 	 * 	- 반환:
 	 * 		- 성공
@@ -118,6 +134,9 @@ public class SpaceController {
 	 * 		- 실패
 	 * 		ProfileObject의 유효성 불통과 
 	 * 	    전달된 ProfileObject에 있는 이메일이 DB에 존재하지 않을때 실패페이지 반환 -> 템플릿에서는 막음
+	 * </pre>
+	 * @param profileObject Person의 필드 및 Space의 필드 값 수정을 위한 ProfileObject DTO 객체 
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
 	public ModelAndView updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject, ModelAndView mav) {

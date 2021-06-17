@@ -13,6 +13,11 @@ import com.gunyoung.info.dto.MainListObject;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
 
+/**
+ * 브라우저와 Ajax 통신을 위한 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 public class RestfulController {
 	@Autowired
@@ -21,10 +26,13 @@ public class RestfulController {
 	@Autowired
 	SpaceService spaceService;
 	
-	/*
+	/**
+	 * <pre>
 	 *  - 기능: main 화면에서 노출할 리스트를 반환하는 컨트롤러
 	 *  - 반환:
 	 *  	List<MainObject>, MainObject(DTO 객체) -> Person.fullname + Person.email
+	 *  </pre>
+	 *  @author kimgun-yeong
 	 */
 	
 	@GetMapping("/main/list")
@@ -40,10 +48,14 @@ public class RestfulController {
 		return result;
 	}
 	
-	/*
+	/**
+	 * <pre>
 	 *  - 기능: 회원가입할때 Email 중복 여부 반환하는 컨트롤러
 	 *  - 반환: 
 	 *  	True or False
+	 *  </pre>
+	 *  @param email 중복여부를 확인하려는 email 값
+	 *  @author kimgun-yeong
 	 */
 	@GetMapping("/join/emailverification")
 	public String emailVerification(@RequestParam("email") String email) {

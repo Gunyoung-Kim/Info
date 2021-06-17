@@ -25,6 +25,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 개인의 포트폴리오를 구성하는 '프로젝트'를 의미하는 객체
+ * @author kimgun-yeong
+ *
+ */
 @Entity
 @Table(name="content")
 @Setter

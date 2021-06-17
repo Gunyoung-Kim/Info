@@ -25,6 +25,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 본 서비스 이용하는 회원을 의미하는 객체
+ * @author kimgun-yeong
+ *
+ */
 @Entity
 @Getter
 @Setter
