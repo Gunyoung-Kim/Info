@@ -65,14 +65,21 @@ public class PersonController {
 	 */
 	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
-	public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) {
+	public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword, ModelAndView mav) {
 		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"))) {
 			return new ModelAndView("redirect:/oauth2/join");
 		}
 		
-		Page<Person> pageResult = personService.getAllInPage(page);
-		long totalPageNum = personService.countAll()/PAGE_SIZE +1;
-		
+		Page<Person> pageResult;
+		long totalPageNum;
+
+		if(keyword != null) {
+			pageResult = personService.findByNameKeywordInPage(keyword);
+			totalPageNum = personService.countWithNameKeyword(keyword)/PAGE_SIZE +1;
+		} else {
+			pageResult = personService.getAllInPage(page);
+			totalPageNum = personService.countAll()/PAGE_SIZE +1;
+		}
 		List<MainListObject> resultList = new LinkedList<>();
 		
 		for(Person p : pageResult) {
@@ -87,7 +94,6 @@ public class PersonController {
 		
 		return mav;
 	}
-	
 	
 	/**
 	 * <pre>

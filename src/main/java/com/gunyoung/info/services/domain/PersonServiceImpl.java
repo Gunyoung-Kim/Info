@@ -66,12 +66,36 @@ public class PersonServiceImpl implements PersonService {
 	public long countAll() {
 		return personRepository.count();
 	}
+	
+	@Override
+	public long countWithNameKeyword(String keyword) {
+		return personRepository.countWithNameKeyword(keyword);
+	}
+	
 
 	@Override
 	public Page<Person> getAllInPage(Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1 , PAGE_SIZE);
 		return personRepository.findAll(pageRequest);
 	}
-	
+
+	@Override
+	public Page<Person> getAllOrderByCreatedAtDescInPage(Integer pageNumber) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, PAGE_SIZE);
+		return personRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+	}
+
+	@Override
+	public Page<Person> getAllOrderByCreatedAtAscInPage(Integer pageNumber) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, PAGE_SIZE);
+		return personRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+	}
+
+	@Override
+	public Page<Person> findByNameKeywordInPage(String keyword) {
+		PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
+		return personRepository.getByNameWithKeyword(keyword, pageRequest);
+	}
+
 	
 }

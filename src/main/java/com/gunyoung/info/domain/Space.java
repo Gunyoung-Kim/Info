@@ -65,7 +65,7 @@ public class Space {
 	@Column
 	private String facebook = ""; 
 	
-	@OneToMany(mappedBy="space", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="space",cascade=CascadeType.ALL)
 	private List<Content> contents = new ArrayList<>();
 	
 	@OneToOne(mappedBy="space")

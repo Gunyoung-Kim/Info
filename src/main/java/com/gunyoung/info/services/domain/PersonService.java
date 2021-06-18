@@ -15,5 +15,9 @@ public interface PersonService {
 	public Person findByEmail(String email);
 	public boolean existsByEmail(String email);
 	public long countAll();
+	public long countWithNameKeyword(String keyword);
 	public Page<Person> getAllInPage(Integer pageNumber);
+	public Page<Person> getAllOrderByCreatedAtDescInPage(Integer pageNumber);
+	public Page<Person> getAllOrderByCreatedAtAscInPage(Integer pageNumber);
+	public Page<Person> findByNameKeywordInPage(String keyword);
 }

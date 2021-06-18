@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -342,14 +341,20 @@ public class PersonControllerTest {
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
+	@Transactional
 	@DisplayName("회원탈퇴 DELETE (성공)")
 	public void personWithdrawTest() throws Exception {
+		Person person = personService.findByEmail("test@google.com");
+		Space space = person.getSpace();
+		Long spaceId = space.getId();
+		Content content = space.getContents().get(0);
+		Long contentId = content.getId();
 		mockMvc.perform(delete("/withdraw")
 				.param("email", "test@google.com"))
 				.andExpect(redirectedUrl("/logout"));
 		
 		assertEquals(personService.existsByEmail("test@google.com"),false);
-		assertEquals(spaceService.existsById(Long.valueOf(1)),false);
-		assertEquals(contentService.existsById(Long.valueOf(1)),false);
+		assertEquals(spaceService.existsById(spaceId),false);
+		assertEquals(contentService.existsById(contentId),false);
 	}
 }

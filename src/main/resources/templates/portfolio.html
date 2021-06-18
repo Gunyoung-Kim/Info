@@ -47,10 +47,18 @@
             </div>
             <p class="lead mb-5" th:text="*{description}">개인 정보 수정에서 자기 소개글을 입력해주세요.</p>
             <div class="social-icons">
-                <a class="social-icon" th:href="@{*{instagram}}"><i class="fab fa-linkedin-in"></i></a>
-                <a class="social-icon" th:href="@{*{github}}"><i class="fab fa-github"></i></a>
-                <a class="social-icon" th:href="@{*{tweeter}}"><i class="fab fa-twitter"></i></a>
-                <a class="social-icon" th:href="@{*{facebook}}"><i class="fab fa-facebook-f"></i></a>
+                <span th:unless="*{instagram} == ''">
+                  <a class="social-icon" th:href="@{*{instagram}}"><i class="fab fa-linkedin-in"></i></a>
+                </span>
+                <span th:unless="*{github} == ''">
+                  <a class="social-icon" th:href="@{*{github}}"><i class="fab fa-github"></i></a>
+                </span>
+                <span th:unless="*{tweeter} == ''">
+                  <a class="social-icon" th:href="@{*{tweeter}}"><i class="fab fa-twitter"></i></a>
+                </span>
+                <span th:unless="*{facebook} == ''">
+                  <a class="social-icon" th:href="@{*{facebook}}"><i class="fab fa-facebook-f"></i></a>
+                </span>
             </div>
           </div>
         </section>

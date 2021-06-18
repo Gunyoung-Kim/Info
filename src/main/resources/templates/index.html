@@ -1,10 +1,7 @@
 <!doctype html>
 <html>
-<head th:replace="fragments.html :: head"></head>
-<body>
-<header>
-  <div th:replace="fragments.html :: main-nav"></div>
-  <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css">
+<head th:include="fragments.html :: head"></head>
+<head>
   <style media="screen">
   .pagination {
     display: inline-block;
@@ -16,12 +13,35 @@
   padding: 8px 16px;
   text-decoration: none;
   }
+
+    .main_container {
+      width:90%;
+      margin: 30px auto;
+    }
+
+  .search {
+    float: right;
+  }
+
   </style>
+</head>
+<body>
+<header>
+  <div th:replace="fragments.html :: main-nav"></div>
 </header>
+
+
 <div id="main-title" class="py-5 text-center">
   <h2>INFO</h2>
 </div>
+<div class="main_container">
 <div class="justify-content-center">
+  <div class="search">
+    <form class="mb-3" action="/" method="get">
+      <input type="text" name="keyword" placeholder="이름 검색">
+      <input type="submit" name="" value="검색">
+    </form>
+  </div>
   <table class="table table-striped text-center">
       <thead>
       <tr>
@@ -61,6 +81,7 @@
       </ul>
     </nav>
   </div>
+</div>
 </div>
 </body>
 <footer>
