@@ -107,7 +107,7 @@ public class SpaceServiceTest {
 	@DisplayName("Space save (성공)")
 	public void saveSpaceTest() {
 		// space 수정 사항 반영
-		Person person = personRepository.getByEmail("test@google.com");
+		Person person = personRepository.findByEmail("test@google.com").get();
 		Space space = person.getSpace();
 		Long spaceId = space.getId();
 		

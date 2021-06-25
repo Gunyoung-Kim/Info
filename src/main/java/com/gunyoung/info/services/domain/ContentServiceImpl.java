@@ -1,5 +1,7 @@
 package com.gunyoung.info.services.domain;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,10 @@ public class ContentServiceImpl implements ContentService{
 	@Override
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
-		return contentRepository.getById(id);
+		 Optional<Content> result = contentRepository.findById(id);
+		 if(result.isEmpty()) 
+			 return null;
+		 return result.get();
 	}
 
 	@Override
@@ -49,11 +54,13 @@ public class ContentServiceImpl implements ContentService{
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public long countAll() {
 		return contentRepository.count();
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public boolean existsById(Long id) {
 		return contentRepository.existsById(id);
 	}

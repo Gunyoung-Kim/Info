@@ -107,7 +107,7 @@ public class ContentServiceTest {
 	@DisplayName("Content Save (성공)") 
 	public void saveContentTest() {
 		// 컨텐트 수정
-		Person person = personRepository.getByEmail("test@google.com");
+		Person person = personRepository.findByEmail("test@google.com").get();
 		Space space = person.getSpace();
 		Content content = space.getContents().get(0);
 		

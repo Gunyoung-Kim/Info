@@ -1,6 +1,7 @@
 package com.gunyoung.info.repos;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import com.gunyoung.info.domain.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long>{
-	public Person getByEmail(String email);
+	public Optional<Person> findByEmail(String email);
 	public List<Person> findAllByOrderByCreatedAtDesc();
 	public List<Person> findAllByOrderByCreatedAtAsc();
 	public boolean existsByEmail(String email);

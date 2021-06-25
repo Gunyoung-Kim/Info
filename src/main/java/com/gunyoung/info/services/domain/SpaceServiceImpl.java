@@ -1,6 +1,7 @@
 package com.gunyoung.info.services.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,14 +23,17 @@ public class SpaceServiceImpl implements SpaceService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<Space> getAll() {
+	public List<Space> findAll() {
 		return spaceRepository.findAll();
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public Space findById(Long id) {
-		return spaceRepository.getById(id);
+		Optional<Space> result = spaceRepository.findById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
 	}
 
 	@Override
@@ -38,6 +42,7 @@ public class SpaceServiceImpl implements SpaceService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public boolean existsById(Long id) {
 		return spaceRepository.existsById(id);
 	}

@@ -1,6 +1,7 @@
 package com.gunyoung.info.services.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,10 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmail(String email) {
-		return personRepository.getByEmail(email);
+		Optional<Person> result = personRepository.findByEmail(email);
+		if(result.isEmpty()) 
+			return null;
+		return result.get();
 	}
 
 	@Override

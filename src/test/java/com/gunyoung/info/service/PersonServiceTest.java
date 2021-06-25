@@ -115,7 +115,7 @@ public class PersonServiceTest {
 		long num = personRepository.count();
 		
 		// 기존의 정보 수정
-		Person person = personRepository.getByEmail("test@google.com");
+		Person person = personRepository.findByEmail("test@google.com").get();
 		
 		int version = person.getVersion();
 		
@@ -125,8 +125,8 @@ public class PersonServiceTest {
 		
 		personService.save(person);
 		
-		assertEquals(personRepository.getByEmail("test@google.com").getFirstName(),"new");
-		assertEquals(version+1,personRepository.getByEmail("test@google.com").getVersion());
+		assertEquals(personRepository.findByEmail("test@google.com").get().getFirstName(),"new");
+		assertEquals(version+1,personRepository.findByEmail("test@google.com").get().getVersion());
 		assertEquals(num,personRepository.count());
 		
 		// 신규 데이터 추가
@@ -168,7 +168,7 @@ public class PersonServiceTest {
 	public void deletePersonTest() {
 		long num = personRepository.count();
 		long spaceNum = spaceRepository.count();
-		Person person = personRepository.getByEmail("test@google.com");
+		Person person = personRepository.findByEmail("test@google.com").get();
 		
 		personService.deletePerson(person);
 		
