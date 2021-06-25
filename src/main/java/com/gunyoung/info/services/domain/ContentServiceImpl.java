@@ -25,7 +25,7 @@ public class ContentServiceImpl implements ContentService{
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
 		 Optional<Content> result = contentRepository.findById(id);
-		 if(result.isEmpty()) 
+		 if(!result.isPresent()) 
 			 return null;
 		 return result.get();
 	}

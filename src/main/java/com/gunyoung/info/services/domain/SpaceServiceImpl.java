@@ -31,7 +31,7 @@ public class SpaceServiceImpl implements SpaceService {
 	@Transactional(readOnly=true)
 	public Space findById(Long id) {
 		Optional<Space> result = spaceRepository.findById(id);
-		if(result.isEmpty())
+		if(!result.isPresent())
 			return null;
 		return result.get();
 	}

@@ -302,6 +302,12 @@
 
    - 메인 화면에 이름으로 사용자 검색 기능 추가 
 
+- ver 0.0.8 (2021.6.25)
+ 
+   - 모든 Entity read method getBy** -> findBy** 로 변경 
+
+   - 포트폴리오 화면에 sns 버튼 target="_blank" attribute 추가 
+
 ---
 
 ### To do List
