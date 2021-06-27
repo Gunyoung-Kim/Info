@@ -30,7 +30,7 @@
 
 ## 코드 배포 구조 
 
-![info_deploy_structure_2](https://user-images.githubusercontent.com/60494603/121388460-7921f000-c986-11eb-820c-0dd44783fc6f.png)
+![info_deploy_structure2](https://user-images.githubusercontent.com/60494603/123542037-624f0c00-d782-11eb-9519-cce022414f5e.png)
 
 ---
 
