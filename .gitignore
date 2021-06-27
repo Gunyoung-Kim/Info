@@ -16,3 +16,5 @@ target/
 ### application properties ###
 application.properties
 application-google.properties
+application-server1.properties
+application-server2.properties

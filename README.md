@@ -24,7 +24,7 @@
 
    - Test: H2
    
-- 접속 URL : [INFO](http://www.info-gun.net:8080/)
+- 접속 URL : [INFO](http://www.info-gun.net)
 
 ---
 
@@ -308,6 +308,11 @@
 
    - 포트폴리오 화면에 sns 버튼 target="_blank" attribute 추가 
 
+- ver 0.0.9 (2021.6.27)
+
+   - ec2 인스턴스에 nginx 설치 -> 리버스 프록시 구현 
+
+   - 무중단 배포로의 변경
 ---
 
 ### To do List
@@ -319,5 +324,3 @@
 - ssl
 
 - 구글 ad 추가 
-
-- 무중단 배포로의 변경.
