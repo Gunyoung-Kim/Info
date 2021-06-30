@@ -1,6 +1,7 @@
 package com.gunyoung.info.aop;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,13 +52,16 @@ public class LogAspect {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
 		
+		// Nginx 리버스 프록시 추가로 인해 추가된 코드
+		String remoteHost = Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteHost());
+		
 		long start = System.currentTimeMillis();
 		
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
 			long end = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, request.getRemoteHost(), end- start);
+			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, end- start);
 		}
 	}
 	

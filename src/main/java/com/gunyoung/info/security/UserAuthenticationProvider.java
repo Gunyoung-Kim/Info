@@ -2,11 +2,13 @@ package com.gunyoung.info.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +16,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	
 	@Autowired
 	UserDetailsService userDetailService;
-
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	/*
 	 *  인자로 전해지는 authentication에는 사용자의 로그인 폼에서 입력값을 나타낸다.
@@ -22,10 +26,15 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		 String email = authentication.getName();
+		 String password = (String) authentication.getCredentials();
 	     
-	     UserDetails authenticateResult= userDetailService.loadUserByUsername(email);
+	     UserDetails userDetailsFromDB= userDetailService.loadUserByUsername(email);
 	     
-	     return new UsernamePasswordAuthenticationToken(authenticateResult, null, authenticateResult.getAuthorities());
+	     if(!passwordEncoder.matches(password, userDetailsFromDB.getPassword())) {
+	    	 throw new BadCredentialsException(email);
+	     }
+	     
+	     return new UsernamePasswordAuthenticationToken(userDetailsFromDB.getUsername(), userDetailsFromDB.getPassword(), userDetailsFromDB.getAuthorities());
 	}
 
 	@Override

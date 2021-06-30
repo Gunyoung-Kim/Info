@@ -24,11 +24,13 @@
 
    - Test: H2
    
-- 접속 URL : [INFO](http://www.info-gun.net)
+- 접속 URL : [INFO](https://www.info-gun.net)
 
 ---
 
 ## 코드 배포 구조 
+
+무중단 자동 배포 
 
 ![info_deploy_structure2](https://user-images.githubusercontent.com/60494603/123542037-624f0c00-d782-11eb-9519-cce022414f5e.png)
 
@@ -208,7 +210,7 @@
 
 1. DbConfig 삭제 -> DB 연결 정보 application.properties로 이동
 
-2. Test 용 데이터베이스 설정 분리 -> application-test.properties, h2 임베디드 데이터베잇 사용
+2. Test 용 데이터베이스 설정 분리 -> application-test.properties, h2 임베디드 데이터베이스 사용
 
 3. ContentController- deleteContent 실패 처리 코드 추가
 
@@ -242,7 +244,7 @@
 
 1. 개인 프로젝트 개수 제한 - 최대 50개
 
-2. 도메인 네임 등록 (www.info-gun.net:8080)
+2. 도메인 네임 등록 (www.info-gun.net)
 
 ### 2021.6.8
 
@@ -313,6 +315,14 @@
    - ec2 인스턴스에 nginx 설치 -> 리버스 프록시 구현 
 
    - 무중단 배포로의 변경
+
+- ver 0.0.10 (2021.6.30)
+
+   - nginx 추가로 인한 로그 기록 속 접속자 IP주소 획일화 타파
+
+   - 유저 권한 계층 추가
+
+   - ssl 추가 
 ---
 
 ### To do List
@@ -320,7 +330,5 @@
 - 프로젝트,회원 삭제는 프론트에서 어떻게 할지 고민
 
 - 소셜 로그인 (네이버 , 카카오)
-
-- ssl
 
 - 구글 ad 추가 
