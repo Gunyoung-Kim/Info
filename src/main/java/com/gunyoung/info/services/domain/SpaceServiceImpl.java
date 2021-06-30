@@ -3,7 +3,6 @@ package com.gunyoung.info.services.domain;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,15 +10,16 @@ import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.SpaceRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("spaceService")
 @Transactional
+@RequiredArgsConstructor
 public class SpaceServiceImpl implements SpaceService {
 	
-	@Autowired
-	SpaceRepository spaceRepository;
+	private final SpaceRepository spaceRepository;
 	
-	@Autowired 
-	ContentService contentService;
+	private final ContentService contentService;
 
 	@Override
 	@Transactional(readOnly=true)

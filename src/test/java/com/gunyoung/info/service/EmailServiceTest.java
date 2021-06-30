@@ -19,11 +19,8 @@ public class EmailServiceTest {
 	 */
 	@Test
 	public void sendEmailTest() {
-		EmailServiceImpl emailServiceImpl = new EmailServiceImpl();
-		
 		JavaMailSender mockMailSender = mock(JavaMailSender.class);
-		
-		emailServiceImpl.setMailSender(mockMailSender);
+		EmailServiceImpl emailServiceImpl = new EmailServiceImpl(mockMailSender);
 		
 		EmailDTO email = EmailDTO.builder()
 								 .senderMail("test@google.com")

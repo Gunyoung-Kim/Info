@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
@@ -25,6 +25,8 @@ import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import com.gunyoung.info.security.UserAuthenticationProvider;
 import com.gunyoung.info.services.social.CustomOAuth2UserService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Spring Security 설정을 위한 Configuration 클래스 (WebSecurityConfigurerAdapter 상속)
  * @author kimgun-yeong
@@ -32,13 +34,13 @@ import com.gunyoung.info.services.social.CustomOAuth2UserService;
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	@Autowired
-    private UserAuthenticationProvider authenticationProvider;
+	private final UserDetailsService userDetailsService;
 	
-	@Autowired
-	private CustomOAuth2UserService customOAuth2UserService;
+	
+	private final CustomOAuth2UserService customOAuth2UserService;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -102,10 +104,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return new SpringSecurityDialect();
 	}
 	
+	@Bean
+	public UserAuthenticationProvider authenticationProvider() {
+		return new UserAuthenticationProvider(userDetailsService,passwordEncoder());
+	}
+	
 	
 	@Override 
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		 auth.authenticationProvider(authenticationProvider);
+		 auth.authenticationProvider(authenticationProvider());
 	}
 	
 	

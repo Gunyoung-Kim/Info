@@ -2,7 +2,6 @@ package com.gunyoung.info.services.social;
 
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -15,11 +14,13 @@ import org.springframework.stereotype.Service;
 import com.gunyoung.info.dto.oauth2.OAuth2Attributes;
 import com.gunyoung.info.services.domain.PersonService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User>{
 
-	@Autowired
-	PersonService personService;
+	private final PersonService personService;
 	
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

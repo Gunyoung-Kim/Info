@@ -1,6 +1,5 @@
 package com.gunyoung.info.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,16 +8,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-@Component
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class UserAuthenticationProvider implements AuthenticationProvider {
 	
-	@Autowired
-	UserDetailsService userDetailService;
+	private final UserDetailsService userDetailService;
 	
-	@Autowired
-	PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	
 	/*
 	 *  인자로 전해지는 authentication에는 사용자의 로그인 폼에서 입력값을 나타낸다.

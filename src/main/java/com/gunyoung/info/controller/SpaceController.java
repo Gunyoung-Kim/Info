@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,9 +17,9 @@ import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.ProfileObject;
-import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
-import com.gunyoung.info.services.domain.SpaceService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Space 도메인 관련 처리를 담당하는 컨트롤러 클래스 
@@ -28,15 +27,10 @@ import com.gunyoung.info.services.domain.SpaceService;
  *
  */
 @Controller
+@RequiredArgsConstructor
 public class SpaceController {
-	@Autowired
-	PersonService personService;
 	
-	@Autowired
-	SpaceService spaceService;
-	
-	@Autowired
-	ContentService contentService;
+	private final PersonService personService;
 	
 	/**
 	 * <pre>

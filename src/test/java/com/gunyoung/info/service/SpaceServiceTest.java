@@ -2,9 +2,6 @@ package com.gunyoung.info.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
-import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.services.domain.ContentService;
@@ -26,17 +22,12 @@ import com.gunyoung.info.services.domain.SpaceService;
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 public class SpaceServiceTest {
-	@Autowired 
+	
+	@Autowired
 	PersonRepository personRepository;
 	
-	@Autowired 
-	ContentRepository contentRepository;
-	
-	@Autowired 
+	@Autowired
 	SpaceRepository spaceRepository;
-	
-	@PersistenceContext
-	EntityManager em;
 	
 	@Autowired
 	PersonService personService;
@@ -44,7 +35,7 @@ public class SpaceServiceTest {
 	@Autowired
 	ContentService contentService;
 	
-	@Autowired 
+	@Autowired
 	SpaceService spaceService;
 	
 	@BeforeEach

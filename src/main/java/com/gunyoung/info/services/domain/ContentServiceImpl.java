@@ -2,19 +2,20 @@ package com.gunyoung.info.services.domain;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.repos.ContentRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("contentService")
 @Transactional
+@RequiredArgsConstructor
 public class ContentServiceImpl implements ContentService{
 
-	@Autowired
-	ContentRepository contentRepository;
+	private final ContentRepository contentRepository;
 	
 	@Override
 	public Content save(Content content) {

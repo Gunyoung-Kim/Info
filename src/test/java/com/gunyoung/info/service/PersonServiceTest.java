@@ -2,9 +2,6 @@ package com.gunyoung.info.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,17 +24,15 @@ import com.gunyoung.info.services.domain.SpaceService;
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 public class PersonServiceTest {
-	@Autowired 
+	
+	@Autowired
 	PersonRepository personRepository;
 	
-	@Autowired 
+	@Autowired
 	ContentRepository contentRepository;
 	
-	@Autowired 
+	@Autowired
 	SpaceRepository spaceRepository;
-	
-	@PersistenceContext
-	EntityManager em;
 	
 	@Autowired
 	PersonService personService;
@@ -45,7 +40,7 @@ public class PersonServiceTest {
 	@Autowired
 	ContentService contentService;
 	
-	@Autowired 
+	@Autowired
 	SpaceService spaceService;
 	
 	@BeforeEach

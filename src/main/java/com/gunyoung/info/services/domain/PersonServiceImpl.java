@@ -3,7 +3,6 @@ package com.gunyoung.info.services.domain;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -12,17 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.repos.PersonRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("personService")
 @Transactional
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 	
 	private static final int PAGE_SIZE = 10;
 	
-	@Autowired
-	PersonRepository personRepository;
-	
-	@Autowired 
-	SpaceService spaceService;
+	private final PersonRepository personRepository;
 
 	@Override
 	@Transactional(readOnly=true)

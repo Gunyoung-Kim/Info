@@ -31,7 +31,8 @@ import com.gunyoung.info.services.domain.SpaceService;
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
 public class RestfulControllerTest {
-	@Autowired 
+	
+	@Autowired
 	MockMvc mockMvc;
 	
 	@Autowired

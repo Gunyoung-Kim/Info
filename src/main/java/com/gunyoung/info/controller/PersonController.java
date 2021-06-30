@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,32 +25,23 @@ import com.gunyoung.info.dto.MainListObject;
 import com.gunyoung.info.dto.email.EmailDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.security.UserDetailsVO;
-import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
-import com.gunyoung.info.services.domain.SpaceService;
 import com.gunyoung.info.services.email.EmailService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Controller
 @Setter
+@RequiredArgsConstructor
 public class PersonController {
 	private static final int PAGE_SIZE = 10;
 	
-	@Autowired
-	PersonService personService;
+	private final PersonService personService;
 	
-	@Autowired
-	SpaceService spaceService;
+	private final PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	ContentService contentService;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	EmailService emailService;
+	private final EmailService emailService;
 	
 	/**
 	 * <pre>

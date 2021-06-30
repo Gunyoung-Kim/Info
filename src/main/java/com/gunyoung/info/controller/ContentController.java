@@ -2,7 +2,6 @@ package com.gunyoung.info.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,21 +19,24 @@ import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Content 도메인 관련 Request들을 처리하는 컨트롤러
  * @author kimgun-yeong
  *
  */
 @Controller
+@RequiredArgsConstructor
 public class ContentController {
-	@Autowired
-	PersonService personService;
 	
-	@Autowired
-	SpaceService spaceService;
+	private final PersonService personService;
 	
-	@Autowired
-	ContentService contentService;
+	
+	private final SpaceService spaceService;
+	
+	
+	private final ContentService contentService;
 	
 	public static final int MAX_CONTENT_NUM = 50;
 	

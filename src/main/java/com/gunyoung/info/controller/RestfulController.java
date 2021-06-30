@@ -3,7 +3,6 @@ package com.gunyoung.info.controller;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.dto.MainListObject;
 import com.gunyoung.info.services.domain.PersonService;
-import com.gunyoung.info.services.domain.SpaceService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * 브라우저와 Ajax 통신을 위한 컨트롤러
@@ -19,12 +19,10 @@ import com.gunyoung.info.services.domain.SpaceService;
  *
  */
 @RestController
+@RequiredArgsConstructor
 public class RestfulController {
-	@Autowired
-	PersonService personService;
 	
-	@Autowired
-	SpaceService spaceService;
+	private final PersonService personService;
 	
 	/**
 	 * <pre>
