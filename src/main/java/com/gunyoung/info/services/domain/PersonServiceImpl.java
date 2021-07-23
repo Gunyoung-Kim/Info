@@ -96,7 +96,7 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public Page<Person> findByNameKeywordInPage(String keyword) {
 		PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
-		return personRepository.getByNameWithKeyword(keyword, pageRequest);
+		return personRepository.findByNameWithKeyword(keyword, pageRequest);
 	}
 
 	

@@ -77,7 +77,7 @@ public class Person {
 	@Column
 	private String lastName;
 	
-	@OneToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL , orphanRemoval = true)
+	@OneToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL , orphanRemoval = true)
 	@JoinColumn(name="space_id")
 	private Space space;
 	

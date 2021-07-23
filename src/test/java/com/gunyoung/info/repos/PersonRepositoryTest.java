@@ -66,7 +66,7 @@ public class PersonRepositoryTest {
 		List<Person> resultList;
 		
 		System.out.println("asdd");
-		resultList = personRepository.getByNameWithKeyword(INPUT_NUMBER + "번째", getPageRequest(1)).getContent();
+		resultList = personRepository.findByNameWithKeyword(INPUT_NUMBER + "번째", getPageRequest(1)).getContent();
 		
 		assertEquals(resultList.size(),1);
 	}
@@ -80,7 +80,7 @@ public class PersonRepositoryTest {
 	public void getByNameWithKeywordTestLike() {
 		List<Person> resultList;
 		
-		resultList = personRepository.getByNameWithKeyword("번째",getPageRequest(1)).getContent();
+		resultList = personRepository.findByNameWithKeyword("번째",getPageRequest(1)).getContent();
 		
 		assertEquals(resultList.size(),PAGE_SIZE);
 	}

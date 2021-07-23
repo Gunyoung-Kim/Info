@@ -30,7 +30,7 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	@Query(value="select p from Person p "
 			+ "where p.firstName like %:keyword% "
 			+ "or p.lastName like %:keyword% ")
-	public Page<Person> getByNameWithKeyword(@Param("keyword") String keyword,Pageable pageable);
+	public Page<Person> findByNameWithKeyword(@Param("keyword") String keyword,Pageable pageable);
 	
 	
 	/**
