@@ -104,18 +104,18 @@ public class SpaceController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		
-		if(!personService.existsByEmail(email)) {
+		Person person = personService.findByEmailWithSpace(email);
+		
+		if(person == null) {
 			return new ModelAndView("redirect:/errorpage");
 		}
 		
-		Person person = personService.findByEmail(email);
-		
-		mav.setViewName("updateProfile");
 		Space space = person.getSpace();
 		
 		profileObject.settingByPersonAndSpace(person, space);
-		
 		mav.addObject("formModel", profileObject);
+		
+		mav.setViewName("updateProfile");
 		
 		return mav;
 	}
