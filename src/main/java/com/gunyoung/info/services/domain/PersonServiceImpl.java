@@ -52,6 +52,15 @@ public class PersonServiceImpl implements PersonService {
 			return null;
 		return result.get();
 	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public Person findByEmailWithSpace(String email) {
+		Optional<Person> result = personRepository.findByEmailWithSpace(email);
+		if(!result.isPresent()) 
+			return null;
+		return result.get();
+	}
 
 	@Override
 	@Transactional(readOnly=true)
@@ -98,6 +107,5 @@ public class PersonServiceImpl implements PersonService {
 		PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
 		return personRepository.findByNameWithKeyword(keyword, pageRequest);
 	}
-
 	
 }

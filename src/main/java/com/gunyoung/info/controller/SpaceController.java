@@ -65,22 +65,24 @@ public class SpaceController {
 	 */
 	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
 	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
-		if(!personService.existsByEmail(email)) {
+		Person person = personService.findByEmailWithSpace(email);
+		
+		if(person == null) {
 			return new ModelAndView("redirect:/errorpage");
 		}
-		
-		Person person = personService.findByEmail(email);
-		mav.setViewName("portfolio");
 		
 		Space space = person.getSpace();
 		ProfileObject profile = new ProfileObject();
 		profile.settingByPersonAndSpace(person, space);
 		mav.addObject("profile", profile);
+		
 		List<Content> contents = space.getContents();
 		mav.addObject("contents",contents);
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		mav.addObject("isHost", email.equals(auth.getName()));
+		
+		mav.setViewName("portfolio");
 		
 		return mav;
 	}

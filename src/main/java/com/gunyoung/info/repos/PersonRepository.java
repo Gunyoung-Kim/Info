@@ -13,6 +13,12 @@ import com.gunyoung.info.domain.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long>{
 	public Optional<Person> findByEmail(String email);
+	
+	@Query(value="SELECT p FROM Person p "
+			+ "INNER JOIN FETCH p.space s "
+			+ "WHERE p.email = :email")
+	public Optional<Person> findByEmailWithSpace(@Param("email")String email);
+	
 	public List<Person> findAllByOrderByCreatedAtDesc();
 	public List<Person> findAllByOrderByCreatedAtAsc();
 	public boolean existsByEmail(String email);
