@@ -136,13 +136,10 @@ public class SpaceController {
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
 	public ModelAndView updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject, ModelAndView mav) {
-		if(!personService.existsByEmail(profileObject.getEmail())) {
+		Person person = personService.findByEmailWithSpace(profileObject.getEmail());
+		if(person == null) {
 			return new ModelAndView("redirect:/errorpage");
 		}
-		
-		Person person = personService.findByEmail(profileObject.getEmail());
-		
-		mav.setViewName("updateProfile");
 		
 		person.setFirstName(profileObject.getFirstName());
 		person.setLastName(profileObject.getLastName());
