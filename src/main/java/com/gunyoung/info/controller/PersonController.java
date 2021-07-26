@@ -24,6 +24,10 @@ import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.dto.MainListObject;
 import com.gunyoung.info.dto.email.EmailDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
+import com.gunyoung.info.error.code.PersonErrorCode;
+import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
+import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
+import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.security.UserDetailsVO;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.email.EmailService;
@@ -121,17 +125,15 @@ public class PersonController {
 	 *  - 반환:
 	 *  	- 성공
 	 * 		View: join.html 
-	 *  	- 실패
-	 *  	이미 존재하는 이메일로 들어옴 -> 프론트에서 막았지만 뷰가 아닌 잘못된 경로로 들어올 때 대비
-	 *  	formModel이 유효성 검증(검증은 백에서 실행) 실패 
 	 *  </pre>
 	 *  @param person 회원가입을 위한 Person 객체
+	 *  @throws PersonDuplicateException 이미 존재하는 이메일로 회원가입 시도시 발생
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join", method = RequestMethod.POST)
 	public ModelAndView joinPost(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav) {
 		if(personService.existsByEmail(person.getEmail())) {
-			return new ModelAndView("redirect:/errorpage"); 
+			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		};
 		
 		person.setPassword(passwordEncoder.encode(person.getPassword()));
@@ -147,9 +149,8 @@ public class PersonController {
 	 *  - 반환:
 	 *  	- 성공: 
 	 *  	View: joinOAuth.html
-	 *  	- 실패: 
-	 *  	해당 접속자가 이미 가입되있는 사람일 경우 에러페이지 반환 -> (ver 0.0.3) 비즈니스로직 상 불가능한 케이스
 	 *  </pre>
+	 *  @throws PersonDuplicateException 해당 접속자가 이미 가입되있는 사람일 경우
 	 *  @author kimgun-yeong 
 	 */
 	
@@ -158,7 +159,7 @@ public class PersonController {
 		String connectedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		if(personService.existsByEmail(connectedEmail)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.setViewName("joinOAuth");
@@ -177,10 +178,9 @@ public class PersonController {
 	 *  	 - 성공:
 	 *  	View: redirect -> index.html
 	 *   	DB: 해당 person 추가
-	 *   	- 실패
-	 *   	접속한 이메일과 전송된 이메일이 불일치할 때 
 	 *  </pre>
 	 *   @param formModel 소셜 로그인한 주체의 회원가입을 위한 OAuth2Join DTO 객체
+	 *   @throws NotMyResourceException 접속한 이메일과 전송된 이메일이 불일치할 때 
 	 *   @author kimgun-yeong
 	 */	
 	
@@ -189,7 +189,7 @@ public class PersonController {
 		String connectEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		if(!connectEmail.equals(formModel.getEmail())) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		Person person = new Person();
@@ -220,11 +220,10 @@ public class PersonController {
 	 *  	- 성공
 	 *  	View: index.html
 	 *  	DB: 해당 person 삭제
-	 *  	- 실패
-	 *  	해당 계정이 DB에 존재하지 않을 때
-	 *  	로그인 계정이 탈퇴 계정과 일치하지 않을 때
 	 *  </pre>
 	 *  @param email 회원 탈퇴하려는 주체의 email값
+	 *  @throws PersonNotFoundedException 해당 계정이 DB에 존재하지 않을 때
+	 *  @throws NotMyResourceException 로그인 계정이 탈퇴 계정과 일치하지 않을 때
 	 *  @author kimgun-yeong
 	 */
 	
@@ -232,14 +231,14 @@ public class PersonController {
 	public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav) {
 		
 		if(!personService.existsByEmail(email)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		
 		if(!auth.getName().equals(email)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		personService.deletePerson(personService.findByEmail(email));
