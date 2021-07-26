@@ -1,7 +1,7 @@
 package com.gunyoung.info.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,6 @@ public class PrivacyControllerTest {
 	public void privacyPolicyWithVersionNoVersion() throws Exception {
 		int latest_version = PrivacyController.LATEST_POLICY_VERSION;
 		mockMvc.perform(get("/privacypolicy/" + (latest_version+3)))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 }
