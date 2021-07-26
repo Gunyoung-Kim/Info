@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.gunyoung.info.error.code.ContentErrorCode;
 import com.gunyoung.info.error.code.PersonErrorCode;
+import com.gunyoung.info.error.code.PrivacyPolicyErrorCode;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
 import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
 import com.gunyoung.info.error.exceptions.exceed.ContentNumLimitExceedException;
 import com.gunyoung.info.error.exceptions.nonexist.ContentNotFoundedException;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
+import com.gunyoung.info.error.exceptions.nonexist.PrivacyPolicyNotFoundedException;
 
 @RestControllerAdvice
 public class ErrorController {
@@ -30,6 +32,12 @@ public class ErrorController {
 	@ExceptionHandler(ContentNotFoundedException.class)
 	public ErrorMsg contentNotFounded(ContentNotFoundedException e) {
 		return new ErrorMsg(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ExceptionHandler(PrivacyPolicyNotFoundedException.class)
+	public ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e) {
+		return new ErrorMsg(PrivacyPolicyErrorCode.PRIVACY_POLICY_VERSION_IS_NOT_VALID_ERROR.getCode(),e.getMessage());
 	}
 	
 	/*
