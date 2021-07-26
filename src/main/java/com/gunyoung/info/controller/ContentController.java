@@ -15,6 +15,12 @@ import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.ContentDTO;
+import com.gunyoung.info.error.code.ContentErrorCode;
+import com.gunyoung.info.error.code.PersonErrorCode;
+import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
+import com.gunyoung.info.error.exceptions.exceed.ContentNumLimitExceedException;
+import com.gunyoung.info.error.exceptions.nonexist.ContentNotFoundedException;
+import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
@@ -32,9 +38,7 @@ public class ContentController {
 	
 	private final PersonService personService;
 	
-	
 	private final SpaceService spaceService;
-	
 	
 	private final ContentService contentService;
 	
@@ -47,11 +51,11 @@ public class ContentController {
 	 *  	- 성공 
 	 *  	View: createContent.html(포트폴리오에 프로젝트 추가하는 템플릿) 
 	 *  	Model: formModel->Content(프로젝트 내용 추가할 Content 객체)
-	 *      - 에러  
-	 *  	로그인된 계정과 일치하지 않으면 메인 홈으로 redirect 
-	 *  	일치하지만 데이터베이스에 저장되지 않은 이메일이면 실패 페이지 반환 -> 실제로 일어나지 않을 상황이지 않을까?
 	 *  </pre>
 	 *  @param email 콘텐트 추가하려는 사람의 이메일 주소
+	 *  @throws NotMyResourceException 로그인된 계정과 일치하지 않으면
+	 *  @throws PersonNotFoundedException 해당 이메일의 유저가 없으면
+	 *  @throws ContentNumLimitExceedException 개인에게 할당 된 최대 프로젝트 수 초과 시 
 	 *  @author kimgun-yeong
 	 *  
 	 */
@@ -61,21 +65,22 @@ public class ContentController {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(!email.equals(auth.getName())) {
-			return new ModelAndView("redirect:/errorpage");   
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		mav.setViewName("createContent");
 		if(!personService.existsByEmail(email)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		};
 		
 		Space space = personService.findByEmail(email).getSpace();
 		
 		if(space.getContents().size() >= MAX_CONTENT_NUM) {
-			return new ModelAndView("redirect:/space");
+			throw new ContentNumLimitExceedException(ContentErrorCode.CONTENT_NUM_LIMIT_EXCEEDED_ERROR.getDescription());
 		}
 		
 		mav.addObject("formModel", content);
+		
+		mav.setViewName("createContent");
 		
 		return mav;
 	}
@@ -87,14 +92,12 @@ public class ContentController {
 	 *  	- 성공
 	 *  	View: 메인 홈으로 redirect
 	 *  	DB: Content 테이블에 로우 추가
-	 *  	- 실패
-	 *   	로그인된 정보가 해당 포트폴리오 주인이 아닐때 -> 실패 페이지 반환
-	 *   	일치하지만 데이터베이스에 저장되지 않은 이메일이면 실패 페이지 반환 -> 실제로 일어나지 않을 상황이지 않을까?
-	 *   	Model 이 validation 통과 못함
-	 *   	개인 최대 프로젝트 개수 초과 -> 실패 페이지 반환
 	 *   </pre>
 	 *   @param email 콘텐트 추가하려는 사람의 이메일 주소 
 	 *   @param content 추가 되는 콘텐트 객체 
+	 *   @throws NotMyResourceException 로그인된 정보가 해당 포트폴리오 주인이 아닐때 
+	 *   @throws PersonNotFoundedException 일치하지만 데이터베이스에 저장되지 않은 이메일이면
+	 *   @throws ContentNumLimitExceedException 개인 최대 프로젝트 개수 초과
 	 *   @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
@@ -104,19 +107,18 @@ public class ContentController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if(!email.equals(auth.getName())) {
-			// 접속자가 해당 컨텐츠의 주인이 아닐 때
-			return new ModelAndView("redirect:/errorpage"); 
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		Person person = personService.findByEmail(email);
 		if(person == null) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Space space = person.getSpace();
 		
 		if(space.getContents().size() >= MAX_CONTENT_NUM) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new ContentNumLimitExceedException(ContentErrorCode.CONTENT_NUM_LIMIT_EXCEEDED_ERROR.getDescription());
 		}
 		
 		spaceService.addContent(space, content);
@@ -130,18 +132,17 @@ public class ContentController {
 	 *  - 반환: 
 	 *  	- 성공
 	 *		View: updateContent.html(콘텐츠의 정보를 수정하는 템플릿)
-	 *		Model: formModel->ContentDTO(프로젝트 작성자 이메일 + 프로젝트 정보 DTO)
-	 *		- 실패
-	 *		입력된 id에 해당하는 content가 DB 테이블에 없을때 -> 실패 페이지 반환
-	 *		현재 로그인 유저 != 해당 프로젝트 작성자 -> 실패 페이지 반환
+	 *		Model: formModel->ContentDTO(프로젝트 작성자 이메일 + 프로젝트 정보 DTO
 	 * </pre>
 	 * @param id 수정하려는 콘텐트의 id 값
+	 * @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때 
+	 * @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
 	public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
 		if(!contentService.existsById(id)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		Content content = contentService.findById(id);
 		
@@ -150,12 +151,13 @@ public class ContentController {
 		String contentUserEmail = content.getSpace().getPerson().getEmail();
 		
 		if(!contentUserEmail.equals(auth.getName())) {
-			return new ModelAndView("redirect:/errorpage"); 
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription()); 
 		}
 		
 		contentDto.settingByEmailAndContent(contentUserEmail, content);
-		mav.setViewName("updateContent");
 		mav.addObject("formModel", contentDto);
+		
+		mav.setViewName("updateContent");
 		
 		return mav;
 	}
@@ -167,18 +169,17 @@ public class ContentController {
 	 *  	- 성공
 	 * 		View: /space(현재 접속자의 포트폴리오) 로 redirect
 	 * 		DB: content 변경 사항 save
-	 * 		- 실패
-	 * 		입력된 id에 해당하는 content가 DB 테이블에 없을때 -> 실패 페이지 반환
-	 *		현재 로그인 유저 != 해당 프로젝트 작성자 -> 실패 페이지 반환
 	 *	</pre>
 	 * @param id 수정하려는 콘텐트의 id 값
 	 * @param contentDto 콘텐트에 대한 수정 사항을 담은 DTO 객체
+	 * @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때
+	 * @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.POST) 
 	public ModelAndView updateContentPost(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
 		if(!contentService.existsById(id)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		Content content = contentService.findById(id);
 		
@@ -186,7 +187,7 @@ public class ContentController {
 		String hostEmail = contentDto.getHostEmail();
 		if(!hostEmail.equals(auth.getName())) {
 			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
-			return new ModelAndView("redirect:/errorpage");
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		content.setTitle(contentDto.getTitle());
@@ -210,24 +211,23 @@ public class ContentController {
 	 *  	- 성공
 	 *  	View: /space(현재 접속자의 포트폴리오) 로 redirect
 	 *  	DB: content 삭제
-	 *  	- 실패
-	 *  	입력된 id에 해당하는 content가 DB 테이블에 없을때 -> 실패 페이지 반환
-	 *		현재 로그인 유저 != 해당 프로젝트 작성자 -> 실패 페이지 반환
 	 *	</pre>
 	 *	@param id 삭제하려는 콘텐트의 id 값
+	 *  @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때
+	 *  @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 *	@author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
 	public ModelAndView deleteContent(@PathVariable long id) {
 		if(!contentService.existsById(id)) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		Content targetContent = contentService.findById(id);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String hostEmail = targetContent.getSpace().getPerson().getEmail();
 		if(!hostEmail.equals(auth.getName())) {
 			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
-			return new ModelAndView("redirect:/errorpage");
+			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		contentService.deleteContent(targetContent);
