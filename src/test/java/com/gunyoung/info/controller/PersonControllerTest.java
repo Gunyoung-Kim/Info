@@ -185,7 +185,7 @@ public class PersonControllerTest {
 		
 		mockMvc.perform(post("/join")
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isConflict());
 			
 		assertEquals(personNum,personService.countAll());
 	}
@@ -264,7 +264,7 @@ public class PersonControllerTest {
 	@DisplayName("소셜 로그인 회원가입 (실패-이미 회원가입 되어있는 회원의 접근)")
 	public void oAuth2JoinAlreadyJoin() throws Exception {
 		mockMvc.perform(get("/oauth2/join"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isConflict());
 		
 	}
 	
@@ -288,7 +288,7 @@ public class PersonControllerTest {
 		
 		mockMvc.perform(post("/oauth2/join")
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isBadRequest());
 		
 		assertEquals(personNum, personService.countAll());
 	}
@@ -327,7 +327,7 @@ public class PersonControllerTest {
 	public void personWithdrawNonExist() throws Exception {
 		mockMvc.perform(delete("/withdraw")
 				.param("email", "none@google.com"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithMockUser(username="second@naver.com", roles= {"USER"})
@@ -336,7 +336,7 @@ public class PersonControllerTest {
 	public void personWithdrawNotMatch() throws Exception {
 		mockMvc.perform(delete("/withdraw")
 				.param("email", "test@google.com"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isBadRequest());
 	}
 	
 	

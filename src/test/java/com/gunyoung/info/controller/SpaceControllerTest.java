@@ -141,7 +141,7 @@ public class SpaceControllerTest {
 	@DisplayName("포트폴리오 열람 (실패-해당 email이 DB에 없을때)")
 	public void spaceEmailNonExists() throws Exception {
 		mockMvc.perform(get("/space/zvasf"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithMockUser(username="second@naver.com",roles = {"USER"}) //anonymous 로 해도 동
@@ -173,7 +173,7 @@ public class SpaceControllerTest {
 	@DisplayName("프로필 업데이트 (실패-현재 로그인 유저의 이메일이 DB에 없을때)")
 	public void updateProfileEmailNonExist() throws Exception {
 		mockMvc.perform(get("/space/updateprofile"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithAnonymousUser
@@ -199,6 +199,7 @@ public class SpaceControllerTest {
 	 */
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
+	@Transactional
 	@Test
 	@DisplayName("프로필 업데이트 POST(실패-유효성 검사 불통과)")
 	public void updateProfilePostNonValidate() throws Exception {

@@ -26,6 +26,7 @@ import org.springframework.util.MultiValueMap;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
+import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
@@ -46,6 +47,9 @@ public class ContentControllerTest {
 	
 	@Autowired
 	ContentService contentService;
+	
+	@Autowired
+	ContentRepository contentRepository;
 	
 	public static final int MAX_CONTENT_NUM = 50;
 	
@@ -121,7 +125,7 @@ public class ContentControllerTest {
 	@DisplayName("콘텐트 추가 (실패-로그인 계정과 일치하지 않음)")
 	public void createContentTestEmailNotMatch() throws Exception {
 		mockMvc.perform(get("/space/makecontent/test@google.com"))
-			   .andExpect(redirectedUrl("/errorpage"));
+			   .andExpect(status().isBadRequest());
 	}
 	
 	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
@@ -129,7 +133,7 @@ public class ContentControllerTest {
 	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 이메일)")
 	public void createContentEmailNotExists() throws Exception {
 		mockMvc.perform(get("/space/makecontent/nonexist@daum.net"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -149,7 +153,7 @@ public class ContentControllerTest {
 		}
 		
 		mockMvc.perform(get("/space/makecontent/test@google.com"))
-				.andExpect(redirectedUrl("/space"));
+				.andExpect(status().isBadRequest());
 	}
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -201,7 +205,7 @@ public class ContentControllerTest {
 		
 		mockMvc.perform(post("/space/makecontent/test@google.com")
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isBadRequest());
 		
 		assertEquals(contentService.countAll(),contentNum);
 	}
@@ -218,9 +222,9 @@ public class ContentControllerTest {
 		map.add("contributors", "test contributors");
 		map.add("contents", "test contents");
 		
-		mockMvc.perform(post("/space/makecontent/test@google.com")
+		mockMvc.perform(post("/space/makecontent/nonexist@daum.net")
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 		
 		assertEquals(contentService.countAll(),contentNum);
 	}
@@ -250,7 +254,7 @@ public class ContentControllerTest {
 		
 		mockMvc.perform(post("/space/makecontent/test@google.com")
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isBadRequest());
 		
 		assertEquals(contentService.countAll(),contentNum);
 	}
@@ -293,15 +297,18 @@ public class ContentControllerTest {
 	@DisplayName("콘텐트 업데이트 (실패-입력된 id에 해당하는 content가 DB에 없을때)")
 	public void updateContentNonExist() throws Exception{
 		mockMvc.perform(get("/space/updatecontent/100"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithMockUser(username="second@naver.com", roles={"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
 	public void updateContentWrongUser() throws Exception {
-		mockMvc.perform(get("/space/updatecontent/1"))
-				.andExpect(redirectedUrl("/errorpage"));
+		Content content = contentRepository.findAll().get(0);
+		Long contentId = content.getId();
+		
+		mockMvc.perform(get("/space/updatecontent/"+contentId))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -333,7 +340,7 @@ public class ContentControllerTest {
 		
 		mockMvc.perform(post("/space/updatecontent/100")
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithMockUser(username="second@naver.com", roles={"USER"})
@@ -356,7 +363,7 @@ public class ContentControllerTest {
 		
 		mockMvc.perform(post("/space/updatecontent/" + contentId.intValue())
 				.params(map))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isBadRequest());
 		
 		content = contentService.findById(contentId);
 		assertEquals(content.getTitle(),title);
@@ -407,7 +414,7 @@ public class ContentControllerTest {
 		Long contentId = content.getId();
 		
 		mockMvc.perform(delete("/space/deletecontent/" + contentId.intValue()))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isBadRequest());
 		
 		assertEquals(contentService.existsById(contentId),true);
 	}
@@ -417,7 +424,7 @@ public class ContentControllerTest {
 	@DisplayName("콘텐트 삭제 (실패-입력된 id에 해당하는 content가 DB에 없을때)")
 	public void deleteContentNonExist() throws Exception{
 		mockMvc.perform(delete("/space/deletecontent/100"))
-				.andExpect(redirectedUrl("/errorpage"));
+				.andExpect(status().isNoContent());
 	}
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})

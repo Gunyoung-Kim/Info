@@ -17,6 +17,8 @@ import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.ProfileObject;
+import com.gunyoung.info.error.code.PersonErrorCode;
+import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.PersonService;
 
 import lombok.RequiredArgsConstructor;
@@ -57,30 +59,31 @@ public class SpaceController {
 	 *  	Model: profile -> ProfileObject (포트폴리오 주인의 프로필 정보를 전달하는 DTO- Person+Space 일부 필드)
 	 *  		   contents -> List<Content> (포트폴리오에 있는 프로젝트 리스트)
 	 *  		   isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부-> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
-	 *  	- 실패
-	 *  	url에 입력된 email이 DB에 없으면 실패 페이지 반환
 	 *  </pre>
 	 *  @param email 열람하려는 포트폴리오 주인의 email 값
+	 *  @throws PersonNotFoundedException url에 입력된 email이 DB에 없으면 실패 페이지 반환
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
 	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
-		if(!personService.existsByEmail(email)) {
-			return new ModelAndView("redirect:/errorpage");
-		}
+		Person person = personService.findByEmailWithSpace(email);
 		
-		Person person = personService.findByEmail(email);
-		mav.setViewName("portfolio");
+		if(person == null) {
+			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
 		Space space = person.getSpace();
 		ProfileObject profile = new ProfileObject();
 		profile.settingByPersonAndSpace(person, space);
 		mav.addObject("profile", profile);
+		
 		List<Content> contents = space.getContents();
 		mav.addObject("contents",contents);
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		mav.addObject("isHost", email.equals(auth.getName()));
+		
+		mav.setViewName("portfolio");
 		
 		return mav;
 	}
@@ -92,9 +95,8 @@ public class SpaceController {
 	 *  	- 성공
 	 *  	View: updateProfile.html (프로필 업데이트 사항 작성을 위한 템플릿)
 	 *  	Model: formModel->ProfileObject(프로필 업데이트 사항 전달을 위한 DTO객체, Person+ Space 일부필드)
-	 *  	- 실패
-	 *  	현재 로그인된 유저의 이메일이 DB에 없으면 실패 페이지 반환 -> 일어나지 않을 확률 100에 수렴
 	 *  </pre>
+	 *  @throws PersonNotFoundedException 현재 로그인된 유저의 이메일이 DB에 없으면
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
@@ -102,18 +104,18 @@ public class SpaceController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		
-		if(!personService.existsByEmail(email)) {
-			return new ModelAndView("redirect:/errorpage");
+		Person person = personService.findByEmailWithSpace(email);
+		
+		if(person == null) {
+			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Person person = personService.findByEmail(email);
-		
-		mav.setViewName("updateProfile");
 		Space space = person.getSpace();
 		
 		profileObject.settingByPersonAndSpace(person, space);
-		
 		mav.addObject("formModel", profileObject);
+		
+		mav.setViewName("updateProfile");
 		
 		return mav;
 	}
@@ -125,22 +127,17 @@ public class SpaceController {
 	 * 		- 성공
 	 * 		View: updateProfile.html (입력된 프로필 정보로 다시 전송)
 	 * 		DB: ProfileObject에서 Person 및 Space의 변경 사항 추출 후 save
-	 * 		- 실패
-	 * 		ProfileObject의 유효성 불통과 
-	 * 	    전달된 ProfileObject에 있는 이메일이 DB에 존재하지 않을때 실패페이지 반환 -> 템플릿에서는 막음
 	 * </pre>
 	 * @param profileObject Person의 필드 및 Space의 필드 값 수정을 위한 ProfileObject DTO 객체 
+	 * @throws PersonNotFoundedException 전달된 ProfileObject에 있는 이메일이 DB에 존재하지 않을때 
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
 	public ModelAndView updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject, ModelAndView mav) {
-		if(!personService.existsByEmail(profileObject.getEmail())) {
-			return new ModelAndView("redirect:/errorpage");
+		Person person = personService.findByEmailWithSpace(profileObject.getEmail());
+		if(person == null) {
+			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
-		Person person = personService.findByEmail(profileObject.getEmail());
-		
-		mav.setViewName("updateProfile");
 		
 		person.setFirstName(profileObject.getFirstName());
 		person.setLastName(profileObject.getLastName());
