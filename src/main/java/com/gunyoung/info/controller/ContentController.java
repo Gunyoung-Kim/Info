@@ -148,14 +148,17 @@ public class ContentController {
 		
 		// 해당 컨텐트가 현재 접속자의 것인지 확인하는 작업
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String contentUserEmail = content.getSpace().getPerson().getEmail();
+		Person host = content.getSpace().getPerson();
+		Long hostId = host.getId();
+		String hostEmail = host.getEmail();
 		
-		if(!contentUserEmail.equals(auth.getName())) {
+		if(!hostEmail.equals(auth.getName())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription()); 
 		}
 		
-		contentDto.settingByEmailAndContent(contentUserEmail, content);
+		contentDto.settingByHostIdAndContent(hostId, content);
 		mav.addObject("formModel", contentDto);
+		mav.addObject("contentId", id);
 		
 		mav.setViewName("updateContent");
 		
