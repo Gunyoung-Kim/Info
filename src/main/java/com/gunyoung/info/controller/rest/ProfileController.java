@@ -1,4 +1,4 @@
-package com.gunyoung.info.controller;
+package com.gunyoung.info.controller.rest;
 
 import java.util.Arrays;
 import java.util.List;
