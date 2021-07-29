@@ -2,7 +2,6 @@ package com.gunyoung.info.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -312,50 +311,5 @@ public class PersonControllerTest {
 		
 		assertEquals(personNum+1,personService.countAll());
 		assertEquals(personService.existsByEmail("new@google.com"),true);
-	}
-	
-	
-	/*
-	 *  - 대상 메소드: 
-	 *  	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
-	 * 		public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav)
-	 */
-	
-	@WithMockUser(username="none@google.com", roles= {"USER"})
-	@Test
-	@DisplayName("회원탈퇴 DELETE (실패-해당 계정이 DB에 존재하지 않을때)")
-	public void personWithdrawNonExist() throws Exception {
-		mockMvc.perform(delete("/withdraw")
-				.param("email", "none@google.com"))
-				.andExpect(status().isNoContent());
-	}
-	
-	@WithMockUser(username="second@naver.com", roles= {"USER"})
-	@Test
-	@DisplayName("회원탈퇴 DELETE (실패-로그인 계정이 탈퇴 계정과 일치하지 않을때")
-	public void personWithdrawNotMatch() throws Exception {
-		mockMvc.perform(delete("/withdraw")
-				.param("email", "test@google.com"))
-				.andExpect(status().isBadRequest());
-	}
-	
-	
-	@WithMockUser(username="test@google.com", roles= {"USER"})
-	@Test
-	@Transactional
-	@DisplayName("회원탈퇴 DELETE (성공)")
-	public void personWithdrawTest() throws Exception {
-		Person person = personService.findByEmail("test@google.com");
-		Space space = person.getSpace();
-		Long spaceId = space.getId();
-		Content content = space.getContents().get(0);
-		Long contentId = content.getId();
-		mockMvc.perform(delete("/withdraw")
-				.param("email", "test@google.com"))
-				.andExpect(redirectedUrl("/logout"));
-		
-		assertEquals(personService.existsByEmail("test@google.com"),false);
-		assertEquals(spaceService.existsById(spaceId),false);
-		assertEquals(contentService.existsById(contentId),false);
 	}
 }

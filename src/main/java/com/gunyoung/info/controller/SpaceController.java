@@ -2,8 +2,6 @@ package com.gunyoung.info.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,7 +22,7 @@ import com.gunyoung.info.services.domain.PersonService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Space 도메인 관련 처리를 담당하는 컨트롤러 클래스 
+ * Space 도메인 관련 화면 반환 컨트롤러 클래스 
  * @author kimgun-yeong
  *
  */
@@ -118,39 +116,5 @@ public class SpaceController {
 		mav.setViewName("updateProfile");
 		
 		return mav;
-	}
-	
-	/**
-	 * <pre>
-	 *  - 기능: updateProfile이 반환한 뷰에서 작성한 프로필 변경 사항들을 유저가 POST Request로 보내면 이를 처리하기 위한 컨트롤러
-	 * 	- 반환:
-	 * 		- 성공
-	 * 		View: updateProfile.html (입력된 프로필 정보로 다시 전송)
-	 * 		DB: ProfileObject에서 Person 및 Space의 변경 사항 추출 후 save
-	 * </pre>
-	 * @param profileObject Person의 필드 및 Space의 필드 값 수정을 위한 ProfileObject DTO 객체 
-	 * @throws PersonNotFoundedException 전달된 ProfileObject에 있는 이메일이 DB에 존재하지 않을때 
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
-	public ModelAndView updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject, ModelAndView mav) {
-		Person person = personService.findByEmailWithSpace(profileObject.getEmail());
-		if(person == null) {
-			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		person.setFirstName(profileObject.getFirstName());
-		person.setLastName(profileObject.getLastName());
-		
-		Space space = person.getSpace();
-		space.setDescription(profileObject.getDescription());
-		space.setGithub(profileObject.getGithub());
-		space.setFacebook(profileObject.getFacebook());
-		space.setInstagram(profileObject.getInstagram());
-		space.setTweeter(profileObject.getTweeter());
-		
-		personService.save(person);
-		
-		return new ModelAndView("redirect:/space/updateprofile");
 	}
 }

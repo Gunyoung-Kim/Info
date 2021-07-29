@@ -2,9 +2,7 @@ package com.gunyoung.info.dto;
 
 import java.util.Date;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,10 +17,9 @@ import lombok.Data;
  */
 @Data
 public class ContentDTO {
+	
 	@NotEmpty
-	@Email
-	@Size(max=50)
-	private String hostEmail;
+	private Long hostId;
 	
 	@NotEmpty
 	private String title;
@@ -49,8 +46,8 @@ public class ContentDTO {
 		
 	}
 	
-	public void settingByEmailAndContent(String email, Content content) {
-		this.hostEmail = email;
+	public void settingByHostIdAndContent(Long hostId, Content content) {
+		this.hostId = hostId;
 		this.title = content.getTitle();
 		this.description = content.getDescription();
 		this.contributors = content.getContributors();

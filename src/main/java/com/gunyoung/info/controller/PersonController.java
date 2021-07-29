@@ -27,7 +27,6 @@ import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
 import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
-import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.security.UserDetailsVO;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.email.EmailService;
@@ -35,6 +34,11 @@ import com.gunyoung.info.services.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Person 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @Setter
 @RequiredArgsConstructor
@@ -211,39 +215,6 @@ public class PersonController {
 		 sendEmailForJoin(formModel.getEmail());
 		
 		return new ModelAndView("redirect:/");
-	}
-	
-	/**
-	 * <pre>
-	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤러
-	 *  - 반환:
-	 *  	- 성공
-	 *  	View: index.html
-	 *  	DB: 해당 person 삭제
-	 *  </pre>
-	 *  @param email 회원 탈퇴하려는 주체의 email값
-	 *  @throws PersonNotFoundedException 해당 계정이 DB에 존재하지 않을 때
-	 *  @throws NotMyResourceException 로그인 계정이 탈퇴 계정과 일치하지 않을 때
-	 *  @author kimgun-yeong
-	 */
-	
-	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
-	public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav) {
-		
-		if(!personService.existsByEmail(email)) {
-			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		
-		if(!auth.getName().equals(email)) {
-			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
-		}
-		
-		personService.deletePerson(personService.findByEmail(email));
-		
-		return new ModelAndView("redirect:/logout");
 	}
 	
 	/**

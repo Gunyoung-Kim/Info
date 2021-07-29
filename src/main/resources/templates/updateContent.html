@@ -13,62 +13,49 @@
       <h2>프로젝트 수정</h2>
     </div>
     <div class="row justify-content-center">
-      <form class ="col-sm-8" method="post" th:object="${formModel}">
-        <input type="hidden" th:field="*{hostEmail}">
+      <form class ="col-sm-8" th:object="${formModel}">
         <div class="mb-3">
           <label for="title" class="form-label">프로젝트 명</label>
-          <input type="text" th:field="*{title}" class="form-control" name="title">
+          <input type="text" id="title" th:field="*{title}" class="form-control" name="title">
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">한줄 소개</label>
-          <input type="text" th:field="*{description}" class="form-control" name="description">
+          <input type="text" id="description" th:field="*{description}" class="form-control" name="description">
         </div>
         <div class="mb-3">
           <label for="contributors" class="form-label">참가자</label>
-          <input type="text" th:field="*{contributors}" class="form-control" name="contributors">
+          <input type="text" id="contributors" th:field="*{contributors}" class="form-control" name="contributors">
         </div>
         <div class="mb-3">
           <label for="skillstacks" class="form-label">사용 기술</label>
-          <input type="text" th:field="*{skillstacks}" class="form-control" name="skillstacks">
+          <input type="text" id="skillstacks" th:field="*{skillstacks}" class="form-control" name="skillstacks">
         </div>
         <div class="row mb-3">
           <div class="col">
             <label for="startedAt">시작일</label>
-            <input type="date" th:field="*{startedAt}" name ="startedAt" class="form-control" aria-label="시작일">
+            <input type="date" id="startedAt" th:field="*{startedAt}" name ="startedAt" class="form-control" aria-label="시작일">
           </div>
           <div class="col">
             <label for="endAt">종료일</label>
-            <input type="date" th:field="*{endAt}" name="endAt" class="form-control" aria-label="종료일">
+            <input type="date" id="endAt" th:field="*{endAt}" name="endAt" class="form-control" aria-label="종료일">
           </div>
         </div>
         <div class="mb-3">
           <label for="contents" class="form-label">프로젝트 소개 및 기여 사항</label>
-          <textarea th:field="*{contents}" class="form-control content-area" name="contents" rows="20" onKeyUp="javascript:fnChkByte(this,'2500')"></textarea>
+          <textarea id="contents" th:field="*{contents}" class="form-control content-area" name="contents" rows="20" onKeyUp="javascript:fnChkByte(this,'2500')"></textarea>
           <br />
           <span style="color:#aaa;" id="counter">(0 / 최대 2500자)</span>
         </div>
         <div class="mb-3">
           <label for="links" class="form-label">깃허브 주소 및 관련 URL</label>
-          <textarea th:field="*{links}" class="form-control" name="links" rows="10"></textarea>
+          <textarea id="links" th:field="*{links}" class="form-control" name="links" rows="10"></textarea>
         </div>
-        <button type="submit" class="btn btn-black justify-content-center">프로젝트 수정</button>
+        <button type="button" class="btn btn-black justify-content-center" th:onclick="|updateContent(*{hostId},${contentId})|">프로젝트 수정</button>
       </form>
     </div>
     <footer>
     	<div th:replace="fragments.html :: footer"></div>
     </footer>
   </body>
-  <script type="text/javascript">
-    $('.content-area').keyup(function (e){
-    var content = $(this).val();
-    $('#counter').html("("+content.length+" / 최대 2500자)");
-
-    if (content.length > 2500){
-        alert("최대 2500자까지 입력 가능합니다.");
-        $(this).val(content.substring(0, 2500));
-        $('#counter').html("(2500 / 최대 2500자)");
-    }
-  });
-
-  </script>
+  <script type="text/javascript" src="/js/updateContent.js"></script>
 </html>
