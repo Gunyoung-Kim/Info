@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
@@ -15,6 +14,11 @@ import com.gunyoung.info.services.domain.PersonService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Person 관련 처리를 하는 RestController
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class PersonRestController {
@@ -47,7 +51,7 @@ public class PersonRestController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
-	public void personWithdraw(@RequestParam("email") String email,ModelAndView mav) {
+	public void personWithdraw(@RequestParam("email") String email) {
 		
 		if(!personService.existsByEmail(email)) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());

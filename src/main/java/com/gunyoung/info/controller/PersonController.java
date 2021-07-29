@@ -34,6 +34,11 @@ import com.gunyoung.info.services.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Person 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @Setter
 @RequiredArgsConstructor

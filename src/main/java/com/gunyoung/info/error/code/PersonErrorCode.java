@@ -2,6 +2,11 @@ package com.gunyoung.info.error.code;
 
 import lombok.Getter;
 
+/**
+ * Person 도메인 관련 에러 코드
+ * @author kimgun-yeong
+ *
+ */
 @Getter
 public enum PersonErrorCode {
 	PERSON_NOT_FOUNDED_ERROR("P001","Person is not founded"),

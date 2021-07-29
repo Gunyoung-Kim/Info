@@ -10,12 +10,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 무중단 배포를 위한 ProfileController
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ProfileController {
 	
 	private final Environment env;
 	
+	/**
+	 * 무중단 배포를 위해 현 애플리케이션이 'server'를 prefix로 갖는 프로필이 어느 프로필인지 반환하는 메소드 <br>
+	 * 'server'을 prefix로 갖는 프로필이 없다면 'default' 반환 
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/profile", method= RequestMethod.GET)
 	public String getProfile() {
 		List<String> profiles = Arrays.asList(env.getActiveProfiles());

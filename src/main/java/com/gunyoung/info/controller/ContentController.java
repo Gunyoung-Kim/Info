@@ -28,7 +28,7 @@ import com.gunyoung.info.services.domain.SpaceService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Content 도메인 관련 Request들을 처리하는 컨트롤러
+ * Content 도메인 관련 화면 반환 컨트롤러
  * @author kimgun-yeong
  *
  */

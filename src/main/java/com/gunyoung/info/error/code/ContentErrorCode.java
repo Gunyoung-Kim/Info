@@ -2,6 +2,11 @@ package com.gunyoung.info.error.code;
 
 import lombok.Getter;
 
+/**
+ * Content 도메인 관련 에러코드
+ * @author kimgun-yeong
+ *
+ */
 @Getter
 public enum ContentErrorCode {
 	CONTENT_NOT_FOUNDED_ERROR("C001","Content not founded"),

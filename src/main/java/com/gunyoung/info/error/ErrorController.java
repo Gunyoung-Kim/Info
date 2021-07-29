@@ -15,11 +15,19 @@ import com.gunyoung.info.error.exceptions.nonexist.ContentNotFoundedException;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.error.exceptions.nonexist.PrivacyPolicyNotFoundedException;
 
+/**
+ * {@code @RestControllerAdvice} = {@code @ResponseBody} +{@code @ControllerAdvice}
+ * Controller 에서 예외 발생시 AOP를 통해 예외 처리 및 클라이언트에 에러 메시지 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestControllerAdvice
 public class ErrorController {
 	
-	/*
+	/**
 	 *  ---------------------- NO CONTENT ---------------------------------------------------
+	 *  주로 DB에서 주어진 조건으로 찾은 결과 값이 없을 때 발생 
+	 *  @author kimgun-yeong
 	 */
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -40,8 +48,10 @@ public class ErrorController {
 		return new ErrorMsg(PrivacyPolicyErrorCode.PRIVACY_POLICY_VERSION_IS_NOT_VALID_ERROR.getCode(),e.getMessage());
 	}
 	
-	/*
+	/**
 	 * ---------------------- CONFLICT ---------------------------------------------------
+	 * 주로 리소스 추가하는 과정에 있어 리소스의 uniqueness 를 위반하는 요청일때 발생 
+	 * @author kimgun-yeong 
 	 */
 	
 	@ResponseStatus(HttpStatus.CONFLICT)
@@ -50,8 +60,10 @@ public class ErrorController {
 		return new ErrorMsg(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
-	/*
+	/**
 	 * ---------------------- BAD REQUEST ---------------------------------------------------
+	 * 주로 접속자의 것이 아닌 리소스에 접근을 하거나 리소스 제한 개수를 초과할떄 발생
+	 * @author kimgun-yeong
 	 */
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
