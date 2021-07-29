@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
@@ -75,7 +74,7 @@ public class ContentRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.PUT) 
-	public void updateContentPost(@PathVariable long id, @ModelAttribute ContentDTO contentDto, ModelAndView mav) {
+	public void updateContentPost(@PathVariable long id, @ModelAttribute ContentDTO contentDto) {
 		if(!contentService.existsById(id)) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}

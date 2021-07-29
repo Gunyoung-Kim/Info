@@ -1,8 +1,6 @@
 package com.gunyoung.info.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,9 +18,6 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
@@ -190,68 +185,5 @@ public class SpaceControllerTest {
 	public void updateProfileTest() throws Exception {
 		mockMvc.perform(get("/space/updateprofile"))
 				.andExpect(view().name("updateProfile"));
-	}
-	
-	/*
-	 *  - 대상 메소드:
-	 *  	@RequestMapping(value="/space/updateprofile", method = RequestMethod.POST)
-	 *		public ModelAndView updateProfilePost(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav)
-	 */
-	
-	@WithMockUser(username="test@google.com", roles= {"USER"})
-	@Transactional
-	@Test
-	@DisplayName("프로필 업데이트 POST(실패-유효성 검사 불통과)")
-	public void updateProfilePostNonValidate() throws Exception {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("email", "test@google.com");
-		map.add("firstName", ""); // 이름을 일부러 비움
-		map.add("lastName", "구");
-		map.add("description", "changed description");
-		map.add("github","changed github");
-		map.add("instagram", "changed instagram");
-		map.add("tweeter", "changed tweeter");
-		map.add("facebook", "changed facebook");
-		
-		mockMvc.perform(post("/space/updateprofile")
-				.params(map))
-				.andExpect(status().is4xxClientError());
-		
-		Person person = personService.findByEmail("test@google.com");
-		Space space = person.getSpace();
-		assertEquals(person.getFirstName(),"스트");
-		assertEquals(person.getLastName(),"테");
-		assertEquals(space.getDescription(),"test용 자기소개입니다.");
-		assertEquals(space.getGithub(),"https://github.com/Gunyoung-Kim");
-	}
-	
-	@WithMockUser(username="test@google.com", roles= {"USER"})
-	@Test
-	@Transactional
-	@DisplayName("프로필 업데이트 POST (성공)")
-	public void updateProfilePostTest() throws Exception {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("email", "test@google.com");
-		map.add("firstName", "변화");
-		map.add("lastName", "구");
-		map.add("description", "changed description");
-		map.add("github","changed github");
-		map.add("instagram", "changed instagram");
-		map.add("tweeter", "changed tweeter");
-		map.add("facebook", "changed facebook");
-		
-		mockMvc.perform(post("/space/updateprofile")
-				.params(map))
-				.andExpect(redirectedUrl("/space/updateprofile"));
-		
-		Person person = personService.findByEmail("test@google.com");
-		Space space = person.getSpace();
-		assertEquals(person.getFirstName(),"변화");
-		assertEquals(person.getLastName(),"구");
-		assertEquals(space.getDescription(),"changed description");
-		assertEquals(space.getGithub(),"changed github");
-		assertEquals(space.getInstagram(),"changed instagram");
-		assertEquals(space.getTweeter(),"changed tweeter");
-		assertEquals(space.getFacebook(),"changed facebook");
 	}
 }

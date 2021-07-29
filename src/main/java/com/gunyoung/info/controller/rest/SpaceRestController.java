@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
@@ -34,7 +33,7 @@ public class SpaceRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.PUT)
-	public void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject, ModelAndView mav) {
+	public void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject) {
 		Person person = personService.findByEmailWithSpace(profileObject.getEmail());
 		if(person == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
