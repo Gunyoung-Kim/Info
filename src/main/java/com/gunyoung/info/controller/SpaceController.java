@@ -22,7 +22,7 @@ import com.gunyoung.info.services.domain.PersonService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Space 도메인 관련 처리를 담당하는 컨트롤러 클래스 
+ * Space 도메인 관련 화면 반환 컨트롤러 클래스 
  * @author kimgun-yeong
  *
  */

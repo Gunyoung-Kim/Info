@@ -21,6 +21,11 @@ import com.gunyoung.info.services.domain.PersonService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Content 관련 처리를 하는 RestController
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ContentRestController {

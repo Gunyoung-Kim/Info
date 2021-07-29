@@ -16,6 +16,11 @@ import com.gunyoung.info.services.domain.PersonService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Space 관련 처리를 담당하는 RestController
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class SpaceRestController {
