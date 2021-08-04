@@ -1,14 +1,11 @@
 # INFO [![Build Status](https://travis-ci.com/Gunyoung-Kim/Info.svg?branch=master)](https://travis-ci.com/Gunyoung-Kim/Info)
 
-### 서버 비용 문제로 인한 일시 중단( ~2021.07.31)
+최신 버전 : ver 0.0.12
+
 
 ## 프로젝트 목적
 
 - 개인 포트폴리오를 작성 할 수 있는 웹 서비스
-
-### 서버 비용 문제로 인한 일시 중단( ~2021.07.31)
-
-ㅠㅠ..
 
 ---
 
