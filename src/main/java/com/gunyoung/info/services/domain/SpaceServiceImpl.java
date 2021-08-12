@@ -20,13 +20,7 @@ public class SpaceServiceImpl implements SpaceService {
 	private final SpaceRepository spaceRepository;
 	
 	private final ContentService contentService;
-
-	@Override
-	@Transactional(readOnly=true)
-	public List<Space> findAll() {
-		return spaceRepository.findAll();
-	}
-
+	
 	@Override
 	@Transactional(readOnly=true)
 	public Space findById(Long id) {
@@ -34,6 +28,12 @@ public class SpaceServiceImpl implements SpaceService {
 		if(!result.isPresent())
 			return null;
 		return result.get();
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<Space> findAll() {
+		return spaceRepository.findAll();
 	}
 
 	@Override
