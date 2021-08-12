@@ -18,11 +18,6 @@ public class ContentServiceImpl implements ContentService{
 	private final ContentRepository contentRepository;
 	
 	@Override
-	public Content save(Content content) {
-		return contentRepository.save(content);
-	}
-
-	@Override
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
 		 Optional<Content> result = contentRepository.findById(id);
@@ -30,28 +25,22 @@ public class ContentServiceImpl implements ContentService{
 			 return null;
 		 return result.get();
 	}
-
+	
 	@Override
-	public void deleteContent(Content content) {
-		Long id = content.getId();
-		if(id == null) 
-			return;
-		if(!contentRepository.existsById(id)) {
-			return;
-		}
-		contentRepository.delete(content);
-		content.getSpace().getContents().remove(content);
+	public Content save(Content content) {
+		return contentRepository.save(content);
 	}
 
 	@Override
-	public void deleteContentById(Long id) {
-		if(!contentRepository.existsById(id)) {
-			return;
-		}
-		Content content = contentRepository.getById(id);
-		content.getSpace().getContents().remove(content);
+	public void delete(Content content) {
 		contentRepository.delete(content);
-		
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		Content content = findById(id);
+		if(content != null)
+			contentRepository.delete(content);
 	}
 
 	@Override

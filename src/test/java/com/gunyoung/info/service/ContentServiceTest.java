@@ -142,7 +142,7 @@ public class ContentServiceTest {
 		content.setContributors("new Contri");
 		content.setContents("new Contents");
 		
-		contentService.deleteContent(content);
+		contentService.delete(content);
 		
 		assertEquals(contentNum, contentRepository.count());
 	}
@@ -156,7 +156,7 @@ public class ContentServiceTest {
 		int spaceContentNum = space.getContents().size();
 		Long id = content.getId();
 		
-		contentService.deleteContent(content);
+		contentService.delete(content);
 		
 		assertEquals(contentRepository.existsById(id),false);
 		assertEquals(space.getContents().size(),spaceContentNum-1);
@@ -173,7 +173,7 @@ public class ContentServiceTest {
 	@DisplayName("Content Delete By Id (실패- 존재하지 않음)")
 	public void deleteContentByIdNonExist() {
 		long contentNum = contentRepository.count();
-		contentService.deleteContentById(Long.valueOf(100));
+		contentService.deleteById(Long.valueOf(100));
 		
 		assertEquals(contentNum, contentRepository.count());
 	}
@@ -187,7 +187,7 @@ public class ContentServiceTest {
 		int spaceContentNum = space.getContents().size();
 		Long id = content.getId();
 		
-		contentService.deleteContentById(id);
+		contentService.deleteById(id);
 		
 		assertEquals(contentRepository.existsById(id),false);
 		assertEquals(space.getContents().size(),spaceContentNum-1);

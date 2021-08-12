@@ -60,7 +60,7 @@ public class ContentRestController {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		contentService.deleteContent(targetContent);
+		contentService.delete(targetContent);
 	}
 	
 	/**
