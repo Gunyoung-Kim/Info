@@ -34,7 +34,7 @@ public class RestfulController {
 	 */
 	@RequestMapping(value="/main/list",method=RequestMethod.GET)
 	public List<MainListObject> index() {
-		List<Person> personList = personService.getAll();
+		List<Person> personList = personService.findAll();
 		
 		List<MainListObject> result = new LinkedList<>();
 		

@@ -75,7 +75,7 @@ public class PersonController {
 			pageResult = personService.findByNameKeywordInPage(keyword);
 			totalPageNum = personService.countWithNameKeyword(keyword)/PAGE_SIZE +1;
 		} else {
-			pageResult = personService.getAllInPage(page);
+			pageResult = personService.findAllInPage(page);
 			totalPageNum = personService.countAll()/PAGE_SIZE +1;
 		}
 		List<MainListObject> resultList = new LinkedList<>();

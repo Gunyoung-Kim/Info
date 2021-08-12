@@ -152,7 +152,7 @@ public class PersonServiceTest {
 		person.setFirstName("new");
 		person.setLastName("new");
 		
-		personService.deletePerson(person);
+		personService.delete(person);
 		
 		assertEquals(num,personRepository.count());
 	}
@@ -165,7 +165,7 @@ public class PersonServiceTest {
 		long spaceNum = spaceRepository.count();
 		Person person = personRepository.findByEmail("test@google.com").get();
 		
-		personService.deletePerson(person);
+		personService.delete(person);
 		
 		assertEquals(num-1,personRepository.count());
 		assertEquals(spaceNum-1,spaceRepository.count());

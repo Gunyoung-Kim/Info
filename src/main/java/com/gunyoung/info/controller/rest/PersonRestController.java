@@ -63,6 +63,6 @@ public class PersonRestController {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		personService.deletePerson(personService.findByEmail(email));
+		personService.delete(personService.findByEmail(email));
 	}
 }
