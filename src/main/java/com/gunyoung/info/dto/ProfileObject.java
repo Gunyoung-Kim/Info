@@ -40,6 +40,23 @@ public class ProfileObject {
 	private String facebook;
 	
 	/**
+	 * ProfileObject에 담긴 정보로 Person, Space 정보 업데이트
+	 * @param person 업데이트하려는 Person
+	 * @param space 업데이트하려는 Space
+	 * @author kimgun-yeong
+ 	 */
+	public void updatePersonAndSpace(Person person, Space space) {
+		person.setFirstName(this.firstName);
+		person.setLastName(this.lastName);
+		
+		space.setDescription(this.description);
+		space.setGithub(this.github);
+		space.setFacebook(this.facebook);
+		space.setInstagram(this.instagram);
+		space.setTweeter(this.tweeter);
+	}
+	
+	/**
 	 * Person, Space 를 통해 ProfileObject 생성 후 반환
 	 * @author kimgun-yeong
 	 */

@@ -37,7 +37,6 @@ public class RestfulController {
 		List<Person> personList = personService.findAll();
 		
 		List<MainListObject> result = new LinkedList<>();
-		
 		for(Person p : personList) {
 			result.add(new MainListObject(p.getFullName(),p.getEmail()));
 		}

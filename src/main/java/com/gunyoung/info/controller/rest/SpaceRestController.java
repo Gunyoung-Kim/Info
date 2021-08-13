@@ -44,15 +44,8 @@ public class SpaceRestController {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		person.setFirstName(profileObject.getFirstName());
-		person.setLastName(profileObject.getLastName());
-		
 		Space space = person.getSpace();
-		space.setDescription(profileObject.getDescription());
-		space.setGithub(profileObject.getGithub());
-		space.setFacebook(profileObject.getFacebook());
-		space.setInstagram(profileObject.getInstagram());
-		space.setTweeter(profileObject.getTweeter());
+		profileObject.updatePersonAndSpace(person, space);
 		
 		personService.save(person);
 	}
