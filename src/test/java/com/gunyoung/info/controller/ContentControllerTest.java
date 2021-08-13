@@ -116,7 +116,7 @@ public class ContentControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
-	 *  	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav)
+	 *  	public ModelAndView createContentView(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="second@naver.com", roles= {"USER"})
@@ -167,7 +167,7 @@ public class ContentControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
-	 *      public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav)
+	 *      public ModelAndView createContent(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -288,7 +288,7 @@ public class ContentControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
-	 *		public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
+	 *		public ModelAndView updateContentView(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})

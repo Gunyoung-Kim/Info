@@ -62,12 +62,12 @@ public class ContentController {
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
 	public ModelAndView createContentView(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
-		String userEmail = AuthorityUtil.getSessionUserEmail();
-		if(!email.equals(userEmail)) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		if(!email.equals(loginUserEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		Person user = personService.findByEmailWithSpace(userEmail);
+		Person user = personService.findByEmailWithSpace(loginUserEmail);
 		if(user == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		};
@@ -100,22 +100,19 @@ public class ContentController {
 	 *   @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
-	public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
-		
+	public ModelAndView createContent(@PathVariable String email, @Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
-		String userEmail = AuthorityUtil.getSessionUserEmail();
-		
-		if(!email.equals(userEmail)) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		if(!email.equals(loginUserEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		Person person = personService.findByEmail(email);
+		Person person = personService.findByEmailWithSpace(email);
 		if(person == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Space space = person.getSpace();
-		
 		if(space.getContents().size() >= MAX_CONTENT_NUM) {
 			throw new ContentNumLimitExceedException(ContentErrorCode.CONTENT_NUM_LIMIT_EXCEEDED_ERROR.getDescription());
 		}
@@ -139,24 +136,23 @@ public class ContentController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
-	public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
-		if(!contentService.existsById(id)) {
+	public ModelAndView updateContentView(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
+		Content content = contentService.findByIdWithSpaceAndPerson(id);
+		if(content == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
-		Content content = contentService.findById(id);
 		
 		// 해당 컨텐트가 현재 접속자의 것인지 확인하는 작업
-		String userEmail = AuthorityUtil.getSessionUserEmail();
-		Person host = content.getSpace().getPerson();
-		String hostEmail = host.getEmail();
-		
-		if(!hostEmail.equals(userEmail)) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		Person contentHost = content.getSpace().getPerson();
+		String contentHostEmail = contentHost.getEmail();
+		if(!contentHostEmail.equals(loginUserEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription()); 
 		}
 		
-		Long hostId = host.getId();
+		Long contentHostId = contentHost.getId();
+		contentDto.settingByHostIdAndContent(contentHostId, content);
 		
-		contentDto.settingByHostIdAndContent(hostId, content);
 		mav.addObject("formModel", contentDto);
 		mav.addObject("contentId", id);
 		

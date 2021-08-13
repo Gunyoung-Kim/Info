@@ -80,6 +80,40 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
+	 * public Content findByIdWithSpaceAndPerson(Long id)
+	 */
+	
+	@Test
+	@DisplayName("ID로 Content 찾기, Space Person 페치조인  -> 존재하지 않음")
+	public void findByIdWithSpaceAndPersonNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(1);
+		
+		given(contentRepository.findByIdWithSpaceAndPerson(nonExistId)).willReturn(Optional.empty());
+		
+		//When
+		Content result = contentService.findByIdWithSpaceAndPerson(nonExistId);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	@Test
+	@DisplayName("ID로 Content 찾기, Space Person 페치조인 -> 정상")
+	public void findByIdWithSpaceAndPersonTest() {
+		//Given
+		Long contentId = Long.valueOf(1);
+		
+		given(contentRepository.findByIdWithSpaceAndPerson(contentId)).willReturn(Optional.of(content));
+		
+		//When
+		Content result = contentService.findByIdWithSpaceAndPerson(contentId);
+		
+		//Then
+		assertEquals(content, result);
+	}
+	
+	/*
 	 * public Content save(Content content)
 	 */
 	

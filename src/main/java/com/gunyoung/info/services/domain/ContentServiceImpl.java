@@ -27,6 +27,15 @@ public class ContentServiceImpl implements ContentService{
 	}
 	
 	@Override
+	@Transactional(readOnly=true)
+	public Content findByIdWithSpaceAndPerson(Long id) {
+		Optional<Content> result = contentRepository.findByIdWithSpaceAndPerson(id);
+		if(!result.isPresent())
+			return null;
+		return result.get();
+	}
+	
+	@Override
 	public Content save(Content content) {
 		return contentRepository.save(content);
 	}
@@ -53,6 +62,5 @@ public class ContentServiceImpl implements ContentService{
 	@Transactional(readOnly=true)
 	public boolean existsById(Long id) {
 		return contentRepository.existsById(id);
-	}
-	
+	}	
 }

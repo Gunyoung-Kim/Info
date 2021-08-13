@@ -13,6 +13,14 @@ public interface ContentService {
 	public Content findById(Long id);
 	
 	/**
+	 * ID로 Content 찾기 <br>
+	 * Space, Person 페치 조인
+	 * @param contentId 찾으려는 Content의 ID
+	 * @author kimgun-yeong
+	 */
+	public Content findByIdWithSpaceAndPerson(Long id);
+	
+	/**
 	 * Content 생성 및 수정
 	 * @param content 저장하려는 Content
 	 * @return 저장된 Content
