@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.Email;
@@ -26,7 +25,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.gunyoung.info.enums.RoleType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -37,7 +39,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="person")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Person {
 	
@@ -48,6 +52,7 @@ public class Person {
 	
 	@Column(name="role_type")
 	@Enumerated(EnumType.STRING)
+	@Builder.Default
 	private RoleType role = RoleType.USER; 
 	
 	@Column(length=50)
@@ -79,12 +84,8 @@ public class Person {
 	
 	@OneToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL , orphanRemoval = true)
 	@JoinColumn(name="space_id")
-	private Space space;
-	
-	public Person() {
-		Space space = new Space();
-		this.space = space;
-	}
+	@Builder.Default
+	private Space space = new Space();
 	
 	public Person(String email, String password, String firstName, String lastName) {
 		this();
@@ -98,6 +99,4 @@ public class Person {
 	public String getFullName() {
 		return this.firstName +" " + this.lastName;
 	}
-	
-	
 }

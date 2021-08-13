@@ -1,6 +1,9 @@
 package com.gunyoung.info.util;
 
+import java.util.Collection;
+
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -17,4 +20,16 @@ public class AuthorityUtil {
 		
 		return auth.getName();
 	}
+	
+	/**
+	 * SecurityContext에 저장된 유저의 Authorities 반환
+	 * @author kimgun-yeong
+	 */
+	public static Collection<? extends GrantedAuthority> getSessionUserAuthorities() {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		Authentication auth = securityContext.getAuthentication();
+		
+		return auth.getAuthorities();
+	}
+	
 }
