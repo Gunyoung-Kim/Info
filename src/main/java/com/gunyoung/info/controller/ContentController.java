@@ -2,8 +2,6 @@ package com.gunyoung.info.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +22,7 @@ import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -63,8 +62,8 @@ public class ContentController {
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
 	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(!email.equals(auth.getName())) {
+		String userEmail = AuthorityUtil.getSessionUserEmail();
+		if(!email.equals(userEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
@@ -104,9 +103,9 @@ public class ContentController {
 	public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav) {
 		
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		
-		if(!email.equals(auth.getName())) {
+		if(!email.equals(userEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
@@ -147,14 +146,15 @@ public class ContentController {
 		Content content = contentService.findById(id);
 		
 		// 해당 컨텐트가 현재 접속자의 것인지 확인하는 작업
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		Person host = content.getSpace().getPerson();
-		Long hostId = host.getId();
 		String hostEmail = host.getEmail();
 		
-		if(!hostEmail.equals(auth.getName())) {
+		if(!hostEmail.equals(userEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription()); 
 		}
+		
+		Long hostId = host.getId();
 		
 		contentDto.settingByHostIdAndContent(hostId, content);
 		mav.addObject("formModel", contentDto);

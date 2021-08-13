@@ -2,8 +2,6 @@ package com.gunyoung.info.controller;
 
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +16,7 @@ import com.gunyoung.info.dto.ProfileObject;
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,8 +43,8 @@ public class SpaceController {
 	 */
 	@RequestMapping(value="/space", method= RequestMethod.GET)
 	public ModelAndView myspace(ModelAndView mav) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return new ModelAndView("redirect:/space/"+auth.getName());
+		String userEmail = AuthorityUtil.getSessionUserEmail();
+		return new ModelAndView("redirect:/space/"+ userEmail);
 	}
 	
 	/**
@@ -78,8 +77,8 @@ public class SpaceController {
 		List<Content> contents = space.getContents();
 		mav.addObject("contents",contents);
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		mav.addObject("isHost", email.equals(auth.getName()));
+		String userEmail = AuthorityUtil.getSessionUserEmail();
+		mav.addObject("isHost", email.equals(userEmail));
 		
 		mav.setViewName("portfolio");
 		
@@ -99,10 +98,9 @@ public class SpaceController {
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
 	public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		
-		Person person = personService.findByEmailWithSpace(email);
+		Person person = personService.findByEmailWithSpace(userEmail);
 		
 		if(person == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());

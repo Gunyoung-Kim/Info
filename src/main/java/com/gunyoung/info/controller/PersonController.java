@@ -30,6 +30,7 @@ import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
 import com.gunyoung.info.security.UserDetailsVO;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.email.EmailService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -160,15 +161,15 @@ public class PersonController {
 	
 	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
 	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav) {
-		String connectedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		
-		if(personService.existsByEmail(connectedEmail)) {
+		if(personService.existsByEmail(userEmail)) {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.setViewName("joinOAuth");
 		
-		formModel.setEmail(connectedEmail);
+		formModel.setEmail(userEmail);
 		
 		mav.addObject("formModel", formModel);
 		
@@ -190,9 +191,9 @@ public class PersonController {
 	
 	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
 	public ModelAndView oAuth2JoinPost(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
-		String connectEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		
-		if(!connectEmail.equals(formModel.getEmail())) {
+		if(!userEmail.equals(formModel.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		

@@ -1,7 +1,5 @@
 package com.gunyoung.info.controller.rest;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,6 +9,7 @@ import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,9 +56,9 @@ public class PersonRestController {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		
-		if(!auth.getName().equals(email)) {
+		if(!userEmail.equals(email)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		

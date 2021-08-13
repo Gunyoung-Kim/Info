@@ -1,7 +1,5 @@
 package com.gunyoung.info.controller.rest;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +16,7 @@ import com.gunyoung.info.error.exceptions.nonexist.ContentNotFoundedException;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,9 +52,9 @@ public class ContentRestController {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		Content targetContent = contentService.findById(id);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		String hostEmail = targetContent.getSpace().getPerson().getEmail();
-		if(!hostEmail.equals(auth.getName())) {
+		if(!hostEmail.equals(userEmail)) {
 			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
@@ -85,7 +84,7 @@ public class ContentRestController {
 		}
 		Content content = contentService.findById(id);
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userEmail = AuthorityUtil.getSessionUserEmail();
 		Long hostId = contentDto.getHostId();
 		
 		Person host = personService.findById(hostId);
@@ -96,7 +95,7 @@ public class ContentRestController {
 		
 		String hostEmail = host.getEmail();
 		
-		if(!hostEmail.equals(auth.getName())) {
+		if(!hostEmail.equals(userEmail)) {
 			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
