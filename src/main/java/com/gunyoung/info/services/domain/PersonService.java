@@ -34,6 +34,15 @@ public interface PersonService {
 	public Person findByEmailWithSpace(String email);
 	
 	/**
+	 * email로 Person 찾기 <br>
+	 * Space와 Content들 페치조인
+	 * @param email 찾으려는 Person의 email
+	 * @return Person, null (해당 email의 Person 없을 경우)
+	 * @author kimgun-yeong
+	 */
+	public Person findByEmailWithSpaceAndContents(String email);
+	
+	/**
 	 * 모든 Person 리스트 반환
 	 * @author kimgun-yeong
 	 */

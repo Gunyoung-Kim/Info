@@ -3,7 +3,6 @@ package com.gunyoung.info.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,9 +41,10 @@ public class SpaceController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space", method= RequestMethod.GET)
-	public ModelAndView myspace(ModelAndView mav) {
-		String userEmail = AuthorityUtil.getSessionUserEmail();
-		return new ModelAndView("redirect:/space/"+ userEmail);
+	public ModelAndView myspaceView(ModelAndView mav) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		
+		return new ModelAndView("redirect:/space/"+ loginUserEmail);
 	}
 	
 	/**
@@ -62,22 +62,21 @@ public class SpaceController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
-	public ModelAndView space(@PathVariable String email, ModelAndView mav) {
-		Person person = personService.findByEmailWithSpace(email);
-		
-		if(person == null) {
+	public ModelAndView spaceView(@PathVariable String email, ModelAndView mav) {
+		Person spaceHost = personService.findByEmailWithSpaceAndContents(email);
+		if(spaceHost == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Space space = person.getSpace();
-		ProfileObject profile = new ProfileObject();
-		profile.settingByPersonAndSpace(person, space);
-		mav.addObject("profile", profile);
+		Space space = spaceHost.getSpace();
+		ProfileObject profileObject = ProfileObject.createFromPersonAndSpace(spaceHost, space);
 		
 		List<Content> contents = space.getContents();
-		mav.addObject("contents",contents);
 		
 		String userEmail = AuthorityUtil.getSessionUserEmail();
+		
+		mav.addObject("contents",contents);
+		mav.addObject("profile", profileObject);
 		mav.addObject("isHost", email.equals(userEmail));
 		
 		mav.setViewName("portfolio");
@@ -97,18 +96,17 @@ public class SpaceController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
-	public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav) {
+	public ModelAndView updateProfileView(ModelAndView mav) {
 		String userEmail = AuthorityUtil.getSessionUserEmail();
 		
-		Person person = personService.findByEmailWithSpace(userEmail);
-		
-		if(person == null) {
+		Person user = personService.findByEmailWithSpace(userEmail);
+		if(user == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Space space = person.getSpace();
+		Space space = user.getSpace();
+		ProfileObject profileObject = ProfileObject.createFromPersonAndSpace(user, space);
 		
-		profileObject.settingByPersonAndSpace(person, space);
 		mav.addObject("formModel", profileObject);
 		
 		mav.setViewName("updateProfile");

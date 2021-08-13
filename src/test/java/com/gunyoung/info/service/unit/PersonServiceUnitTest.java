@@ -151,6 +151,40 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
+	 * public Content findByEmailWithSpaceAndContents(Long id)
+	 */
+	
+	@Test
+	@DisplayName("Email로 Person 찾기, Space, Contents 페치 조인 -> 존재하지 않음")
+	public void findByEmailWithSpaceAndContentsNonExist() {
+		//Given
+		String nonExistEmail = "nonexist@test.com";
+		
+		given(personRepository.findByEmailWithSpaceAndContents(nonExistEmail)).willReturn(Optional.empty());
+		
+		//When
+		Person result = personService.findByEmailWithSpaceAndContents(nonExistEmail);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	@Test
+	@DisplayName("Email로 Person 찾기, Space, Contents 페치 조인 -> 정상")
+	public void findByEmailWithSpaceAndContentsTest() {
+		//Given
+		String personEmail = "test@test.com";
+		
+		given(personRepository.findByEmailWithSpaceAndContents(personEmail)).willReturn(Optional.of(person));
+		
+		//When
+		Person result = personService.findByEmailWithSpaceAndContents(personEmail);
+		
+		//Then
+		assertEquals(person, result);
+	}
+	
+	/*
 	 * public List<Person> findAll()
 	 */
 	

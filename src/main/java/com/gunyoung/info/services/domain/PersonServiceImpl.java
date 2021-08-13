@@ -48,6 +48,15 @@ public class PersonServiceImpl implements PersonService {
 			return null;
 		return result.get();
 	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public Person findByEmailWithSpaceAndContents(String email) {
+		Optional<Person> result = personRepository.findByEmailWithSpaceAndContents(email);
+		if(!result.isPresent()) 
+			return null;
+		return result.get();
+	}
 
 	@Override
 	@Transactional(readOnly=true)
@@ -62,24 +71,28 @@ public class PersonServiceImpl implements PersonService {
 	}
 	
 	@Override
+	@Transactional(readOnly=true)
 	public Page<Person> findAllInPage(Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1 , PAGE_SIZE);
 		return personRepository.findAll(pageRequest);
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public Page<Person> findAllOrderByCreatedAtDescInPage(Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PAGE_SIZE);
 		return personRepository.findAllByOrderByCreatedAtDesc(pageRequest);
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public Page<Person> findAllOrderByCreatedAtAscInPage(Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PAGE_SIZE);
 		return personRepository.findAllByOrderByCreatedAtAsc(pageRequest);
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public Page<Person> findByNameKeywordInPage(String keyword) {
 		PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
 		return personRepository.findByNameWithKeyword(keyword, pageRequest);
@@ -96,16 +109,19 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public boolean existsByEmail(String email) {
 		return personRepository.existsByEmail(email);
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public long countAll() {
 		return personRepository.count();
 	}
 	
 	@Override
+	@Transactional(readOnly=true)
 	public long countWithNameKeyword(String keyword) {
 		return personRepository.countWithNameKeyword(keyword);
 	}

@@ -14,10 +14,22 @@ import com.gunyoung.info.domain.Person;
 public interface PersonRepository extends JpaRepository<Person, Long>{
 	public Optional<Person> findByEmail(String email);
 	
-	@Query(value="SELECT p FROM Person p "
+	@Query("SELECT p FROM Person p "
 			+ "INNER JOIN FETCH p.space s "
 			+ "WHERE p.email = :email")
 	public Optional<Person> findByEmailWithSpace(@Param("email")String email);
+	
+	/**
+	 * email로 Person 찾기 <br>
+	 * Space, Content들 페치 조인
+	 * @param email 찾으려는 Person의 email
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT p FROM Person p "
+			+ "INNER JOIN FETCH p.space s "
+			+ "LEFT JOIN FETCH s.contents c "
+			+ "WHERE p.email = :email")
+	public Optional<Person> findByEmailWithSpaceAndContents(@Param("email")String email);
 	
 	public List<Person> findAllByOrderByCreatedAtDesc();
 	public List<Person> findAllByOrderByCreatedAtAsc();
@@ -33,7 +45,7 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	 * @param pageable
 	 * @return 해당 검색 조건을 만족하는 Person 컬렉션
 	 */
-	@Query(value="select p from Person p "
+	@Query("select p from Person p "
 			+ "where p.firstName like %:keyword% "
 			+ "or p.lastName like %:keyword% ")
 	public Page<Person> findByNameWithKeyword(@Param("keyword") String keyword,Pageable pageable);
@@ -44,7 +56,7 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	 * @param keyword 검색하려는 firstName 이나 lastName
 	 * @return
 	 */
-	@Query(value="select count(p) from Person p "
+	@Query("select count(p) from Person p "
 			+ "where p.firstName like %:keyword% "
 			+ "or p.lastName like %:keyword% ")
 	public long countWithNameKeyword(@Param("keyword") String keyword);

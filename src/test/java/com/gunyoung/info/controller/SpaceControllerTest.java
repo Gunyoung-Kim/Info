@@ -106,13 +106,13 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space", method= RequestMethod.GET)
-	 * 		public ModelAndView myspace(ModelAndView mav)
+	 * 		public ModelAndView myspaceView(ModelAndView mav)
 	 */
 	
 	@WithAnonymousUser
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 안되있을때)") 
-	public void myspaceAnonymousTest() throws Exception {
+	public void myspaceViewAnonymousTest() throws Exception {
 		mockMvc.perform(get("/space"))
 				.andExpect(status().is(302));
 	}
@@ -120,7 +120,7 @@ public class SpaceControllerTest {
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 되어있을때)")
-	public void mySpaceUserTest() throws Exception {
+	public void mySpaceViewUserTest() throws Exception {
 		mockMvc.perform(get("/space"))
 				.andExpect(redirectedUrl("/space/test@google.com"));
 	}
@@ -128,7 +128,7 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
-	 *  	public ModelAndView space(@PathVariable String email, ModelAndView mav)
+	 *  	public ModelAndView spaceView(@PathVariable String email, ModelAndView mav)
 	 */
 	
 	@WithAnonymousUser
@@ -160,7 +160,7 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
-	 *		public ModelAndView updateProfile(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav)
+	 *		public ModelAndView updateProfileView(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="none@none.com", roles= {"USER"})
