@@ -57,4 +57,20 @@ public class ContentDTO {
 		this.contents = content.getContents();
 		this.links = content.getLinks();
 	}
+	
+	/**
+	 * ContentDTO에 담긴 정보로 Content 업데이트 
+	 * @param content 업데이트하려는 Content
+	 * @author kimgun-yeong
+	 */
+	public void updateContent(Content content) {
+		content.setTitle(this.title);
+		content.setDescription(this.description);
+		content.setContributors(this.contributors);
+		content.setSkillstacks(this.skillstacks);
+		content.setStartedAt(this.startedAt);
+		content.setEndAt(this.endAt);
+		content.setContents(this.contents);
+		content.setLinks(this.links);
+	}
 }

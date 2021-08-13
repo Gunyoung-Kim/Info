@@ -48,14 +48,14 @@ public class ContentRestController {
 	 */
 	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
 	public void deleteContent(@PathVariable long id) {
-		if(!contentService.existsById(id)) {
+		Content targetContent = contentService.findByIdWithSpaceAndPerson(id);
+		if(targetContent == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
-		Content targetContent = contentService.findById(id);
-		String userEmail = AuthorityUtil.getSessionUserEmail();
+		
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		String hostEmail = targetContent.getSpace().getPerson().getEmail();
-		if(!hostEmail.equals(userEmail)) {
-			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
+		if(!hostEmail.equals(loginUserEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
@@ -78,37 +78,26 @@ public class ContentRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.PUT) 
-	public void updateContentPost(@PathVariable long id, @ModelAttribute ContentDTO contentDto) {
-		if(!contentService.existsById(id)) {
+	public void updateContent(@PathVariable long id, @ModelAttribute ContentDTO contentDto) {
+		Content targetContent = contentService.findById(id);
+		if(targetContent == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
-		Content content = contentService.findById(id);
 		
-		String userEmail = AuthorityUtil.getSessionUserEmail();
-		Long hostId = contentDto.getHostId();
-		
-		Person host = personService.findById(hostId);
-		
+		Long contentHostId = contentDto.getHostId();
+		Person host = personService.findById(contentHostId);
 		if(host == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		String hostEmail = host.getEmail();
-		
-		if(!hostEmail.equals(userEmail)) {
-			// 리퀘스트 보낸 사람이 이 콘텐츠의 주인과 다를때 
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		if(!hostEmail.equals(loginUserEmail)) { 
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		content.setTitle(contentDto.getTitle());
-		content.setDescription(contentDto.getDescription());
-		content.setContributors(contentDto.getContributors());
-		content.setSkillstacks(contentDto.getSkillstacks());
-		content.setStartedAt(contentDto.getStartedAt());
-		content.setEndAt(contentDto.getEndAt());
-		content.setContents(contentDto.getContents());
-		content.setLinks(contentDto.getLinks());
+		contentDto.updateContent(targetContent);
 		
-		contentService.save(content);
+		contentService.save(targetContent);
 	}
 }
