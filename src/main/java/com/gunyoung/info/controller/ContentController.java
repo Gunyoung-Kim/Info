@@ -60,19 +60,19 @@ public class ContentController {
 	 */
 	
 	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
-	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
+	public ModelAndView createContentView(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
 		String userEmail = AuthorityUtil.getSessionUserEmail();
 		if(!email.equals(userEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		if(!personService.existsByEmail(email)) {
+		Person user = personService.findByEmailWithSpace(userEmail);
+		if(user == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		};
 		
-		Space space = personService.findByEmail(email).getSpace();
-		
+		Space space = user.getSpace();
 		if(space.getContents().size() >= MAX_CONTENT_NUM) {
 			throw new ContentNumLimitExceedException(ContentErrorCode.CONTENT_NUM_LIMIT_EXCEEDED_ERROR.getDescription());
 		}
