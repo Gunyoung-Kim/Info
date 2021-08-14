@@ -2,9 +2,12 @@ package com.gunyoung.info.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.URL;
 
@@ -39,4 +42,8 @@ public class Link extends BaseEntity {
 	
 	@URL
 	private String url;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="content_id")
+	private Content content;
 }
