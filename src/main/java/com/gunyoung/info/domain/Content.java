@@ -81,7 +81,7 @@ public class Content {
 	@Column(columnDefinition="TEXT NOT NULL")
 	private String contents;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "space_id")
 	private Space space;
 

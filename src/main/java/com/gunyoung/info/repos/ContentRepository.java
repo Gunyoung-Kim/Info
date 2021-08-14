@@ -22,6 +22,15 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 			+ "WHERE c.id = :contentId")
 	public Optional<Content> findByIdWithSpaceAndPerson(@Param("contentId") Long contentId);
 	
+	/**
+	 * 모든 Content 개수 반환
+	 * @author kimgun-yeong
+	 */
 	public long count();
+	
+	/**
+	 * ID로 존재 여부 반환
+	 * @author kimgun-yeong
+	 */
 	public boolean existsById(Long id);
 }

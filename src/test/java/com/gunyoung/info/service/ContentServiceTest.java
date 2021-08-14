@@ -152,15 +152,11 @@ public class ContentServiceTest {
 	@DisplayName("Content Delete(성공)")
 	public void deleteContentTest() {
 		Content content = contentRepository.findAll().get(0);
-		Space space = content.getSpace();
-		int spaceContentNum = space.getContents().size();
 		Long id = content.getId();
 		
 		contentService.delete(content);
 		
-		assertEquals(contentRepository.existsById(id),false);
-		assertEquals(space.getContents().size(),spaceContentNum-1);
-		
+		assertEquals(false, contentRepository.existsById(id));
 	}
 	
 	/*
@@ -183,13 +179,10 @@ public class ContentServiceTest {
 	@DisplayName("Content Delete By Id (성공)")
 	public void deleteContentByIdTest() {
 		Content content = contentRepository.findAll().get(0);
-		Space space = content.getSpace();
-		int spaceContentNum = space.getContents().size();
 		Long id = content.getId();
 		
 		contentService.deleteById(id);
 		
-		assertEquals(contentRepository.existsById(id),false);
-		assertEquals(space.getContents().size(),spaceContentNum-1);
+		assertEquals(false, contentRepository.existsById(id));
 	}
 }

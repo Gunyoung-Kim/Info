@@ -12,8 +12,20 @@ import org.springframework.data.repository.query.Param;
 import com.gunyoung.info.domain.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long>{
+	
+	/**
+	 * email로 Person 찾기
+	 * @param email 찾으려는 Person email
+	 * @author kimgun-yeong
+	 */
 	public Optional<Person> findByEmail(String email);
 	
+	/**
+	 * email로 Person 찾기 <br>
+	 * Space 페치 조인
+	 * @param email 찾으려는 Person email
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT p FROM Person p "
 			+ "INNER JOIN FETCH p.space s "
 			+ "WHERE p.email = :email")
@@ -31,33 +43,60 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 			+ "WHERE p.email = :email")
 	public Optional<Person> findByEmailWithSpaceAndContents(@Param("email")String email);
 	
+	/**
+	 * parameter로 전달된 keyword 값을 포함하는 firstName 이나 lastName 가진 Person 객체들 가져오기 위한 쿼리
+	 * @param keyword 검색하려는 firstName 이나 lastName
+	 * @return 해당 검색 조건을 만족하는 Person 컬렉션
+	 */
+	@Query("SELECT p FROM Person p "
+			+ "WHERE p.firstName LIKE %:keyword% "
+			+ "OR p.lastName LIKE %:keyword% ")
+	public Page<Person> findByNameWithKeyword(@Param("keyword") String keyword,Pageable pageable);
+	
+	/**
+	 * 모든 Person 생성 최신순으로 정렬 반환
+	 * @author kimgun-yeong
+	 */
 	public List<Person> findAllByOrderByCreatedAtDesc();
+	
+	/**
+	 * 모든 Person 생성 오래된 순으로 정렬 반환
+	 * @author kimgun-yeong
+	 */
 	public List<Person> findAllByOrderByCreatedAtAsc();
-	public boolean existsByEmail(String email);
-	public long count();
+	
+	/**
+	 * 모든 Person 생성 최신순으로 정렬 페이지 반환 
+	 * @author kimgun-yeong
+	 */
 	public Page<Person> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	
+	/**
+	 * 모든 Person 생성 오래된순으로 정렬 페이지 반환
+	 * @author kimgun-yeong
+	 */
 	public Page<Person> findAllByOrderByCreatedAtAsc(Pageable pageable);
 	
 	/**
-	 * parameter로 전달된 keyword 값을 포함하는 firstName 이나 lastName 가진 Person 객체들 가져오기 위한 메소드 
-	 * 
-	 * @param keyword 검색하려는 firstName 이나 lastName
-	 * @param pageable
-	 * @return 해당 검색 조건을 만족하는 Person 컬렉션
+	 * 모든 Person 개수 반환
+	 * @author kimgun-yeong
 	 */
-	@Query("select p from Person p "
-			+ "where p.firstName like %:keyword% "
-			+ "or p.lastName like %:keyword% ")
-	public Page<Person> findByNameWithKeyword(@Param("keyword") String keyword,Pageable pageable);
-	
+	public long count();
 	
 	/**
 	 * parameter로 전달된 keyword 값을 포함하는 firstName 이나 lastName 가진 Person 개수를 반환하는 메소드
 	 * @param keyword 검색하려는 firstName 이나 lastName
 	 * @return
 	 */
-	@Query("select count(p) from Person p "
-			+ "where p.firstName like %:keyword% "
-			+ "or p.lastName like %:keyword% ")
+	@Query("SELECT COUNT(p) FROM Person p "
+			+ "WHERE p.firstName LIKE %:keyword% "
+			+ "OR p.lastName LIKE %:keyword% ")
 	public long countWithNameKeyword(@Param("keyword") String keyword);
+	
+	/**
+	 * email로 Person 존재여부 반환
+	 * @param email 존재여부 확인하려는 Person의 email
+	 * @author kimgun-yeong
+	 */
+	public boolean existsByEmail(String email);
 }

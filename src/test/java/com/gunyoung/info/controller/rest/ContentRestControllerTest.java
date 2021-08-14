@@ -68,7 +68,7 @@ public class ContentRestControllerTest {
 			
 			// content 들 설정
 			int contentsNumber = INIT_CONTENT_NUM;
-			for(int i=0;i<=contentsNumber;i++) {
+			for(int i=0;i<contentsNumber;i++) {
 				Content content = new Content();
 				content.setTitle(i+" 번째 타이틀");
 				content.setDescription(i+" 번째 프로젝트 설명");
@@ -219,11 +219,9 @@ public class ContentRestControllerTest {
 		Content content = space.getContents().get(0);
 		Long contentId = content.getId();
 		
-		int contentsListSize = space.getContents().size();
 		mockMvc.perform(delete("/space/deletecontent/" + contentId))
 				.andExpect(status().isOk());
 		
-		assertEquals(contentsListSize-1, space.getContents().size());
 		assertEquals(num-1,contentService.countAll());
 	}
 }
