@@ -1,14 +1,20 @@
 package com.gunyoung.info.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.gunyoung.info.domain.Content;
+import com.gunyoung.info.domain.Link;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 콘텐트 내용 수정을 위한 DTO 객체
@@ -16,6 +22,9 @@ import lombok.Data;
  *
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContentDTO {
 	
 	@NotEmpty
@@ -40,11 +49,8 @@ public class ContentDTO {
 	@NotEmpty
 	private String contents;
 	
-	private String links;
-	
-	public ContentDTO() {
-		
-	}
+	@Builder.Default
+	private List<LinkDTO> links = new ArrayList<>();
 	
 	public void settingByHostIdAndContent(Long hostId, Content content) {
 		this.hostId = hostId;
@@ -55,7 +61,14 @@ public class ContentDTO {
 		this.startedAt = content.getStartedAt();
 		this.endAt = content.getEndAt();
 		this.contents = content.getContents();
-		this.links = content.getLinks();
+		
+		for(Link link: content.getLinks()) {
+			LinkDTO linkDTO = LinkDTO.builder()
+					.tag(link.getTag())
+					.url(link.getUrl())
+					.build();
+			this.links.add(linkDTO);
+		}
 	}
 	
 	/**
@@ -71,6 +84,18 @@ public class ContentDTO {
 		content.setStartedAt(this.startedAt);
 		content.setEndAt(this.endAt);
 		content.setContents(this.contents);
-		content.setLinks(this.links);
+		 
+		List<Link> newContentLinks = new ArrayList<>();
+		
+		for(LinkDTO linkDTO: this.links) {
+			Link link = Link.builder()
+					.tag(linkDTO.getTag())
+					.url(linkDTO.getUrl())
+					.build();
+			
+			newContentLinks.add(link);
+		}
+		
+		content.setLinks(newContentLinks);
 	}
 }
