@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.info.controller.util.ModelAndPageView;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.dto.MainListObject;
 import com.gunyoung.info.dto.email.EmailDTO;
@@ -35,7 +36,6 @@ import com.gunyoung.info.services.email.EmailService;
 import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * Person 관련 화면 반환하는 컨트롤러
@@ -43,7 +43,6 @@ import lombok.Setter;
  *
  */
 @Controller
-@Setter
 @RequiredArgsConstructor
 public class PersonController {
 	private static final int PAGE_SIZE = 10;
@@ -67,7 +66,7 @@ public class PersonController {
 	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
 	public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
-			@RequestParam(value="keyword",required=false) String keyword, ModelAndView mav) {
+			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
 		Collection<? extends GrantedAuthority> loginUserAuthorities = AuthorityUtil.getSessionUserAuthorities();
 		if(loginUserAuthorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"))) {
 			return new ModelAndView("redirect:/oauth2/join");
@@ -90,9 +89,8 @@ public class PersonController {
 		}
 		
 		mav.addObject("listObject",resultList);
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/PAGE_SIZE)*PAGE_SIZE+1);
-		mav.addObject("lastIndex",(page/PAGE_SIZE)*PAGE_SIZE+PAGE_SIZE-1 > totalPageNum ? totalPageNum : (page/PAGE_SIZE)*PAGE_SIZE+PAGE_SIZE-1);
+		
+		mav.setPageNumbers(page, PAGE_SIZE, totalPageNum);
 		
 		mav.setViewName("index");
 		

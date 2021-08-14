@@ -66,7 +66,6 @@ public class Person {
 	
 	@NotEmpty(message="{password.notEmpty}")
 	@Column
-	//@Password(message="{password.password}")
 	private String password;
 	
 	@CreatedDate
@@ -85,7 +84,7 @@ public class Person {
 	@OneToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL , orphanRemoval = true)
 	@JoinColumn(name="space_id")
 	@Builder.Default
-	private Space space = new Space();
+	private Space space = Space.builder().build();
 	
 	public Person(String email, String password, String firstName, String lastName) {
 		this();
