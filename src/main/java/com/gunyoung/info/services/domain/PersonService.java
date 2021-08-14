@@ -80,7 +80,7 @@ public interface PersonService {
 	 * @param keyword Person들의 name 검색 키워드
 	 * @author kimgun-yeong 
 	 */
-	public Page<Person> findByNameKeywordInPage(String keyword);
+	public Page<Person> findByNameKeywordInPage(Integer pageNumber, String keyword);
 	
 	/**
 	 * Person 생성 및 수정

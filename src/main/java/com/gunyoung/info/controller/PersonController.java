@@ -76,7 +76,7 @@ public class PersonController {
 		long totalPageNum;
 
 		if(keyword != null) {
-			pageResult = personService.findByNameKeywordInPage(keyword);
+			pageResult = personService.findByNameKeywordInPage(page, keyword);
 			totalPageNum = personService.countWithNameKeyword(keyword)/PAGE_SIZE +1;
 		} else {
 			pageResult = personService.findAllInPage(page);

@@ -281,10 +281,11 @@ public class PersonServiceUnitTest {
 	@DisplayName("이름 검색 키워드 만족하는 모든 Person 페이지 반환 -> 정상")
 	public void findByNameKeywordInPageTest() {
 		//Given
+		int pageNum = 1;
 		String keyword = "keyword";
 		
 		//When
-		personService.findByNameKeywordInPage(keyword);
+		personService.findByNameKeywordInPage(pageNum, keyword);
 		
 		//Then
 		then(personRepository).should(times(1)).findByNameWithKeyword(anyString(),any(PageRequest.class));

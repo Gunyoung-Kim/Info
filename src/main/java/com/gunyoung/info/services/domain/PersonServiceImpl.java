@@ -93,7 +93,7 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Person> findByNameKeywordInPage(String keyword) {
+	public Page<Person> findByNameKeywordInPage(Integer pageNumber, String keyword) {
 		PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
 		return personRepository.findByNameWithKeyword(keyword, pageRequest);
 	}
