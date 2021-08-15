@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
-import com.gunyoung.info.dto.MainListObject;
+import com.gunyoung.info.dto.MainListDTO;
 import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.domain.SpaceService;
@@ -104,7 +104,7 @@ public class RestfulControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@GetMapping("/main/list")
-	 *		public List<MainListObject> index()
+	 *		public List<MainListDTO> index()
 	 */
 	
 	@Test
@@ -119,7 +119,7 @@ public class RestfulControllerTest {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		List<MainListObject> resultList = mapper.readValue(responseString, new TypeReference<List<MainListObject>>() {});
+		List<MainListDTO> resultList = mapper.readValue(responseString, new TypeReference<List<MainListDTO>>() {});
 		
 		assertEquals(resultList.size(), personNum);
 	}
