@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MainListDTO {
+	private Long personId;
 	private String personName;
 	private String personEmail;
 }

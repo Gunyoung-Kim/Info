@@ -86,6 +86,7 @@ public class PersonController {
 		List<MainListDTO> resultList = new LinkedList<>();
 		for(Person p : pageResult) {
 			MainListDTO mainListDTO = MainListDTO.builder()
+					.personId(p.getId())
 					.personName(p.getFullName())
 					.personEmail(p.getEmail())
 					.build();
