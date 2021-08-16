@@ -46,8 +46,10 @@ public class SpaceController {
 	@RequestMapping(value="/space", method= RequestMethod.GET)
 	public ModelAndView myspaceView(ModelAndView mav) {
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		Person loginUser = personService.findByEmail(loginUserEmail);
+		Long loginUserId = loginUser.getId();
 		
-		return new ModelAndView("redirect:/space/"+ loginUserEmail);
+		return new ModelAndView("redirect:/space/"+ loginUserId);
 	}
 	
 	/**

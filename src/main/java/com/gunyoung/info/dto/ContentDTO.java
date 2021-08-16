@@ -27,7 +27,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContentDTO {
 	
-	@NotEmpty
 	private Long hostId;
 	
 	@NotEmpty
@@ -97,5 +96,45 @@ public class ContentDTO {
 		}
 		
 		content.setLinks(newContentLinks);
+	}
+	
+	/**
+	 * ContentDTO에 담긴 정보로 Content 생성 후 반환 <br>
+	 * Link는 따로 추가하지 않는다
+	 * @author kimgun-yeong
+	 */
+	public Content createContentOnly() {
+		Content newContent = Content.builder()
+				.title(this.title)
+				.description(this.description)
+				.contributors(this.contributors)
+				.skillstacks(this.skillstacks)
+				.startedAt(this.startedAt)
+				.endAt(this.endAt)
+				.contents(this.contents)
+				.build();
+		
+		return newContent;
+	}
+	
+	/**
+	 * ContentDTO에 담긴 정보로 Link 리스트 생성 후 반환 <br>
+	 * Link에 인자로 입력된 Content와 연관관계 설정
+	 * @author kimgun-yeong
+	 */
+	public List<Link> createLinkListOnlyWithContent(Content content) {
+		List<Link> linkList = new ArrayList<>();
+		
+		for(LinkDTO linkDTO: this.links) {
+			Link link = Link.builder()
+					.tag(linkDTO.getTag())
+					.url(linkDTO.getUrl())
+					.content(content)
+					.build();
+			
+			linkList.add(link);
+		}
+		
+		return linkList;
 	}
 }
