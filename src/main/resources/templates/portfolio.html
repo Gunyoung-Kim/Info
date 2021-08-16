@@ -16,7 +16,7 @@
       }
 
       .content_box {
-        
+
       }
     </style>
   </head>
@@ -82,7 +82,9 @@
             <h5 class="mb-1">프로젝트 소개 및 기여 사항</h4>
             <pre class="mb-5 content_box" th:text="${content.contents}">내용</pre>
             <h5>프로젝트 관련 링크</h5>
-            <pre th:text="${content.links}">links</pre>
+            <div class="links" th:each="link:*{content.links}">
+              <b th:text="${link.tag}"></b> : <span><a th:href="${link.url}" th:text="${link.url}"></span>
+            </div>
           </div>
         </section>
         <footer th:if="${isHost}">
