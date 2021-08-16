@@ -14,6 +14,7 @@ import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.ProfileObject;
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
+import com.gunyoung.info.services.domain.ContentService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.util.AuthorityUtil;
 
@@ -29,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class SpaceController {
 	
 	private final PersonService personService;
+	
+	private final ContentService contentService;
 	
 	/**
 	 * <pre>
@@ -57,13 +60,13 @@ public class SpaceController {
 	 *  		   contents -> List<Content> (포트폴리오에 있는 프로젝트 리스트)
 	 *  		   isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부-> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
 	 *  </pre>
-	 *  @param email 열람하려는 포트폴리오 주인의 email 값
+	 *  @param userId 열람하려는 포트폴리오 주인의 Id
 	 *  @throws PersonNotFoundedException url에 입력된 email이 DB에 없으면 실패 페이지 반환
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
-	public ModelAndView spaceView(@PathVariable String email, ModelAndView mav) {
-		Person spaceHost = personService.findByEmailWithSpaceAndContents(email);
+	@RequestMapping(value="/space/{userId}", method= RequestMethod.GET)
+	public ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav) {
+		Person spaceHost = personService.findByIdWithSpace(userId);
 		if(spaceHost == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -71,13 +74,15 @@ public class SpaceController {
 		Space space = spaceHost.getSpace();
 		ProfileObject profileObject = ProfileObject.createFromPersonAndSpace(spaceHost, space);
 		
-		List<Content> contents = space.getContents();
+		Long spaceId = space.getId();
+		List<Content> contents = contentService.findBySpaceIdWithLinks(spaceId);
 		
-		String userEmail = AuthorityUtil.getSessionUserEmail();
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		boolean isSessionUserHost = loginUserEmail.equals(spaceHost.getEmail());
 		
-		mav.addObject("contents",contents);
 		mav.addObject("profile", profileObject);
-		mav.addObject("isHost", email.equals(userEmail));
+		mav.addObject("contents",contents);
+		mav.addObject("isHost", isSessionUserHost);
 		
 		mav.setViewName("portfolio");
 		

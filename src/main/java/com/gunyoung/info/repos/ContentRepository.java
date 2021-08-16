@@ -1,5 +1,6 @@
 package com.gunyoung.info.repos;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,18 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 			+ "INNER JOIN FETCH s.person p "
 			+ "WHERE c.id = :contentId")
 	public Optional<Content> findByIdWithSpaceAndPerson(@Param("contentId") Long contentId);
+	
+	/**
+	 * Space ID로 Content들 찾기 <br>
+	 * Links 페치 조인
+	 * @param spaceId 찾으려는 Content들의 Space ID
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT c FROM Content c "
+			+ "INNER JOIN c.space s "
+			+ "LEFT JOIN FETCH c.links l "
+			+ "WHERE s.id = :spaceId")
+	public List<Content> findBySpaceIdWithLinks(@Param("spaceId") Long spaceId);
 	
 	/**
 	 * 모든 Content 개수 반환

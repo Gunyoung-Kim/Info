@@ -25,6 +25,15 @@ public interface PersonService {
 	public Person findByEmail(String email);
 	
 	/**
+	 * id로 Person 찾기 <br>
+	 * Space와 페치조인
+	 * @param id 찾으려는 Person의 id
+	 * @return Person, null (해당 email의 Person 없을 경우)
+	 * @author kimgun-yeong
+	 */
+	public Person findByIdWithSpace(Long id);
+	
+	/**
 	 * email로 Person 찾기 <br>
 	 * Space와 페치조인
 	 * @param email 찾으려는 Person의 email
@@ -32,6 +41,15 @@ public interface PersonService {
 	 * @author kimgun-yeong
 	 */
 	public Person findByEmailWithSpace(String email);
+	
+	/**
+	 * id로 Person 찾기 <br>
+	 * Space와 Content들 페치조인
+	 * @param id 찾으려는 Person의 id
+	 * @return Person, null (해당 id의 Person 없을 경우)
+	 * @author kimgun-yeong
+	 */
+	public Person findByIdWithSpaceAndContents(Long id);
 	
 	/**
 	 * email로 Person 찾기 <br>

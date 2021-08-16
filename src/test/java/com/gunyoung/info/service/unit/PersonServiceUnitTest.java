@@ -185,6 +185,40 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
+	 * public Content findByIdWithSpaceAndContents(Long id)
+	 */
+	
+	@Test
+	@DisplayName("Id로 Person 찾기, Space, Contents 페치 조인 -> 존재하지 않음")
+	public void findByIdWithSpaceAndContentsNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(1);
+		
+		given(personRepository.findByIdWithSpaceAndContents(nonExistId)).willReturn(Optional.empty());
+		
+		//When
+		Person result = personService.findByIdWithSpaceAndContents(nonExistId);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	@Test
+	@DisplayName("Id로 Person 찾기, Space, Contents 페치 조인 -> 정상")
+	public void findByIdWithSpaceAndContentsTest() {
+		//Given
+		Long personId = Long.valueOf(1);
+		
+		given(personRepository.findByIdWithSpaceAndContents(personId)).willReturn(Optional.of(person));
+		
+		//When
+		Person result = personService.findByIdWithSpaceAndContents(personId);
+		
+		//Then
+		assertEquals(person, result);
+	}
+	
+	/*
 	 * public List<Person> findAll()
 	 */
 	
