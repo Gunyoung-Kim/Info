@@ -115,8 +115,8 @@ public class ContentControllerTest {
 	
 	/*
 	 *  - 대상 메소드: 
-	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
-	 *  	public ModelAndView createContentView(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav)
+	 *  	@RequestMapping(value="/space/makecontent/{userId}", method = RequestMethod.GET)
+	 *  	public ModelAndView createContentView(@PathVariable Long userId,@ModelAttribute("formModel") Content content, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="second@naver.com", roles= {"USER"})
@@ -129,9 +129,15 @@ public class ContentControllerTest {
 	
 	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
 	@Test
-	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 이메일)")
+	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 ID)")
 	public void createContentEmailNotExists() throws Exception {
-		mockMvc.perform(get("/space/makecontent/nonexist@daum.net"))
+		//Given
+		Long nonExistId = getNonExistPersonId();
+		
+		//When
+		mockMvc.perform(get("/space/makecontent/" + nonExistId))
+		
+		//Then
 				.andExpect(status().isNoContent());
 	}
 	
@@ -159,15 +165,22 @@ public class ContentControllerTest {
 	@Test
 	@DisplayName("콘텐트 추가 (정상)")
 	public void craeteContentTest() throws Exception{
-		mockMvc.perform(get("/space/makecontent/test@google.com"))
+		//Given
+		Person person = personService.findByEmail("test@google.com");
+		Long personId = person.getId();
+		
+		//When
+		mockMvc.perform(get("/space/makecontent/" + personId))
+		
+		//Then
 				.andExpect(status().isOk())
 				.andExpect(view().name("createContent"));
 	}
 	
 	/*
 	 *  - 대상 메소드:
-	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
-	 *      public ModelAndView createContent(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav)
+	 *  	@RequestMapping(value="/space/makecontent/{userId}", method = RequestMethod.POST)
+	 *      public ModelAndView createContent(@PathVariable Long userId,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -211,9 +224,11 @@ public class ContentControllerTest {
 	
 	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
 	@Test
-	@DisplayName("콘텐트 추가 POST (실패-일치하지만 DB에 저장되지 않은 이메일)")
+	@DisplayName("콘텐트 추가 POST (실패-일치하지만 DB에 저장되지 않은 ID)")
 	public void createContentPostEmailNotExists() throws Exception {
+		//Given
 		long contentNum = contentService.countAll();
+		Long nonExistPersonId = getNonExistPersonId();
 		
 		// Not Empty, Not Null인 것들만 채워넣음
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -221,8 +236,11 @@ public class ContentControllerTest {
 		map.add("contributors", "test contributors");
 		map.add("contents", "test contents");
 		
-		mockMvc.perform(post("/space/makecontent/nonexist@daum.net")
+		//When
+		mockMvc.perform(post("/space/makecontent/" + nonExistPersonId)
 				.params(map))
+		
+		//Then
 				.andExpect(status().isNoContent());
 		
 		assertEquals(contentService.countAll(),contentNum);
@@ -263,18 +281,24 @@ public class ContentControllerTest {
 	@Transactional
 	@DisplayName("콘텐트 추가 POST (정상)")
 	public void createContentPostTest() throws Exception {
+		//Given
 		long contentNum = contentService.countAll();
 		Person person = personService.findByEmail("test@google.com");
+		Long personId = person.getId();
 		Space space = person.getSpace();
 		long spaceContentsSize = space.getContents().size();
+		
 		// Not Empty, Not Null인 것들만 채워넣음
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("title", "testTitle");
 		map.add("contributors", "test contributors");
 		map.add("contents", "test contents");
 		
-		mockMvc.perform(post("/space/makecontent/test@google.com")
+		//When
+		mockMvc.perform(post("/space/makecontent/" + personId)
 				.params(map))
+		
+		//Then
 				.andExpect(redirectedUrl("/space"));
 		
 		// content 테이블의 로우 개수 추가 됐는지 확인
@@ -320,5 +344,17 @@ public class ContentControllerTest {
 		Long contentId = space.getContents().get(0).getId();
 		mockMvc.perform(get("/space/updatecontent/" + contentId.intValue()))
 				.andExpect(view().name("updateContent"));
+	}
+	
+	private Long getNonExistPersonId() {
+		Long nonExistPersonId = Long.valueOf(1);
+		
+		for(Person p : personService.findAll()) {
+			nonExistPersonId = Math.max(nonExistPersonId, p.getId());
+		}
+		
+		nonExistPersonId++;
+		
+		return nonExistPersonId;
 	}
 }
