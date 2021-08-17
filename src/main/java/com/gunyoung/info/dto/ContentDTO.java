@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 콘텐트 내용 수정,열람, 저장을 위한 DTO 객체
+ * Content 내용 수정,열람, 저장을 위한 DTO 객체
  * @author kimgun-yeong
  *
  */

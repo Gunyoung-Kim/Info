@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileObject {
+public class ProfileDTO {
 	@NotEmpty
 	private String email;
 	
@@ -40,7 +40,7 @@ public class ProfileObject {
 	private String facebook;
 	
 	/**
-	 * ProfileObject에 담긴 정보로 Person, Space 정보 업데이트
+	 * ProfileDTO에 담긴 정보로 Person, Space 정보 업데이트
 	 * @param person 업데이트하려는 Person
 	 * @param space 업데이트하려는 Space
 	 * @author kimgun-yeong
@@ -57,11 +57,11 @@ public class ProfileObject {
 	}
 	
 	/**
-	 * Person, Space 를 통해 ProfileObject 생성 후 반환
+	 * Person, Space 를 통해 ProfileDTO 생성 후 반환
 	 * @author kimgun-yeong
 	 */
-	public static ProfileObject createFromPersonAndSpace(Person person, Space space) {
-		ProfileObject profileObject = ProfileObject.builder()
+	public static ProfileDTO createFromPersonAndSpace(Person person, Space space) {
+		ProfileDTO profileDTO = ProfileDTO.builder()
 				.email(person.getEmail())
 				.firstName(person.getFirstName())
 				.lastName(person.getLastName())
@@ -72,6 +72,6 @@ public class ProfileObject {
 				.facebook(space.getFacebook())
 				.build();
 		
-		return profileObject;
+		return profileDTO;
 	}
 }

@@ -186,7 +186,7 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
-	 *		public ModelAndView updateProfileView(@ModelAttribute("formModel") ProfileObject profileObject, ModelAndView mav)
+	 *		public ModelAndView updateProfileView(@ModelAttribute("formModel") ProfileDTO profileDTO, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="none@none.com", roles= {"USER"})

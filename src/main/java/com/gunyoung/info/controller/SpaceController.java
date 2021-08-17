@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
-import com.gunyoung.info.dto.ProfileObject;
+import com.gunyoung.info.dto.ProfileDTO;
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.ContentService;
@@ -61,7 +61,7 @@ public class SpaceController {
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: portfolio.html (url에 입력된 이메일 유저의 포트폴리오)
-	 *  	Model: profile -> ProfileObject (포트폴리오 주인의 프로필 정보를 전달하는 DTO- Person+Space 일부 필드)
+	 *  	Model: profile -> ProfileDTO (포트폴리오 주인의 프로필 정보를 전달하는 DTO- Person+Space 일부 필드)
 	 *  		   contents -> List<Content> (포트폴리오에 있는 프로젝트 리스트)
 	 *  		   isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부-> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
 	 *  </pre>
@@ -77,7 +77,7 @@ public class SpaceController {
 		}
 		
 		Space space = spaceHost.getSpace();
-		ProfileObject profileObject = ProfileObject.createFromPersonAndSpace(spaceHost, space);
+		ProfileDTO profileDTO = ProfileDTO.createFromPersonAndSpace(spaceHost, space);
 		
 		Long spaceId = space.getId();
 		List<Content> contents = contentService.findBySpaceIdWithLinks(spaceId);
@@ -85,7 +85,7 @@ public class SpaceController {
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		boolean isSessionUserHost = loginUserEmail.equals(spaceHost.getEmail());
 		
-		mav.addObject("profile", profileObject);
+		mav.addObject("profile", profileDTO);
 		mav.addObject("contents",contents);
 		mav.addObject("isHost", isSessionUserHost);
 		
@@ -100,7 +100,7 @@ public class SpaceController {
 	 *  - 반환: 
 	 *  	- 성공
 	 *  	View: updateProfile.html (프로필 업데이트 사항 작성을 위한 템플릿)
-	 *  	Model: formModel->ProfileObject(프로필 업데이트 사항 전달을 위한 DTO객체, Person+ Space 일부필드)
+	 *  	Model: formModel->ProfileDTO(프로필 업데이트 사항 전달을 위한 DTO객체, Person+ Space 일부필드)
 	 *  </pre>
 	 *  @throws PersonNotFoundedException 현재 로그인된 유저의 이메일이 DB에 없으면
 	 *  @author kimgun-yeong
@@ -115,9 +115,9 @@ public class SpaceController {
 		}
 		
 		Space space = user.getSpace();
-		ProfileObject profileObject = ProfileObject.createFromPersonAndSpace(user, space);
+		ProfileDTO profileDTO = ProfileDTO.createFromPersonAndSpace(user, space);
 		
-		mav.addObject("formModel", profileObject);
+		mav.addObject("formModel", profileDTO);
 		
 		mav.setViewName("updateProfile");
 		
