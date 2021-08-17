@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +119,14 @@ public class ContentControllerTest {
 	@Test
 	@DisplayName("콘텐트 추가 (실패-로그인 계정과 일치하지 않음)")
 	public void createContentTestEmailNotMatch() throws Exception {
-		mockMvc.perform(get("/space/makecontent/test@google.com"))
+		//Given
+		Person anotherPerson = personService.findByEmail("test@google.com");
+		Long anotherID = anotherPerson.getId();
+		
+		//When
+		mockMvc.perform(get("/space/makecontent/" + anotherID))
+		
+		//Then
 			   .andExpect(status().isBadRequest());
 	}
 	
@@ -142,6 +150,7 @@ public class ContentControllerTest {
 	@DisplayName("콘텐트 추가 (실패-개인 최대 프로젝트 개수 초과)")
 	public void createContentEmailOverLimit() throws Exception {
 		Person person = personService.findByEmail("test@google.com");
+		Long personId = person.getId();
 		Space space = person.getSpace();
 		for(int i=INIT_CONTENT_NUM;i<=MAX_CONTENT_NUM;i++) {
 			Content content = new Content();
@@ -152,7 +161,7 @@ public class ContentControllerTest {
 			spaceService.addContent(space, content);
 		}
 		
-		mockMvc.perform(get("/space/makecontent/test@google.com"))
+		mockMvc.perform(get("/space/makecontent/"+personId))
 				.andExpect(status().isBadRequest());
 	}
 	
@@ -201,6 +210,7 @@ public class ContentControllerTest {
 				.andExpect(status().isBadRequest());
 	}
 	
+	@Disabled
 	@WithMockUser(username="test@google.com", roles= {"USER"})
 	@Test
 	@Transactional
@@ -209,7 +219,8 @@ public class ContentControllerTest {
 		//Given
 		Person p = personService.findByEmail("test@google.com");
 		Space space = p.getSpace();
-		Long contentId = space.getContents().get(0).getId();
+		Content content = space.getContents().get(0);
+		Long contentId = content.getId();
 		
 		//When
 		mockMvc.perform(get("/space/updatecontent/" + contentId))
