@@ -121,8 +121,14 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 되어있을때)")
 	public void mySpaceViewUserTest() throws Exception {
+		//Given
+		Long personId = personService.findByEmail("test@google.com").getId();
+		
+		//When
 		mockMvc.perform(get("/space"))
-				.andExpect(redirectedUrl("/space/test@google.com"));
+		
+		//Then
+				.andExpect(redirectedUrl("/space/"+ personId));
 	}
 	
 	/*
