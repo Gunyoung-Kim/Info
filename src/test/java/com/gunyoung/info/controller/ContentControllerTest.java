@@ -1,9 +1,6 @@
 package com.gunyoung.info.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -19,8 +16,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
@@ -115,8 +110,8 @@ public class ContentControllerTest {
 	
 	/*
 	 *  - 대상 메소드: 
-	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.GET)
-	 *  	public ModelAndView createContent(@PathVariable String email,@ModelAttribute("formModel") Content content, ModelAndView mav)
+	 *  	@RequestMapping(value="/space/makecontent/{userId}", method = RequestMethod.GET)
+	 *  	public ModelAndView createContentView(@PathVariable Long userId,@ModelAttribute("formModel") Content content, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="second@naver.com", roles= {"USER"})
@@ -129,9 +124,15 @@ public class ContentControllerTest {
 	
 	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
 	@Test
-	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 이메일)")
+	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 ID)")
 	public void createContentEmailNotExists() throws Exception {
-		mockMvc.perform(get("/space/makecontent/nonexist@daum.net"))
+		//Given
+		Long nonExistId = getNonExistPersonId();
+		
+		//When
+		mockMvc.perform(get("/space/makecontent/" + nonExistId))
+		
+		//Then
 				.andExpect(status().isNoContent());
 	}
 	
@@ -159,136 +160,22 @@ public class ContentControllerTest {
 	@Test
 	@DisplayName("콘텐트 추가 (정상)")
 	public void craeteContentTest() throws Exception{
-		mockMvc.perform(get("/space/makecontent/test@google.com"))
+		//Given
+		Person person = personService.findByEmail("test@google.com");
+		Long personId = person.getId();
+		
+		//When
+		mockMvc.perform(get("/space/makecontent/" + personId))
+		
+		//Then
 				.andExpect(status().isOk())
 				.andExpect(view().name("createContent"));
 	}
 	
 	/*
-	 *  - 대상 메소드:
-	 *  	@RequestMapping(value="/space/makecontent/{email}", method = RequestMethod.POST)
-	 *      public ModelAndView createContentPost(@PathVariable String email,@Valid @ModelAttribute("formModel") Content content ,ModelAndView mav)
-	 */
-	
-	@WithMockUser(username="test@google.com", roles= {"USER"})
-	@Test
-	@DisplayName("콘텐트 추가 POST (실패-콘텐트 유효성 검사 통과 못함)")
-	public void createContentPostNonValidate() throws Exception {
-		long contentNum = contentService.countAll();
-		
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", ""); // 타이틀을 공백으로 보냄
-		map.add("contributors", "test contributors");
-		map.add("contents", "test contents");
-		
-		
-		mockMvc.perform(post("/space/makecontent/test@google.com")
-				.params(map))
-				.andExpect(status().is4xxClientError());
-	
-		
-		assertEquals(contentService.countAll(),contentNum);
-	}
-	
-	@WithMockUser(username="second@naver.com", roles= {"USER"})
-	@Test
-	@DisplayName("콘텐트 추가 POST (실패-로그인 계정과 일치하지 않음)")
-	public void createContentPostTestEmailNotMatch() throws Exception {
-		long contentNum = contentService.countAll();
-		
-		// Not Empty, Not Null인 것들만 채워넣음
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", "testTitle");
-		map.add("contributors", "test contributors");
-		map.add("contents", "test contents");
-		
-		mockMvc.perform(post("/space/makecontent/test@google.com")
-				.params(map))
-				.andExpect(status().isBadRequest());
-		
-		assertEquals(contentService.countAll(),contentNum);
-	}
-	
-	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
-	@Test
-	@DisplayName("콘텐트 추가 POST (실패-일치하지만 DB에 저장되지 않은 이메일)")
-	public void createContentPostEmailNotExists() throws Exception {
-		long contentNum = contentService.countAll();
-		
-		// Not Empty, Not Null인 것들만 채워넣음
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", "testTitle");
-		map.add("contributors", "test contributors");
-		map.add("contents", "test contents");
-		
-		mockMvc.perform(post("/space/makecontent/nonexist@daum.net")
-				.params(map))
-				.andExpect(status().isNoContent());
-		
-		assertEquals(contentService.countAll(),contentNum);
-	}
-	
-	@WithMockUser(username="test@google.com" , roles= {"USER"})
-	@Test
-	@Transactional
-	@DisplayName("콘텐트 추가 POST (실패-개인 최대 프로젝트 개수 초과)")
-	public void createContentPostOverLimit() throws Exception {
-		Person person = personService.findByEmail("test@google.com");
-		Space space = person.getSpace();
-		for(int i=INIT_CONTENT_NUM;i<=MAX_CONTENT_NUM;i++) {
-			Content content = new Content();
-			content.setTitle(i+" 번째 타이틀");
-			content.setDescription(i+" 번째 프로젝트 설명");
-			content.setContributors(i+" 번째 기여자들");
-			content.setContents(i+ " 번째 프로젝트 내용");
-			spaceService.addContent(space, content);
-		}
-		
-		long contentNum = contentService.countAll();
-		
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", "testTitle");
-		map.add("contributors", "test contributors");
-		map.add("contents", "test contents");
-		
-		mockMvc.perform(post("/space/makecontent/test@google.com")
-				.params(map))
-				.andExpect(status().isBadRequest());
-		
-		assertEquals(contentService.countAll(),contentNum);
-	}
-	
-	@WithMockUser(username="test@google.com", roles= {"USER"})
-	@Test
-	@Transactional
-	@DisplayName("콘텐트 추가 POST (정상)")
-	public void createContentPostTest() throws Exception {
-		long contentNum = contentService.countAll();
-		Person person = personService.findByEmail("test@google.com");
-		Space space = person.getSpace();
-		long spaceContentsSize = space.getContents().size();
-		// Not Empty, Not Null인 것들만 채워넣음
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", "testTitle");
-		map.add("contributors", "test contributors");
-		map.add("contents", "test contents");
-		
-		mockMvc.perform(post("/space/makecontent/test@google.com")
-				.params(map))
-				.andExpect(redirectedUrl("/space"));
-		
-		// content 테이블의 로우 개수 추가 됐는지 확인
-		assertEquals(contentService.countAll(),contentNum+1);
-		
-		//해당 유저의 포트폴리오에 하나 더 추가 되었는지 확인
-		assertEquals(space.getContents().size(),spaceContentsSize+1);
-		
-	}
-	
-	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
-	 *		public ModelAndView updateContent(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
+	 *		public ModelAndView updateContentView(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})
@@ -303,10 +190,14 @@ public class ContentControllerTest {
 	@Test
 	@DisplayName("콘텐트 업데이트 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
 	public void updateContentWrongUser() throws Exception {
+		//Given
 		Content content = contentRepository.findAll().get(0);
 		Long contentId = content.getId();
 		
+		//When
 		mockMvc.perform(get("/space/updatecontent/"+contentId))
+		
+		//Then
 				.andExpect(status().isBadRequest());
 	}
 	
@@ -315,10 +206,27 @@ public class ContentControllerTest {
 	@Transactional
 	@DisplayName("콘텐트 업데이트 (정상)")
 	public void updateContentTest() throws Exception {
+		//Given
 		Person p = personService.findByEmail("test@google.com");
 		Space space = p.getSpace();
 		Long contentId = space.getContents().get(0).getId();
-		mockMvc.perform(get("/space/updatecontent/" + contentId.intValue()))
+		
+		//When
+		mockMvc.perform(get("/space/updatecontent/" + contentId))
+		
+		//Then
 				.andExpect(view().name("updateContent"));
+	}
+	
+	private Long getNonExistPersonId() {
+		Long nonExistPersonId = Long.valueOf(1);
+		
+		for(Person p : personService.findAll()) {
+			nonExistPersonId = Math.max(nonExistPersonId, p.getId());
+		}
+		
+		nonExistPersonId++;
+		
+		return nonExistPersonId;
 	}
 }

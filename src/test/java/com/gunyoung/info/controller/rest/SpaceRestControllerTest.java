@@ -96,7 +96,7 @@ public class SpaceRestControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/updateprofile", method = RequestMethod.PUT)
-	 * 		public void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileObject profileObject)
+	 * 		public void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileDTO profileDTO)
 	 */
 	
 	@WithMockUser(username="test@google.com", roles= {"USER"})

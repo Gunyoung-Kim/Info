@@ -1,11 +1,8 @@
 package com.gunyoung.info.domain;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -14,19 +11,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.gunyoung.info.enums.RoleType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -37,9 +32,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="person")
-@EntityListeners(AuditingEntityListener.class)
-public class Person {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Person extends BaseEntity{
 	
 	@Id
 	@Column(name = "person_id")
@@ -48,6 +44,7 @@ public class Person {
 	
 	@Column(name="role_type")
 	@Enumerated(EnumType.STRING)
+	@Builder.Default
 	private RoleType role = RoleType.USER; 
 	
 	@Column(length=50)
@@ -55,17 +52,9 @@ public class Person {
 	@Email(message="{email.email}")
 	private String email;
 	
-	@Version
-	@Column
-	private int version;
-	
 	@NotEmpty(message="{password.notEmpty}")
 	@Column
-	//@Password(message="{password.password}")
 	private String password;
-	
-	@CreatedDate
-	private LocalDateTime createdAt;
 	
 	@NotEmpty(message="{firstName.notEmpty}")
 	@Size(max =60, message="{firstName.size}")
@@ -79,12 +68,8 @@ public class Person {
 	
 	@OneToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL , orphanRemoval = true)
 	@JoinColumn(name="space_id")
-	private Space space;
-	
-	public Person() {
-		Space space = new Space();
-		this.space = space;
-	}
+	@Builder.Default
+	private Space space = Space.builder().build();
 	
 	public Person(String email, String password, String firstName, String lastName) {
 		this();
@@ -98,6 +83,4 @@ public class Person {
 	public String getFullName() {
 		return this.firstName +" " + this.lastName;
 	}
-	
-	
 }

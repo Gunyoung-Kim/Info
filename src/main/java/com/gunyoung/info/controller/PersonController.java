@@ -1,6 +1,7 @@
 package com.gunyoung.info.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,8 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.info.controller.util.ModelAndPageView;
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.dto.MainListObject;
+import com.gunyoung.info.dto.MainListDTO;
 import com.gunyoung.info.dto.email.EmailDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.error.code.PersonErrorCode;
@@ -30,9 +33,9 @@ import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
 import com.gunyoung.info.security.UserDetailsVO;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.email.EmailService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * Person 관련 화면 반환하는 컨트롤러
@@ -40,7 +43,6 @@ import lombok.Setter;
  *
  */
 @Controller
-@Setter
 @RequiredArgsConstructor
 public class PersonController {
 	private static final int PAGE_SIZE = 10;
@@ -63,8 +65,10 @@ public class PersonController {
 	 */
 	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
-	public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword, ModelAndView mav) {
-		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"))) {
+	public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
+			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
+		Collection<? extends GrantedAuthority> loginUserAuthorities = AuthorityUtil.getSessionUserAuthorities();
+		if(loginUserAuthorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"))) {
 			return new ModelAndView("redirect:/oauth2/join");
 		}
 		
@@ -72,22 +76,27 @@ public class PersonController {
 		long totalPageNum;
 
 		if(keyword != null) {
-			pageResult = personService.findByNameKeywordInPage(keyword);
+			pageResult = personService.findByNameKeywordInPage(page, keyword);
 			totalPageNum = personService.countWithNameKeyword(keyword)/PAGE_SIZE +1;
 		} else {
-			pageResult = personService.getAllInPage(page);
+			pageResult = personService.findAllInPage(page);
 			totalPageNum = personService.countAll()/PAGE_SIZE +1;
 		}
-		List<MainListObject> resultList = new LinkedList<>();
 		
+		List<MainListDTO> resultList = new LinkedList<>();
 		for(Person p : pageResult) {
-			resultList.add(new MainListObject(p.getFullName(),p.getEmail()));
+			MainListDTO mainListDTO = MainListDTO.builder()
+					.personId(p.getId())
+					.personName(p.getFullName())
+					.personEmail(p.getEmail())
+					.build();
+			resultList.add(mainListDTO);
 		}
 		
 		mav.addObject("listObject",resultList);
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/PAGE_SIZE)*PAGE_SIZE+1);
-		mav.addObject("lastIndex",(page/PAGE_SIZE)*PAGE_SIZE+PAGE_SIZE-1 > totalPageNum ? totalPageNum : (page/PAGE_SIZE)*PAGE_SIZE+PAGE_SIZE-1);
+		
+		mav.setPageNumbers(page, PAGE_SIZE, totalPageNum);
+		
 		mav.setViewName("index");
 		
 		return mav;
@@ -103,7 +112,7 @@ public class PersonController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login() {
+	public String loginView() {
 		return "login";
 	}
 	
@@ -117,9 +126,10 @@ public class PersonController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join" , method = RequestMethod.GET)
-	public ModelAndView join(@ModelAttribute("formModel") Person person, ModelAndView mav) {
-		mav.setViewName("join");
+	public ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav) {
 		mav.addObject("formModel", person);
+		
+		mav.setViewName("join");
 		return mav;
 	}
 	
@@ -135,7 +145,7 @@ public class PersonController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join", method = RequestMethod.POST)
-	public ModelAndView joinPost(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav) {
+	public ModelAndView join(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav) {
 		if(personService.existsByEmail(person.getEmail())) {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		};
@@ -143,7 +153,7 @@ public class PersonController {
 		person.setPassword(passwordEncoder.encode(person.getPassword()));
 		personService.save(person);
 		
-		 sendEmailForJoin(person.getEmail());
+		sendEmailForJoin(person.getEmail());
 		return new ModelAndView("redirect:/");
 	}
 	
@@ -159,18 +169,17 @@ public class PersonController {
 	 */
 	
 	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
-	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav) {
-		String connectedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		if(personService.existsByEmail(connectedEmail)) {
+	public ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		if(personService.existsByEmail(loginUserEmail)) {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		mav.setViewName("joinOAuth");
-		
-		formModel.setEmail(connectedEmail);
+		formModel.setEmail(loginUserEmail);
 		
 		mav.addObject("formModel", formModel);
+		
+		mav.setViewName("joinOAuth");
 		
 		return mav;
 	}
@@ -189,30 +198,25 @@ public class PersonController {
 	 */	
 	
 	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
-	public ModelAndView oAuth2JoinPost(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
-		String connectEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		if(!connectEmail.equals(formModel.getEmail())) {
+	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
+		String userEmail = AuthorityUtil.getSessionUserEmail();
+		if(!userEmail.equals(formModel.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		Person person = new Person();
-		person.setEmail(formModel.getEmail());
-		person.setPassword(passwordEncoder.encode(formModel.getPassword()));
-		person.setFirstName(formModel.getFirstName());
-		person.setLastName(formModel.getLastName());
-		
+		String encodedPassword = passwordEncoder.encode(formModel.getPassword());
+		Person person = formModel.createPersonFromOAuth2Join(encodedPassword);
 		personService.save(person);
 		
+		// 예비 사용자가 회원 가입 후 새로운 Authentication 부여
 		List<GrantedAuthority> newAuthorityList = new ArrayList<>();
-		
 		newAuthorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
 		
-		Authentication newAuth = new UsernamePasswordAuthenticationToken(new UserDetailsVO(person.getEmail(),person.getPassword(),person.getRole()),null,newAuthorityList);
-		
+		UserDetails newUserDetails = new UserDetailsVO(person.getEmail(),person.getPassword(),person.getRole());
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails,null,newAuthorityList);
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 		
-		 sendEmailForJoin(formModel.getEmail());
+		sendEmailForJoin(formModel.getEmail());
 		
 		return new ModelAndView("redirect:/");
 	}

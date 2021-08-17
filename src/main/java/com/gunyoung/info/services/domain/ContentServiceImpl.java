@@ -1,5 +1,6 @@
 package com.gunyoung.info.services.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -18,11 +19,6 @@ public class ContentServiceImpl implements ContentService{
 	private final ContentRepository contentRepository;
 	
 	@Override
-	public Content save(Content content) {
-		return contentRepository.save(content);
-	}
-
-	@Override
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
 		 Optional<Content> result = contentRepository.findById(id);
@@ -30,28 +26,46 @@ public class ContentServiceImpl implements ContentService{
 			 return null;
 		 return result.get();
 	}
-
+	
 	@Override
-	public void deleteContent(Content content) {
-		Long id = content.getId();
-		if(id == null) 
-			return;
-		if(!contentRepository.existsById(id)) {
-			return;
-		}
-		contentRepository.delete(content);
-		content.getSpace().getContents().remove(content);
+	@Transactional(readOnly=true)
+	public Content findByIdWithSpaceAndPerson(Long id) {
+		Optional<Content> result = contentRepository.findByIdWithSpaceAndPerson(id);
+		if(!result.isPresent())
+			return null;
+		return result.get();
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public Content findByIdWithLinks(Long id) {
+		Optional<Content> result = contentRepository.findByIdWithLinks(id);
+		if(!result.isPresent())
+			return null;
+		return result.get();
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public List<Content> findBySpaceIdWithLinks(Long spaceId) {
+		return contentRepository.findBySpaceIdWithLinks(spaceId);
+	}	
+	
+	@Override
+	public Content save(Content content) {
+		return contentRepository.save(content);
 	}
 
 	@Override
-	public void deleteContentById(Long id) {
-		if(!contentRepository.existsById(id)) {
-			return;
-		}
-		Content content = contentRepository.getById(id);
-		content.getSpace().getContents().remove(content);
+	public void delete(Content content) {
 		contentRepository.delete(content);
-		
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		Content content = findById(id);
+		if(content != null)
+			contentRepository.delete(content);
 	}
 
 	@Override
@@ -65,5 +79,4 @@ public class ContentServiceImpl implements ContentService{
 	public boolean existsById(Long id) {
 		return contentRepository.existsById(id);
 	}
-	
 }

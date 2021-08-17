@@ -111,7 +111,7 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value ="/", method =RequestMethod.GET)
-	 * 		public ModelAndView indexByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) 
+	 * 		public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) 
 	 */
 	
 	@Test
@@ -142,13 +142,13 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	 * 		public String login() 
+	 * 		public String loginView() 
 	 */
 	
 	@WithAnonymousUser
 	@Test
 	@DisplayName("로그인 화면 (성공)")
-	public void loginTest() throws Exception {
+	public void loginViewTest() throws Exception {
 		mockMvc.perform(get("/login"))
 				.andExpect(view().name("login"));
 	}
@@ -156,12 +156,12 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/join" , method = RequestMethod.GET)
-	 * 		public ModelAndView join(@ModelAttribute("formModel") Person person, ModelAndView mav)
+	 * 		public ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("회원가입 화면 (성공)")
-	public void joinTest() throws Exception {
+	public void joinViewTest() throws Exception {
 		mockMvc.perform(get("/join"))
 				.andExpect(view().name("join"));
 	}
@@ -169,7 +169,7 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/join", method = RequestMethod.POST)
-	 * 		public ModelAndView joinPost(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav)
+	 * 		public ModelAndView join(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav)
 	 */
 	
 	@Test
@@ -256,12 +256,12 @@ public class PersonControllerTest {
 	/* 
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
-	 *		public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
+	 *		public ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
 	 */
 	@WithMockUser(username="test@google.com", roles= {"PRE"})
 	@Test
 	@DisplayName("소셜 로그인 회원가입 (실패-이미 회원가입 되어있는 회원의 접근)")
-	public void oAuth2JoinAlreadyJoin() throws Exception {
+	public void oAuth2JoinViewAlreadyJoin() throws Exception {
 		mockMvc.perform(get("/oauth2/join"))
 				.andExpect(status().isConflict());
 		
@@ -270,12 +270,12 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
-	 * 		public ModelAndView oAuth2JoinPost(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
+	 * 		public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
 	 */
 	@WithMockUser(username="none@google.com", roles= {"PRE"})
 	@Test
 	@DisplayName("소셜로그인 계정 회원가입 POST (실패- 이메일이 입력된 사항과 불일치)")
-	public void oAuth2JoinPostEmailNotMatch() throws Exception{
+	public void oAuth2JoinEmailNotMatch() throws Exception{
 		
 		long personNum = personService.countAll();
 		
@@ -295,7 +295,7 @@ public class PersonControllerTest {
 	@WithMockUser(username="new@google.com" , roles= {"PRE"})
 	@Test
 	@DisplayName("소셜로그인 계정 회원가입 POST (성공)")
-	public void oAuth2JoinPostTest() throws Exception {
+	public void oAuth2JoinTest() throws Exception {
 		long personNum = personService.countAll();
 		
 		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();

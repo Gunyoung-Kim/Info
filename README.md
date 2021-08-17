@@ -1,7 +1,6 @@
 # INFO [![Build Status](https://travis-ci.com/Gunyoung-Kim/Info.svg?branch=master)](https://travis-ci.com/Gunyoung-Kim/Info)
 
-최신 버전 : ver 0.0.12
-
+최신 버전 : ver 0.1.0
 
 ## 프로젝트 목적
 
@@ -19,7 +18,7 @@
 
 - 프로젝트 주요 기능: 포트폴리오 열람, 포트폴리오 작성, 로그인기능, 회원가입 기능
 
-- 사용 기술, 개발 환경 : SPRING Boot , SPRING JPA, Spring Security, JUnit5, Thymleaf, Maven, open-jdk8, HTML, CSS, Javascript
+- 사용 기술, 개발 환경 : SPRING Boot , SPRING JPA, Spring Security, JUnit5, SpringMVC, open-jdk8
 
 - 사용 데이터베이스
 
@@ -57,9 +56,23 @@
 
 ---
 
+### 테스트 방식 
+
+1. RestController, Controller 클래스 
+
+   - 통합 테스트 : 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 
+
+2. Service 클래스 
+
+   - 통합 테스트 : 서비스 계층 - 영속성 계층 (com.gunyoung.info.services.domain.* 클래스들만)
+
+   - 단위 테스트 : 서비스 계층 
+
+---
+
 ## DB 테이블 설계
 
-<img width="752" alt="infodb_table_2" src="https://user-images.githubusercontent.com/60494603/120187085-4f165280-c24f-11eb-95f0-e7002e86aa8e.png">
+![Info_0_1_0](https://user-images.githubusercontent.com/60494603/129672306-a06123c8-9e21-4df3-a945-03ab5a2672ed.png)
 
 ---
 
@@ -71,38 +84,7 @@
 
 ## 화면 설계
 
-- 메인 화면 
-
-<img width="1440" alt="mainView" src="https://user-images.githubusercontent.com/60494603/120885865-15b25e00-c626-11eb-829b-1a32b336597f.png">
-
-- 회원 가입 화면
-
-<img width="1440" alt="join" src="https://user-images.githubusercontent.com/60494603/121858668-cf4db500-cd31-11eb-84a7-3b2072a23e6e.png">
-
-- 로그인 화면
-
-<img width="1440" alt="login614" src="https://user-images.githubusercontent.com/60494603/121858696-d5dc2c80-cd31-11eb-89c3-6f029807598b.png">
-
-
-- 포트폴리오-프로필 화면
-
-<img width="1440" alt="profile" src="https://user-images.githubusercontent.com/60494603/120186150-12962700-c24e-11eb-959e-a31490d95617.png">
-
-- 포트폴리오-프로젝트 화면
-
-<img width="1440" alt="portfolio" src="https://user-images.githubusercontent.com/60494603/120502626-8d517480-c3fd-11eb-81dc-c1f916997f24.png">
-
-- 프로젝트 생성 화면
-
-<img width="1440" alt="ceate_content" src="https://user-images.githubusercontent.com/60494603/120320356-0b8a1a00-c31d-11eb-99c2-78e12b6193c3.png">
-
-- 프로젝트 수정 화면
-
-<img width="1440" alt="update_content" src="https://user-images.githubusercontent.com/60494603/120320662-64f24900-c31d-11eb-8a3e-c8a56b118b11.png">
-
-- 개인 정보 수정 화면
-
-<img width="1440" alt="update_profile" src="https://user-images.githubusercontent.com/60494603/120186152-13c75400-c24e-11eb-9615-7dec6001681c.png">
+- 화면 설계: [화면 설계 보러가기](https://github.com/Gunyoung-Kim/Info_ABOUT/blob/master/View_Design.md)
 
 ---
 

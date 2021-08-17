@@ -1,16 +1,16 @@
 package com.gunyoung.info.controller.rest;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.util.AuthorityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,24 +45,23 @@ public class PersonRestController {
 	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤
 	 *  	   DB: 해당 person 삭제
 	 *  </pre>
-	 *  @param email 회원 탈퇴하려는 주체의 email값
+	 *  @param targetPersonEmail 회원 탈퇴하려는 주체의 email값
 	 *  @throws PersonNotFoundedException 해당 계정이 DB에 존재하지 않을 때
 	 *  @throws NotMyResourceException 로그인 계정이 탈퇴 계정과 일치하지 않을 때
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
-	public void personWithdraw(@RequestParam("email") String email) {
-		
-		if(!personService.existsByEmail(email)) {
+	public void personWithdraw(@RequestParam("email") String targetPersonEmail) {
+		Person targetPerson = personService.findByEmail(targetPersonEmail);
+		if(targetPerson == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		if(!auth.getName().equals(email)) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		if(!loginUserEmail.equals(targetPersonEmail)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		personService.deletePerson(personService.findByEmail(email));
+		personService.delete(targetPerson);
 	}
 }

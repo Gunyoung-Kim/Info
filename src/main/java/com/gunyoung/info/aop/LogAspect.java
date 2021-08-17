@@ -29,7 +29,7 @@ public class LogAspect {
 	 * 컨트롤러들의 포인트컷
 	 * @author kimgun-yeong
 	 */
-	@Pointcut("within(com.gunyoung.info.controller.*)")
+	@Pointcut("within(com.gunyoung.info.controller..*)")
 	public void onRequest() {}
 	
 	/**

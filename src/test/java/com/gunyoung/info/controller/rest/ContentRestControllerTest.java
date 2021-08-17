@@ -2,6 +2,7 @@ package com.gunyoung.info.controller.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,7 +69,7 @@ public class ContentRestControllerTest {
 			
 			// content 들 설정
 			int contentsNumber = INIT_CONTENT_NUM;
-			for(int i=0;i<=contentsNumber;i++) {
+			for(int i=0;i<contentsNumber;i++) {
 				Content content = new Content();
 				content.setTitle(i+" 번째 타이틀");
 				content.setDescription(i+" 번째 프로젝트 설명");
@@ -97,6 +98,132 @@ public class ContentRestControllerTest {
 			
 			personService.save(person2);
 		}
+	}
+	
+	/*
+	 *  - 대상 메소드:
+	 *  	@RequestMapping(value="/space/makecontent/{userId}", method = RequestMethod.POST)
+	 *      public void createContent(@PathVariable Long userId,@Valid @ModelAttribute("formModel") Content content)
+	 */
+	
+	@WithMockUser(username="test@google.com", roles= {"USER"})
+	@Test
+	@DisplayName("콘텐트 추가 POST (실패-콘텐트 유효성 검사 통과 못함)")
+	public void createContentPostNonValidate() throws Exception {
+		long contentNum = contentService.countAll();
+		
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("title", ""); // 타이틀을 공백으로 보냄
+		map.add("contributors", "test contributors");
+		map.add("contents", "test contents");
+		
+		
+		mockMvc.perform(post("/space/makecontent/test@google.com")
+				.params(map))
+				.andExpect(status().is4xxClientError());
+	
+		
+		assertEquals(contentService.countAll(),contentNum);
+	}
+	
+	@WithMockUser(username="second@naver.com", roles= {"USER"})
+	@Test
+	@DisplayName("콘텐트 추가 POST (실패-로그인 계정과 일치하지 않음)")
+	public void createContentPostTestEmailNotMatch() throws Exception {
+		long contentNum = contentService.countAll();
+		
+		// Not Empty, Not Null인 것들만 채워넣음
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("title", "testTitle");
+		map.add("contributors", "test contributors");
+		map.add("contents", "test contents");
+		
+		mockMvc.perform(post("/space/makecontent/test@google.com")
+				.params(map))
+				.andExpect(status().isBadRequest());
+		
+		assertEquals(contentService.countAll(),contentNum);
+	}
+	
+	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
+	@Test
+	@DisplayName("콘텐트 추가 POST (실패-일치하지만 DB에 저장되지 않은 ID)")
+	public void createContentPostEmailNotExists() throws Exception {
+		//Given
+		long contentNum = contentService.countAll();
+		Long nonExistPersonId = getNonExistPersonId();
+		
+		// Not Empty, Not Null인 것들만 채워넣음
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("title", "testTitle");
+		map.add("contributors", "test contributors");
+		map.add("contents", "test contents");
+		
+		//When
+		mockMvc.perform(post("/space/makecontent/" + nonExistPersonId)
+				.params(map))
+		
+		//Then
+				.andExpect(status().isNoContent());
+		
+		assertEquals(contentService.countAll(),contentNum);
+	}
+	
+	@WithMockUser(username="test@google.com" , roles= {"USER"})
+	@Test
+	@Transactional
+	@DisplayName("콘텐트 추가 POST (실패-개인 최대 프로젝트 개수 초과)")
+	public void createContentPostOverLimit() throws Exception {
+		Person person = personService.findByEmail("test@google.com");
+		Space space = person.getSpace();
+		for(int i=INIT_CONTENT_NUM;i<=MAX_CONTENT_NUM;i++) {
+			Content content = new Content();
+			content.setTitle(i+" 번째 타이틀");
+			content.setDescription(i+" 번째 프로젝트 설명");
+			content.setContributors(i+" 번째 기여자들");
+			content.setContents(i+ " 번째 프로젝트 내용");
+			spaceService.addContent(space, content);
+		}
+		
+		long contentNum = contentService.countAll();
+		
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("title", "testTitle");
+		map.add("contributors", "test contributors");
+		map.add("contents", "test contents");
+		
+		mockMvc.perform(post("/space/makecontent/test@google.com")
+				.params(map))
+				.andExpect(status().isBadRequest());
+		
+		assertEquals(contentService.countAll(),contentNum);
+	}
+	
+	@WithMockUser(username="test@google.com", roles= {"USER"})
+	@Test
+	@Transactional
+	@DisplayName("콘텐트 추가 POST (정상)")
+	public void createContentPostTest() throws Exception {
+		//Given
+		long contentNum = contentService.countAll();
+		Person person = personService.findByEmail("test@google.com");
+		Long personId = person.getId();
+		
+		// Not Empty, Not Null인 것들만 채워넣음
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("title", "testTitle");
+		map.add("contributors", "test contributors");
+		map.add("contents", "test contents");
+		
+		//When
+		mockMvc.perform(post("/space/makecontent/" + personId)
+				.params(map))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		// content 테이블의 로우 개수 추가 됐는지 확인
+		assertEquals(contentService.countAll(),contentNum+1);
 	}
 	
 	/*
@@ -219,11 +346,21 @@ public class ContentRestControllerTest {
 		Content content = space.getContents().get(0);
 		Long contentId = content.getId();
 		
-		int contentsListSize = space.getContents().size();
 		mockMvc.perform(delete("/space/deletecontent/" + contentId))
 				.andExpect(status().isOk());
 		
-		assertEquals(contentsListSize-1, space.getContents().size());
 		assertEquals(num-1,contentService.countAll());
+	}
+	
+	private Long getNonExistPersonId() {
+		Long nonExistPersonId = Long.valueOf(1);
+		
+		for(Person p : personService.findAll()) {
+			nonExistPersonId = Math.max(nonExistPersonId, p.getId());
+		}
+		
+		nonExistPersonId++;
+		
+		return nonExistPersonId;
 	}
 }

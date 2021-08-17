@@ -47,8 +47,18 @@
           <span style="color:#aaa;" id="counter">(0 / 최대 2500자)</span>
         </div>
         <div class="mb-3">
-          <label for="links" class="form-label">깃허브 주소 및 관련 URL</label>
-          <textarea id="links" th:field="*{links}" class="form-control" name="links" rows="10"></textarea>
+          <label class="form-label">깃허브 주소 및 관련 URL</label>
+          <button type="button" class="btn" onclick="addLinkInput()">추가</button>
+          <div id="linkInput">
+            <div th:each="link:*{links}" th:id="|linkExist${link.id}|">
+              <label>설명</label>
+              <input type="hidden" th:id="|linkExistId${link.id}" th:value="${link.id}">
+              <input type="text" th:id="|linkExistTag${link.id}|" th:value="${link.tag}">
+              <label>URL</label>
+              <input type="text" th:id="|linkExistURL${link.id}|" th:value="${link.url}">
+              <button type="button" class="btn" th:onclick="|deleteExistSelect(link.id)|">삭제</button>
+            </div>
+          </div>
         </div>
         <button type="button" class="btn btn-black justify-content-center" th:onclick="|updateContent(*{hostId},${contentId})|">프로젝트 수정</button>
       </form>
