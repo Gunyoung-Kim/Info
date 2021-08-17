@@ -1,5 +1,6 @@
 package com.gunyoung.info.services.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -36,6 +37,21 @@ public class ContentServiceImpl implements ContentService{
 	}
 	
 	@Override
+	@Transactional(readOnly=true)
+	public Content findByIdWithLinks(Long id) {
+		Optional<Content> result = contentRepository.findByIdWithLinks(id);
+		if(!result.isPresent())
+			return null;
+		return result.get();
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public List<Content> findBySpaceIdWithLinks(Long spaceId) {
+		return contentRepository.findBySpaceIdWithLinks(spaceId);
+	}	
+	
+	@Override
 	public Content save(Content content) {
 		return contentRepository.save(content);
 	}
@@ -62,5 +78,5 @@ public class ContentServiceImpl implements ContentService{
 	@Transactional(readOnly=true)
 	public boolean existsById(Long id) {
 		return contentRepository.existsById(id);
-	}	
+	}
 }

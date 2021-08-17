@@ -121,21 +121,33 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 되어있을때)")
 	public void mySpaceViewUserTest() throws Exception {
+		//Given
+		Long personId = personService.findByEmail("test@google.com").getId();
+		
+		//When
 		mockMvc.perform(get("/space"))
-				.andExpect(redirectedUrl("/space/test@google.com"));
+		
+		//Then
+				.andExpect(redirectedUrl("/space/"+ personId));
 	}
 	
 	/*
 	 *  - 대상 메소드:
-	 *  	@RequestMapping(value="/space/{email}", method= RequestMethod.GET)
-	 *  	public ModelAndView spaceView(@PathVariable String email, ModelAndView mav)
+	 *  	@RequestMapping(value="/space/{userId}", method= RequestMethod.GET)
+	 *  	public ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav)
 	 */
 	
 	@WithAnonymousUser
 	@Test
-	@DisplayName("포트폴리오 열람 (실패-해당 email이 DB에 없을때)")
+	@DisplayName("포트폴리오 열람 (실패-해당 Id의 Person DB에 없을때)")
 	public void spaceEmailNonExists() throws Exception {
-		mockMvc.perform(get("/space/zvasf"))
+		//Given
+		Long nonExistPersonId = getNonExistPersonId();
+		
+		//When
+		mockMvc.perform(get("/space/" + nonExistPersonId))
+		
+		//Then
 				.andExpect(status().isNoContent());
 	}
 	
@@ -143,7 +155,15 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("포트폴리오 열람 (성공-접속자가 해당 포트폴리오 주인이 아닐때)")
 	public void spaceNotHostTest() throws Exception {
-		mockMvc.perform(get("/space/test@google.com"))
+		//Given
+		String hostEmail = "test@google.com";
+		Person host = personService.findByEmail(hostEmail);
+		Long hostId = host.getId();
+		
+		//When
+		mockMvc.perform(get("/space/" + hostId))
+		
+		//Then
 			.andExpect(view().name("portfolio"))
 			.andExpect(model().attribute("isHost", false));
 	}
@@ -152,7 +172,13 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("포트폴리오 열람 (성공-접속자가 해당 포트폴리오 주인일때)")
 	public void spaceTest() throws Exception {
-		mockMvc.perform(get("/space/test@google.com"))
+		//Given
+		Long personId = personService.findByEmail("test@google.com").getId();
+		
+		//When
+		mockMvc.perform(get("/space/" + personId))
+		
+		//Then
 				.andExpect(view().name("portfolio"))
 				.andExpect(model().attribute("isHost", true));
 	}
@@ -185,5 +211,17 @@ public class SpaceControllerTest {
 	public void updateProfileTest() throws Exception {
 		mockMvc.perform(get("/space/updateprofile"))
 				.andExpect(view().name("updateProfile"));
+	}
+	
+	private Long getNonExistPersonId() {
+		Long nonExistPersonId = Long.valueOf(1);
+		
+		for(Person p : personService.findAll()) {
+			nonExistPersonId = Math.max(nonExistPersonId, p.getId());
+		}
+		
+		nonExistPersonId++;
+		
+		return nonExistPersonId;
 	}
 }

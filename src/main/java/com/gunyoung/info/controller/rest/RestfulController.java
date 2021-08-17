@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.dto.MainListObject;
+import com.gunyoung.info.dto.MainListDTO;
 import com.gunyoung.info.services.domain.PersonService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,17 +28,21 @@ public class RestfulController {
 	 * <pre>
 	 *  - 기능: main 화면에서 노출할 리스트를 반환하는 컨트롤러
 	 *  - 반환:
-	 *  	List<MainObject>, MainObject(DTO 객체) -> Person.fullname + Person.email
+	 *  	List<MainListDTO>, MainListDTO(DTO 객체) -> Person.fullname + Person.email
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/main/list",method=RequestMethod.GET)
-	public List<MainListObject> index() {
+	public List<MainListDTO> index() {
 		List<Person> personList = personService.findAll();
 		
-		List<MainListObject> result = new LinkedList<>();
+		List<MainListDTO> result = new LinkedList<>();
 		for(Person p : personList) {
-			result.add(new MainListObject(p.getFullName(),p.getEmail()));
+			MainListDTO mainListDTO = MainListDTO.builder()
+					.personName(p.getFullName())
+					.personEmail(p.getEmail())
+					.build();
+			result.add(mainListDTO);
 		}
 		
 		return result;

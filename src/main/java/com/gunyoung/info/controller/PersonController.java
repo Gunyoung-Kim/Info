@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.controller.util.ModelAndPageView;
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.dto.MainListObject;
+import com.gunyoung.info.dto.MainListDTO;
 import com.gunyoung.info.dto.email.EmailDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.error.code.PersonErrorCode;
@@ -83,9 +83,14 @@ public class PersonController {
 			totalPageNum = personService.countAll()/PAGE_SIZE +1;
 		}
 		
-		List<MainListObject> resultList = new LinkedList<>();
+		List<MainListDTO> resultList = new LinkedList<>();
 		for(Person p : pageResult) {
-			resultList.add(new MainListObject(p.getFullName(),p.getEmail()));
+			MainListDTO mainListDTO = MainListDTO.builder()
+					.personId(p.getId())
+					.personName(p.getFullName())
+					.personEmail(p.getEmail())
+					.build();
+			resultList.add(mainListDTO);
 		}
 		
 		mav.addObject("listObject",resultList);

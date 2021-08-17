@@ -1,5 +1,7 @@
 package com.gunyoung.info.services.domain;
 
+import java.util.List;
+
 import com.gunyoung.info.domain.Content;
 
 public interface ContentService {
@@ -19,6 +21,22 @@ public interface ContentService {
 	 * @author kimgun-yeong
 	 */
 	public Content findByIdWithSpaceAndPerson(Long id);
+	
+	/**
+	 * ID로 Content 찾기 <br>
+	 * Links 페치 조인
+	 * @param contentId 찾으려는 Content의 ID
+	 * @author kimgun-yeong
+	 */
+	public Content findByIdWithLinks(Long id);
+	
+	/**
+	 * Space ID로 Content들 찾기 <br>
+	 * Links 페치 조인
+	 * @param spaceId 찾으려는 Content들의 Space ID
+	 * @author kimgun-yeong
+	 */
+	public List<Content> findBySpaceIdWithLinks(Long spaceId);
 	
 	/**
 	 * Content 생성 및 수정

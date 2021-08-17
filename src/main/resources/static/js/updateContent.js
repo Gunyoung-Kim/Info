@@ -9,21 +9,82 @@ $('.content-area').keyup(function (e){
     }
 });
 
+var inputNum = 1;
+
+function addLinkInput() {
+  var newInput = $(`<div id="link${inputNum}"></div>`);
+
+  var tagLabel = $(`<label> 설명</label>`);
+  var tagInput = $(`<input type="text" id="tagInput${inputNum}">`);
+  var urlLabel = $(`<label> URL</label>`);
+  var urlInput = $(`<input type="text" id="urlInput${inputNum}">`);
+
+  var deleteBtn = $(`<button type="button" onclick="deleteSelect(${inputNum})" class="btn">삭제</button>`);
+  inputNum++;
+
+  newInput.append(tagLabel);
+  newInput.append(tagInput);
+  newInput.append(urlLabel);
+  newInput.append(urlInput);
+  newInput.append(deleteBtn);
+
+  $('#linkInput').append(newInput);
+}
+
+const deleteSelect = (deleteNum) => {
+  $(`#link${deleteNum}`).remove();
+}
+
+const deleteExistSelect = (deleteNum) => {
+  $(`#linkExist${deleteNum}`).remove();
+}
+
 function updateContent(hostId, contentId) {
-  let title = $('#title').val();
-  let description = $('#description').val();
-  let contributors = $('#contributors').val();
-  let skillstacks = $('#skillstacks').val();
-  let startedAt = $('#startedAt').val();
-  let endAt = $('#endAt').val();
-  let contents = $('#contents').val();
-  let links = $('#links').val();
+  var dto = new Object();
+  dto.hostId = hostId;
+  dto.title = $('#title').val();
+  dto.description = $('#description').val();
+  dto.contributors = $('#contributors').val();
+  dto.skillstacks = $('#skillstacks').val();
+  dto.startedAt = $('#startedAt').val();
+  dto.endAt = $('#endAt').val();
+  dto.contents = $('#contents').val();
+
+  let linkNum = 0;
+  for(let i=1; i<inputNum;i++) {
+    let tag = $(`#tagInput${i}`).val();
+    let url = $(`#urlInput${i}`).val();
+
+    if(tag != "" && url != "") {
+      dto['links['+linkNum+'].tag'] = tag;
+      dto['links['+linkNum+'].url'] = url;
+      linkNum++;
+    }
+  }
+
+  let existLinksId = $("[id^='linkExistId']");
+  let existLinksTag = $("[id^='linkExistTag']");
+  let existLinksURL = $("[id^='linkExistURL']");
+
+  console.log(existLinksId);
+
+  for(let i=0; i<existLinksTag.length; i++) {
+    let id = existLinksId.eq(i).val();
+    let tag = existLinksTag.eq(i).val();
+    let url = existLinksURL.eq(i).val();
+
+    if(tag != "" && url != "") {
+      dto['links['+linkNum+'].id'] = id;
+      dto['links['+linkNum+'].tag'] = tag;
+      dto['links['+linkNum+'].url'] = url;
+      linkNum++;
+    }
+  }
 
   $.ajax({
     url: '/space/updatecontent/' + contentId,
     method: 'PUT',
-    data: {"hostId": hostId, "title": title, "description": description, "contributors":contributors,
-  "skillstacks" : skillstacks, "startedAt" : startedAt, "endAt" : endAt, "contents": contents, "links": links},
+    data: dto,
 
     error:function(request,status,error){
     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

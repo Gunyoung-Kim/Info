@@ -21,6 +21,17 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	public Optional<Person> findByEmail(String email);
 	
 	/**
+	 * id로 Person 찾기 <br>
+	 * Space 페치 조인
+	 * @param id 찾으려는 Person Id
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT p FROM Person p "
+			+ "INNER JOIN FETCH p.space s "
+			+ "WHERE p.id = :personId")
+	public Optional<Person> findByIdWithSpace(@Param("personId")Long id);
+	
+	/**
 	 * email로 Person 찾기 <br>
 	 * Space 페치 조인
 	 * @param email 찾으려는 Person email
@@ -30,6 +41,18 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 			+ "INNER JOIN FETCH p.space s "
 			+ "WHERE p.email = :email")
 	public Optional<Person> findByEmailWithSpace(@Param("email")String email);
+	
+	/**
+	 * ID로 Person 찾기 <br>
+	 * Space, Content들 페치 조인
+	 * @param personId 찾으려는 Person ID
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT p FROM Person p "
+			+ "INNER JOIN FETCH p.space s "
+			+ "LEFT JOIN FETCH s.contents c "
+			+ "WHERE p.id = :personId")
+	public Optional<Person> findByIdWithSpaceAndContents(@Param("personId")Long personId);
 	
 	/**
 	 * email로 Person 찾기 <br>
