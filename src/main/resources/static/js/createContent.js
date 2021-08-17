@@ -44,8 +44,6 @@ function addContent(personId) {
   dto.endAt = $('#endAt').val();
   dto.contents = $('#contents').val();
 
-  var links = new Array();
-
   let linkNum = 0;
   for(let i=1; i<inputNum;i++) {
     let tag = $(`#tagInput${i}`).val();
@@ -57,10 +55,6 @@ function addContent(personId) {
       linkNum++;
     }
   }
-
-  dto.links = links;
-
-  console.log(dto);
 
   $.ajax({
     url: '/space/makecontent/' + personId,
@@ -78,6 +72,6 @@ function addContent(personId) {
   })
 }
 
-$(document).ready(function() {
-  addKeyUP();
-})
+const deleteSelect = (deleteNum) => {
+  $(`#link${deleteNum}`).remove();
+}

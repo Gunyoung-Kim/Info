@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LinkDTO {
 	
-	String tag;
+	private Long id;
 	
-	String url;
+	private String tag;
+	
+	private String url;
 }

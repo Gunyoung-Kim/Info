@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 콘텐트 내용 수정을 위한 DTO 객체
+ * 콘텐트 내용 수정,열람, 저장을 위한 DTO 객체
  * @author kimgun-yeong
  *
  */
@@ -51,7 +51,12 @@ public class ContentDTO {
 	@Builder.Default
 	private List<LinkDTO> links = new ArrayList<>();
 	
-	public void settingByHostIdAndContent(Long hostId, Content content) {
+	/**
+	 * Content Host Person Id, Content 필드들로 ContentDTO 필드 값 설정 <br>
+	 * links는 따로 설정하지 않음
+	 * @author kimgun-yeong
+	 */
+	public void settingHostIdAndContentField(Long hostId, Content content) {
 		this.hostId = hostId;
 		this.title = content.getTitle();
 		this.description = content.getDescription();
@@ -60,22 +65,32 @@ public class ContentDTO {
 		this.startedAt = content.getStartedAt();
 		this.endAt = content.getEndAt();
 		this.contents = content.getContents();
-		
-		for(Link link: content.getLinks()) {
+	}
+	
+	/**
+	 * Link 리스트를 통해 links 필드 설정
+	 * @author kimgun-yeong
+	 */
+	public void settingLinks(List<Link> links) {
+		for(int i=0; i < links.size() ; i++) {
+			Link link = links.get(i);
 			LinkDTO linkDTO = LinkDTO.builder()
+					.id(link.getId())
 					.tag(link.getTag())
 					.url(link.getUrl())
 					.build();
+			
 			this.links.add(linkDTO);
 		}
 	}
 	
 	/**
-	 * ContentDTO에 담긴 정보로 Content 업데이트 
+	 * ContentDTO에 담긴 정보로 Content만 업데이트 <br>
+	 * Link는 업데이트하지 않음 
 	 * @param content 업데이트하려는 Content
 	 * @author kimgun-yeong
 	 */
-	public void updateContent(Content content) {
+	public void updateContentOnly(Content content) {
 		content.setTitle(this.title);
 		content.setDescription(this.description);
 		content.setContributors(this.contributors);
@@ -83,19 +98,6 @@ public class ContentDTO {
 		content.setStartedAt(this.startedAt);
 		content.setEndAt(this.endAt);
 		content.setContents(this.contents);
-		 
-		List<Link> newContentLinks = new ArrayList<>();
-		
-		for(LinkDTO linkDTO: this.links) {
-			Link link = Link.builder()
-					.tag(linkDTO.getTag())
-					.url(linkDTO.getUrl())
-					.build();
-			
-			newContentLinks.add(link);
-		}
-		
-		content.setLinks(newContentLinks);
 	}
 	
 	/**

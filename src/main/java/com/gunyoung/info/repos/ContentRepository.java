@@ -24,6 +24,17 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 	public Optional<Content> findByIdWithSpaceAndPerson(@Param("contentId") Long contentId);
 	
 	/**
+	 * ID로 Content 찾기 <br>
+	 * Links 페치 조인 
+	 * @param contentId 찾으려는 Content의 ID
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT c FROM Content c "
+			+ "LEFT JOIN FETCH c.links l "
+			+ "WHERE c.id = :contentId")
+	public Optional<Content> findByIdWithLinks(@Param("contentId") Long contentId);
+	
+	/**
 	 * Space ID로 Content들 찾기 <br>
 	 * Links 페치 조인
 	 * @param spaceId 찾으려는 Content들의 Space ID

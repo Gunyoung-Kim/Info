@@ -15,6 +15,7 @@ import com.gunyoung.info.domain.Link;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.ContentDTO;
+import com.gunyoung.info.dto.LinkDTO;
 import com.gunyoung.info.error.code.ContentErrorCode;
 import com.gunyoung.info.error.code.PersonErrorCode;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
@@ -121,7 +122,6 @@ public class ContentRestController {
 	 *  - 기능: updateContent가 반환한 뷰에서 수정한 Content 정보를 반영하기 위한 사용자의 POST Request를 담당하는 컨트롤러
 	 *  - 반환:
 	 *  	- 성공
-	 * 		View: /space(현재 접속자의 포트폴리오) 로 redirect
 	 * 		DB: content 변경 사항 save
 	 *	</pre>
 	 * @param id 수정하려는 콘텐트의 id 값
@@ -133,7 +133,7 @@ public class ContentRestController {
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.PUT) 
 	public void updateContent(@PathVariable long id, @ModelAttribute ContentDTO contentDto) {
-		Content targetContent = contentService.findById(id);
+		Content targetContent = contentService.findByIdWithLinks(id);
 		if(targetContent == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -150,8 +150,12 @@ public class ContentRestController {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		contentDto.updateContent(targetContent);
-		
+		contentDto.updateContentOnly(targetContent);
 		contentService.save(targetContent);
+		
+		List<LinkDTO> linkDTOs = contentDto.getLinks();
+		List<Link> existContentLinks = targetContent.getLinks();
+		
+		linkService.saveByLinkDTOsAndExistContentLinks(targetContent,linkDTOs,existContentLinks);
 	}
 }

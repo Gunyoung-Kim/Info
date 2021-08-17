@@ -1,5 +1,7 @@
 package com.gunyoung.info.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Content;
+import com.gunyoung.info.domain.Link;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.dto.ContentDTO;
@@ -18,6 +21,7 @@ import com.gunyoung.info.error.exceptions.exceed.ContentNumLimitExceedException;
 import com.gunyoung.info.error.exceptions.nonexist.ContentNotFoundedException;
 import com.gunyoung.info.error.exceptions.nonexist.PersonNotFoundedException;
 import com.gunyoung.info.services.domain.ContentService;
+import com.gunyoung.info.services.domain.LinkService;
 import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.util.AuthorityUtil;
 
@@ -36,7 +40,25 @@ public class ContentController {
 	
 	private final ContentService contentService;
 	
+	private final LinkService linkService;
+	
 	public static final int MAX_CONTENT_NUM = 50;
+	
+	/**
+	 * 세션 유저의 포트폴리오에 프로젝트 추가화면으로 리다이렉트
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/space/makecontent", method = RequestMethod.GET)
+	public ModelAndView createMyContentView() {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		Person loginUser = personService.findByEmailWithSpace(loginUserEmail);
+		if(loginUser == null) {
+			return new ModelAndView("redirect:/login");
+		};
+		
+		Long loginUserId = loginUser.getId();
+		return new ModelAndView("redirect:/space/makecontent/" + loginUserId);
+	}
 	
 	/**
 	 * <pre>
@@ -53,7 +75,6 @@ public class ContentController {
 	 *  @author kimgun-yeong
 	 *  
 	 */
-	
 	@RequestMapping(value="/space/makecontent/{personId}", method = RequestMethod.GET)
 	public ModelAndView createContentView(@PathVariable Long personId,@ModelAttribute("formModel") Content content, ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
@@ -89,14 +110,14 @@ public class ContentController {
 	 *		View: updateContent.html(콘텐츠의 정보를 수정하는 템플릿)
 	 *		Model: formModel->ContentDTO(프로젝트 작성자 이메일 + 프로젝트 정보 DTO
 	 * </pre>
-	 * @param id 수정하려는 콘텐트의 id 값
+	 * @param contentId 수정하려는 콘텐트의 id 값
 	 * @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때 
 	 * @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
-	public ModelAndView updateContentView(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
-		Content content = contentService.findByIdWithSpaceAndPerson(id);
+	@RequestMapping(value="/space/updatecontent/{contentId}", method= RequestMethod.GET)
+	public ModelAndView updateContentView(@PathVariable Long contentId, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
+		Content content = contentService.findByIdWithSpaceAndPerson(contentId);
 		if(content == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -110,10 +131,13 @@ public class ContentController {
 		}
 		
 		Long contentHostId = contentHost.getId();
-		contentDto.settingByHostIdAndContent(contentHostId, content);
+		contentDto.settingHostIdAndContentField(contentHostId, content);
+		
+		List<Link> linkList = linkService.findAllByContentId(contentId);
+		contentDto.settingLinks(linkList);
 		
 		mav.addObject("formModel", contentDto);
-		mav.addObject("contentId", id);
+		mav.addObject("contentId", contentId);
 		
 		mav.setViewName("updateContent");
 		
