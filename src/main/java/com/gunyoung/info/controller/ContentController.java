@@ -42,8 +42,6 @@ public class ContentController {
 	
 	private final LinkService linkService;
 	
-	public static final int MAX_CONTENT_NUM = 50;
-	
 	/**
 	 * 세션 유저의 포트폴리오에 프로젝트 추가화면으로 리다이렉트
 	 * @author kimgun-yeong
@@ -90,7 +88,7 @@ public class ContentController {
 		}
 		
 		Space space = loginUser.getSpace();
-		if(space.getContents().size() >= MAX_CONTENT_NUM) {
+		if(space.getContents().size() >= Space.MAX_CONTENT_NUM) {
 			throw new ContentNumLimitExceedException(ContentErrorCode.CONTENT_NUM_LIMIT_EXCEEDED_ERROR.getDescription());
 		}
 		

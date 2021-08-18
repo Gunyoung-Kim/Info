@@ -32,6 +32,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Space extends BaseEntity{
 	
+	/**
+	 * 포트폴리오의 최대 프로젝트 개수
+	 * @author kimgun-yeong
+	 */
+	public static final int MAX_CONTENT_NUM = 50;
+	
 	@Id
 	@Column(name= "space_id")
 	@GeneratedValue(strategy= GenerationType.IDENTITY)

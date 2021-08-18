@@ -46,8 +46,6 @@ public class ContentRestControllerTest {
 	@Autowired
 	ContentRepository contentRepository;
 	
-	public static final int MAX_CONTENT_NUM = 50;
-	
 	private static final int INIT_CONTENT_NUM = 3;
 	
 	@BeforeEach
@@ -176,7 +174,7 @@ public class ContentRestControllerTest {
 	public void createContentPostOverLimit() throws Exception {
 		Person person = personService.findByEmail("test@google.com");
 		Space space = person.getSpace();
-		for(int i=INIT_CONTENT_NUM;i<=MAX_CONTENT_NUM;i++) {
+		for(int i=INIT_CONTENT_NUM;i<=Space.MAX_CONTENT_NUM;i++) {
 			Content content = new Content();
 			content.setTitle(i+" 번째 타이틀");
 			content.setDescription(i+" 번째 프로젝트 설명");

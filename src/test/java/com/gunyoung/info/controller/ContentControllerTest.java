@@ -50,8 +50,6 @@ public class ContentControllerTest {
 	@Autowired
 	ContentRepository contentRepository;
 	
-	public static final int MAX_CONTENT_NUM = 50;
-	
 	private static final String MAIN_PERSON_EMAIL = "test@test.com";
 	
 	private Person person;
@@ -118,7 +116,7 @@ public class ContentControllerTest {
 		Space space = person.getSpace();
 		
 		List<Content> newContents = new ArrayList<>();
-		for(int i=0;i<=MAX_CONTENT_NUM;i++) {
+		for(int i=0; i <= Space.MAX_CONTENT_NUM ; i++) {
 			Content content = ContentTest.getContentInstance("title"+i);
 			content.setSpace(space);
 			space.getContents().add(content);
