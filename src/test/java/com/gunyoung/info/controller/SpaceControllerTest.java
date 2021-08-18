@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,18 +15,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.domain.Space;
-import com.gunyoung.info.services.domain.ContentService;
-import com.gunyoung.info.services.domain.PersonService;
-import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.repos.ContentRepository;
+import com.gunyoung.info.repos.PersonRepository;
+import com.gunyoung.info.repos.SpaceRepository;
+import com.gunyoung.info.util.PersonTest;
 
+/**
+ * {@link SpaceController} 에 대한 테스트 클래스
+ * 테스트 범위:(통합 테스트) 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 <br>
+ * MockMvc 활용을 통한 통합 테스트
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
 public class SpaceControllerTest {
 	
@@ -35,72 +38,28 @@ public class SpaceControllerTest {
 	MockMvc mockMvc;
 	
 	@Autowired
-	PersonService personService;
+	PersonRepository personRepository;
 	
 	@Autowired
-	SpaceService spaceService;
+	SpaceRepository spaceRepository;
 	
 	@Autowired
-	ContentService contentService;
+	ContentRepository contentRepository;
+	
+	private static final String MAIN_PERSON_EMAIL = "test@test.com";
+	
+	private Person person;
 	
 	@BeforeEach
 	void setup() {
-		// 유저 등록
-		if(!personService.existsByEmail("test@google.com")) {
-			Person person = new Person();
-			person.setEmail("test@google.com");
-			person.setPassword("abcd1234");
-			person.setFirstName("스트");
-			person.setLastName("테");
-				
-			personService.save(person);
-					
-			// space 내용 설정
-			Space space = person.getSpace();
-			space.setDescription("test용 자기소개입니다.");
-			space.setGithub("https://github.com/Gunyoung-Kim");
-			
-			// content 들 설정
-			int contentsNumber = 1;
-			for(int i=0;i<=contentsNumber;i++) {
-				Content content = new Content();
-				content.setTitle(i+" 번째 타이틀");
-				content.setDescription(i+" 번째 프로젝트 설명");
-				content.setContributors(i+" 번째 기여자들");
-				content.setContents(i+ " 번째 프로젝트 내용");
-				content.setSpace(space);
-				contentService.save(content);
-				
-				space.getContents().add(content);
-			}
-			
-			spaceService.save(space);
-		}
-		
-		//2번쨰 유 등록
-		if(!personService.existsByEmail("second@naver.com")) {
-			Person person2 = new Person();					
-			person2.setEmail("second@naver.com");	
-			person2.setPassword("abcd1234");
-			person2.setFirstName("로그");
-			person2.setLastName("블");
-					
-			// space 내용 설정
-			Space space2 = person2.getSpace();
-			space2.setDescription("test2222용 자기소개입니다.");
-			space2.setGithub("https://github.com/Gunyoung-Kim");
-					
-			personService.save(person2);
-		}
+		person = PersonTest.getPersonInstance(MAIN_PERSON_EMAIL);
+		personRepository.save(person);
 	}
 	
 	@AfterEach
 	void tearDown() {
-	}
-	
-	@AfterAll
-	static void done() {
-		System.out.println("---------------- SpaceController Test Done ----------------");
+		contentRepository.deleteAll();
+		personRepository.deleteAll();
 	}
 	
 	/*
@@ -113,16 +72,19 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 안되있을때)") 
 	public void myspaceViewAnonymousTest() throws Exception {
+		//When
 		mockMvc.perform(get("/space"))
+		
+		//Then
 				.andExpect(status().is(302));
 	}
 	
-	@WithMockUser(username="test@google.com", roles= {"USER"})
+	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 되어있을때)")
 	public void mySpaceViewUserTest() throws Exception {
 		//Given
-		Long personId = personService.findByEmail("test@google.com").getId();
+		Long personId = person.getId();
 		
 		//When
 		mockMvc.perform(get("/space"))
@@ -142,7 +104,7 @@ public class SpaceControllerTest {
 	@DisplayName("포트폴리오 열람 (실패-해당 Id의 Person DB에 없을때)")
 	public void spaceEmailNonExists() throws Exception {
 		//Given
-		Long nonExistPersonId = getNonExistPersonId();
+		Long nonExistPersonId = PersonTest.getNonExistPersonId(personRepository);
 		
 		//When
 		mockMvc.perform(get("/space/" + nonExistPersonId))
@@ -156,8 +118,7 @@ public class SpaceControllerTest {
 	@DisplayName("포트폴리오 열람 (성공-접속자가 해당 포트폴리오 주인이 아닐때)")
 	public void spaceNotHostTest() throws Exception {
 		//Given
-		String hostEmail = "test@google.com";
-		Person host = personService.findByEmail(hostEmail);
+		Person host = person;
 		Long hostId = host.getId();
 		
 		//When
@@ -168,12 +129,12 @@ public class SpaceControllerTest {
 			.andExpect(model().attribute("isHost", false));
 	}
 	
-	@WithMockUser(username="test@google.com", roles = {"USER"}) 
+	@WithMockUser(username=MAIN_PERSON_EMAIL, roles = {"USER"}) 
 	@Test
 	@DisplayName("포트폴리오 열람 (성공-접속자가 해당 포트폴리오 주인일때)")
 	public void spaceTest() throws Exception {
 		//Given
-		Long personId = personService.findByEmail("test@google.com").getId();
+		Long personId = person.getId();
 		
 		//When
 		mockMvc.perform(get("/space/" + personId))
@@ -193,7 +154,10 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("프로필 업데이트 (실패-현재 로그인 유저의 이메일이 DB에 없을때)")
 	public void updateProfileEmailNonExist() throws Exception {
+		//When
 		mockMvc.perform(get("/space/updateprofile"))
+		
+		//Then
 				.andExpect(status().isNoContent());
 	}
 	
@@ -201,27 +165,21 @@ public class SpaceControllerTest {
 	@Test
 	@DisplayName("프로필 업데이트 (성공-로그인 되어 있지 않을 때)")
 	public void updateProfileAnonymousTest() throws Exception {
+		//When
 		mockMvc.perform(get("/space/updateprofile"))
+		
+		//Then
 				.andExpect(status().is(302));
 	}
 	
-	@WithMockUser(username="test@google.com", roles= {"USER"}) 
+	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"}) 
 	@Test
 	@DisplayName("프로필 업데이트 (성공-로그인 되어 있을때)")
 	public void updateProfileTest() throws Exception {
+		//When
 		mockMvc.perform(get("/space/updateprofile"))
+		
+		//Then
 				.andExpect(view().name("updateProfile"));
-	}
-	
-	private Long getNonExistPersonId() {
-		Long nonExistPersonId = Long.valueOf(1);
-		
-		for(Person p : personService.findAll()) {
-			nonExistPersonId = Math.max(nonExistPersonId, p.getId());
-		}
-		
-		nonExistPersonId++;
-		
-		return nonExistPersonId;
 	}
 }
