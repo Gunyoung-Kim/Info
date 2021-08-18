@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,22 +17,26 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Person;
-import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.enums.RoleType;
-import com.gunyoung.info.services.domain.ContentService;
-import com.gunyoung.info.services.domain.PersonService;
-import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.repos.ContentRepository;
+import com.gunyoung.info.repos.PersonRepository;
+import com.gunyoung.info.repos.SpaceRepository;
+import com.gunyoung.info.util.PersonTest;
 
+/**
+ * {@link PersonController} 에 대한 테스트 클래스
+ * 테스트 범위:(통합 테스트) 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 <br>
+ * MockMvc 활용을 통한 통합 테스트
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
 public class PersonControllerTest {
 	
@@ -41,71 +44,28 @@ public class PersonControllerTest {
 	MockMvc mockMvc;
 
 	@Autowired
-	PersonService personService;
+	PersonRepository personRepository;
 	
 	@Autowired
-	SpaceService spaceService;
+	SpaceRepository spaceRepository;
 	
 	@Autowired
-	ContentService contentService;
+	ContentRepository contentRepository;
+	
+	private static final String MAIN_PERSON_EMAIL = "test@test.com";
+	
+	private Person person;
 	
 	@BeforeEach
 	void setup() {
-		// 유저 등록
-		if(!personService.existsByEmail("test@google.com")) {
-			Person person = new Person();
-			person.setEmail("test@google.com");
-			person.setPassword("abcd1234");
-			person.setFirstName("스트");
-			person.setLastName("테");
-										
-			personService.save(person);
-			
-			// space 내용 설정
-			Space space = person.getSpace();
-			space.setDescription("test용 자기소개입니다.");
-			space.setGithub("https://github.com/Gunyoung-Kim");
-			
-			// content 들 설정
-			int contentsNumber = 1;
-			for(int i=0;i<=contentsNumber;i++) {
-				Content content = new Content();
-				content.setTitle(i+" 번째 타이틀");
-				content.setDescription(i+" 번째 프로젝트 설명");
-				content.setContributors(i+" 번째 기여자들");
-				content.setContents(i+ " 번째 프로젝트 내용");
-				content.setSpace(space);
-				contentService.save(content);
-				
-				space.getContents().add(content);
-			}
-			
-			spaceService.save(space);
-		}
-		//2번쨰 유저 등록
-		if(!personService.existsByEmail("second@naver.com")) {
-			Person person2 = new Person();				
-			person2.setEmail("second@naver.com");	
-			person2.setPassword("abcd1234");
-			person2.setFirstName("로그");
-			person2.setLastName("블");
-							
-			// space 내용 설정
-			Space space2 = person2.getSpace();
-			space2.setDescription("test2222용 자기소개입니다.");
-			space2.setGithub("https://github.com/Gunyoung-Kim");
-							
-			personService.save(person2);
-		}	
+		person = PersonTest.getPersonInstance(MAIN_PERSON_EMAIL);
+		personRepository.save(person);
 	}
 	
 	@AfterEach
 	void tearDown() {
-	}
-	
-	@AfterAll
-	static void done() {
-		System.out.println("---------------- PersonController Test Done ----------------");
+		contentRepository.deleteAll();
+		personRepository.deleteAll();
 	}
 	
 	/*
@@ -117,17 +77,25 @@ public class PersonControllerTest {
 	@Test
 	@DisplayName("메인 화면 (성공)")
 	public void indexTest() throws Exception {
-		mockMvc.perform(get("/"))
-				.andExpect(view().name("index"));
+		//Given
 		
-		mockMvc.perform(get("/?page=1"))
+		//When
+		mockMvc.perform(get("/"))
+		
+		//Then
 				.andExpect(view().name("index"));
 	}
 	
 	@Test
 	@DisplayName("메인 화면 페이지 (성공)")
 	public void indexPageTest() throws Exception {
-		mockMvc.perform(get("/").param("page", "1"))
+		//Given
+		int pageNum = 1;
+		
+		//When
+		mockMvc.perform(get("/").param("page", String.valueOf(pageNum)))
+		
+		//Then
 				.andExpect(view().name("index"));
 	}
 	
@@ -135,7 +103,13 @@ public class PersonControllerTest {
 	@Test
 	@DisplayName("메인 화면 페이지 (성공- 소셜로그인했지만 아직 회원가입이 안되있을)")
 	public void indexWithPreUser() throws Exception {
-		mockMvc.perform(get("/").param("page", "1"))
+		//Given
+		int pageNum = 1;
+		
+		//When
+		mockMvc.perform(get("/").param("page", String.valueOf(pageNum)))
+		
+		//Then
 				.andExpect(redirectedUrl("/oauth2/join"));
 	}
 	
@@ -149,7 +123,11 @@ public class PersonControllerTest {
 	@Test
 	@DisplayName("로그인 화면 (성공)")
 	public void loginViewTest() throws Exception {
+		
+		//When
 		mockMvc.perform(get("/login"))
+		
+		//Then
 				.andExpect(view().name("login"));
 	}
 	
@@ -162,7 +140,11 @@ public class PersonControllerTest {
 	@Test
 	@DisplayName("회원가입 화면 (성공)")
 	public void joinViewTest() throws Exception {
+		
+		//When
 		mockMvc.perform(get("/join"))
+		
+		//Then
 				.andExpect(view().name("join"));
 	}
 	
@@ -173,84 +155,157 @@ public class PersonControllerTest {
 	 */
 	
 	@Test
-	@DisplayName("회원가입 POST (실패-이미 존재하는 이메일로 회원 가입시도: 잘못된 경로 대비)")
+	@Transactional
+	@DisplayName("회원가입 (실패-이미 존재하는 이메일로 회원 가입시도: 잘못된 경로 대비)")
 	public void joinPostEmailDuplicated() throws Exception {
-		long personNum = personService.countAll();
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("email", "test@google.com"); //이메일 형식 맞지 않음
-		map.add("password", "abcd1234");
-		map.add("firstName", "first");
-		map.add("lastName", "last");
+		//Given
+		long givenPersonNum = personRepository.count();
 		
+		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
+		String existPersonEmail = person.getEmail();
+		paramMap.add("email", existPersonEmail); 
+		paramMap.add("password", "abcd1234");
+		paramMap.add("firstName", "first");
+		paramMap.add("lastName", "last");
+		
+		//When
 		mockMvc.perform(post("/join")
-				.params(map))
+				.params(paramMap))
+		
+		//Then
 				.andExpect(status().isConflict());
-			
-		assertEquals(personNum,personService.countAll());
-	}
-	
-	@Test
-	@DisplayName("회원가입 POST (실패-유효성 검증 실패)")
-	public void joinPostNonValidate() throws Exception {
-		long personNum = personService.countAll();
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("email", "second"); //이메일 형식 맞지 않음
-		map.add("password", "abcd1234");
-		map.add("firstName", "first");
-		map.add("lastName", "last");
 		
-		mockMvc.perform(post("/join")
-				.params(map))
-				.andExpect(status().is4xxClientError());
-		
-		
-		assertEquals(personNum,personService.countAll());
-		
-		map = new LinkedMultiValueMap<>();
-		map.add("email", "second@naver.com"); 
-		map.add("password", ""); // 비밀번호 공백
-		map.add("firstName", "first");
-		map.add("lastName", "last");
-		
-		mockMvc.perform(post("/join")
-				.params(map))
-				.andExpect(status().is4xxClientError());
-		
-		
-		assertEquals(personNum,personService.countAll());
-		
-		map = new LinkedMultiValueMap<>();
-		map.add("email", "second@naver.com"); 
-		map.add("password", "abcd1234"); 
-		map.add("firstName", "");   // 이름 공백
-		map.add("lastName", "last");
-		
-		mockMvc.perform(post("/join")
-				.params(map))
-				.andExpect(status().is4xxClientError());
-		
-		
-		assertEquals(personNum,personService.countAll());
+		assertEquals(givenPersonNum, personRepository.count());
 	}
 	
 	@Test
 	@Transactional
-	@DisplayName("회원가입 POST (성공)")
-	public void joinPostTest() throws Exception {
-		long personNum = personService.countAll();
+	@DisplayName("회원가입 (실패-유효성 검증 실패, 이메일이 형식에 맞지 않음)")
+	public void joinPostNonValidateEmail() throws Exception {
+		//Given
+		long givenPersonNum = personRepository.count();
+		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
+		paramMap.add("email", "second"); //이메일 형식 맞지 않음
+		paramMap.add("password", "abcd1234");
+		paramMap.add("firstName", "first");
+		paramMap.add("lastName", "last");
+		
+		//When
+		mockMvc.perform(post("/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(status().is4xxClientError());
+		
+		assertEquals(givenPersonNum,personRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("회원가입 (실패-유효성 검증 실패, 비밀번호가 형식에 맞지않음- 공백)")
+	public void joinNonValidatePassword() throws Exception {
+		//Given
+		long givenPersonNum = personRepository.count();
+		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
+		paramMap = new LinkedMultiValueMap<>();
+		paramMap.add("email", "second@naver.com"); 
+		paramMap.add("password", ""); // 비밀번호 공백
+		paramMap.add("firstName", "first");
+		paramMap.add("lastName", "last");
+		
+		//When
+		mockMvc.perform(post("/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(status().is4xxClientError());
+		
+		assertEquals(givenPersonNum,personRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("회원가입 (실패-유효성 검증 실패, 이름 공백)")
+	public void joinNonValidateFirstName() throws Exception {
+		//Given
+		long givenPersonNum = personRepository.count();
+		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
+		paramMap = new LinkedMultiValueMap<>();
+		paramMap.add("email", "second@naver.com"); 
+		paramMap.add("password", "abcd1234"); 
+		paramMap.add("firstName", "");   // 이름 공백
+		paramMap.add("lastName", "last");
+		
+		//When
+		mockMvc.perform(post("/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(status().is4xxClientError());
+		
+		assertEquals(givenPersonNum,personRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("회원가입 (성공, person 개수 확인)")
+	public void joinTestCheckPersonNum() throws Exception {
+		//Given
+		long personNum = personRepository.count();
+		MultiValueMap<String, String> paramMap = getJoinSuccessParamMap();
+		
+		//When
+		mockMvc.perform(post("/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(redirectedUrl("/"));
+		
+		assertEquals(personNum+1,personRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("회원가입 POST (성공, Person DB에 존재 여부 확인)")
+	public void joinTestCheckIsInDB() throws Exception {
+		//Given
+		MultiValueMap<String, String> paramMap = getJoinSuccessParamMap();
+		
+		//When
+		mockMvc.perform(post("/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(redirectedUrl("/"));
+		
+		assertEquals(personRepository.existsByEmail("third@naver.com"),true);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("회원가입 POST (성공, 추가된 Person Role이 USER인지 확인)")
+	public void joinTestCheckIsROLE_USER() throws Exception {
+		//Given
+		MultiValueMap<String, String> paramMap = getJoinSuccessParamMap();
+		
+		//When
+		mockMvc.perform(post("/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(redirectedUrl("/"));
+		
+		assertEquals(personRepository.findByEmail("third@naver.com").get().getRole(),RoleType.USER);
+	}
+	
+	private MultiValueMap<String, String> getJoinSuccessParamMap() {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("email", "third@naver.com"); 
 		map.add("password", "abcd1234");
 		map.add("firstName", "first");
 		map.add("lastName", "last");
 		
-		mockMvc.perform(post("/join")
-				.params(map))
-				.andExpect(redirectedUrl("/"));
-		
-		assertEquals(personNum+1,personService.countAll());
-		assertEquals(personService.existsByEmail("third@naver.com"),true);
-		assertEquals(personService.findByEmail("third@naver.com").getRole(),RoleType.USER);
+		return map;
 	}
 	
 	/* 
@@ -258,11 +313,15 @@ public class PersonControllerTest {
 	 *  	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
 	 *		public ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
 	 */
-	@WithMockUser(username="test@google.com", roles= {"PRE"})
+	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"PRE"})
 	@Test
+	@Transactional
 	@DisplayName("소셜 로그인 회원가입 (실패-이미 회원가입 되어있는 회원의 접근)")
 	public void oAuth2JoinViewAlreadyJoin() throws Exception {
+		//When
 		mockMvc.perform(get("/oauth2/join"))
+		
+		//Then
 				.andExpect(status().isConflict());
 		
 	}
@@ -274,42 +333,75 @@ public class PersonControllerTest {
 	 */
 	@WithMockUser(username="none@google.com", roles= {"PRE"})
 	@Test
+	@Transactional
 	@DisplayName("소셜로그인 계정 회원가입 POST (실패- 이메일이 입력된 사항과 불일치)")
 	public void oAuth2JoinEmailNotMatch() throws Exception{
+		//Given
+		long givenPersonNum = personRepository.count();
 		
-		long personNum = personService.countAll();
+		MultiValueMap<String,String> paramMap = new LinkedMultiValueMap<>();
+		paramMap.add("email","oAuth2JoinPostEmailNotMatch@mail.com");
+		paramMap.add("firstName", "new");
+		paramMap.add("lastName", "one");
+		paramMap.add("password", "abcd1234");
 		
-		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-		map.add("email","oAuth2JoinPostEmailNotMatch@mail.com");
-		map.add("firstName", "new");
-		map.add("lastName", "one");
-		map.add("password", "abcd1234");
-		
+		//When
 		mockMvc.perform(post("/oauth2/join")
-				.params(map))
+				.params(paramMap))
+		
+		//Then
 				.andExpect(status().isBadRequest());
 		
-		assertEquals(personNum, personService.countAll());
+		assertEquals(givenPersonNum, personRepository.count());
 	}
 	
 	@WithMockUser(username="new@google.com" , roles= {"PRE"})
 	@Test
-	@DisplayName("소셜로그인 계정 회원가입 POST (성공)")
-	public void oAuth2JoinTest() throws Exception {
-		long personNum = personService.countAll();
+	@Transactional
+	@DisplayName("소셜로그인 계정 회원가입 POST (성공, Person 개수 확인)")
+	public void oAuth2JoinTestCheckPersonNum() throws Exception {
+		//Given
+		long givnePersonNum = personRepository.count();
 		
+		MultiValueMap<String,String> paramMap = getOAuth2JoinSuccessParamMap();
+		
+		//When
+		mockMvc.perform(post("/oauth2/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated().withRoles("USER").withUsername("new@google.com"));
+		
+		assertEquals(givnePersonNum+1,personRepository.count());
+	}
+	
+	@WithMockUser(username="new@google.com" , roles= {"PRE"})
+	@Test
+	@Transactional
+	@DisplayName("소셜로그인 계정 회원가입 POST (성공, Person DB에 있는지 확인)")
+	public void oAuth2JoinTestCheckIsInDB() throws Exception {
+		//Given
+		MultiValueMap<String,String> paramMap = getOAuth2JoinSuccessParamMap();
+		
+		//When
+		mockMvc.perform(post("/oauth2/join")
+				.params(paramMap))
+		
+		//Then
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated().withRoles("USER").withUsername("new@google.com"));
+		
+		assertEquals(personRepository.existsByEmail("new@google.com"),true);
+	}
+	
+	private MultiValueMap<String,String> getOAuth2JoinSuccessParamMap() {
 		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
 		map.add("email","new@google.com");
 		map.add("firstName", "new");
 		map.add("lastName", "one");
 		map.add("password", "abcd1234");
 		
-		mockMvc.perform(post("/oauth2/join")
-				.params(map))
-				.andExpect(redirectedUrl("/"))
-				.andExpect(authenticated().withRoles("USER").withUsername("new@google.com"));
-		
-		assertEquals(personNum+1,personService.countAll());
-		assertEquals(personService.existsByEmail("new@google.com"),true);
+		return map;
 	}
 }
