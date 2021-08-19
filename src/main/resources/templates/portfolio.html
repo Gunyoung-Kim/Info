@@ -83,7 +83,7 @@
             <pre class="mb-5 content_box" th:text="${content.contents}">내용</pre>
             <h5>프로젝트 관련 링크</h5>
             <div class="links" th:each="link:*{content.links}">
-              <b th:text="|${link.tag} : |"></b> <a th:href="${link.url}" th:text="${link.url}"></a>
+              <b th:text="|${link.tag} : |"></b> <a th:href="${link.url}" th:text="${link.url}" target="_blank"></a>
             </div>
           </div>
         </section>
