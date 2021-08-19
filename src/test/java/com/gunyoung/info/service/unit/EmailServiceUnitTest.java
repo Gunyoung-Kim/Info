@@ -38,12 +38,12 @@ public class EmailServiceUnitTest {
 	public void sendEmailTest() {
 		//Given
 		EmailDTO email = EmailDTO.builder()
-								 .senderMail("test@google.com")
-								 .senderName("test")
-								 .receiveMail("test@naver.com")
-								 .subject("subject")
-								 .message("message")
-								 .build();
+				.senderMail("test@google.com")
+				.senderName("test")
+				.receiveMail("test@naver.com")
+				.subject("subject")
+			    .message("message")
+				.build();
 		
 		//When
 		emailService.sendEmail(email);
