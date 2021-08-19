@@ -116,17 +116,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	
 	
-	// for password Encoding
+	/**
+	 * Password 인코딩 시 사용되는 빈
+	 * @author kimgun-yeong
+	 */
 	@Bean 
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
-	/*
-	@Bean
-	public SecurityAuthenticationFilter securityAuthenticationFilter() {
-		return new SecurityAuthenticationFilter();
-	}
-	*/
-	
 }
