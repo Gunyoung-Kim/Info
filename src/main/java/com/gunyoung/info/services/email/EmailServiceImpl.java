@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 import com.gunyoung.info.dto.email.EmailDTO;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 @Service("emailService")
-@Setter
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService{
 
