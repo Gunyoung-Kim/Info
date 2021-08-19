@@ -47,8 +47,8 @@ public class ContentServiceImpl implements ContentService{
 	
 	@Override
 	@Transactional(readOnly=true)
-	public List<Content> findBySpaceIdWithLinks(Long spaceId) {
-		return contentRepository.findBySpaceIdWithLinks(spaceId);
+	public List<Content> findAllBySpaceIdWithLinks(Long spaceId) {
+		return contentRepository.findAllBySpaceIdWithLinks(spaceId);
 	}	
 	
 	@Override

@@ -40,11 +40,11 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 	 * @param spaceId 찾으려는 Content들의 Space ID
 	 * @author kimgun-yeong
 	 */
-	@Query("SELECT c FROM Content c "
-			+ "INNER JOIN c.space s "
+	@Query("SELECT DISTINCT c FROM Content c "
 			+ "LEFT JOIN FETCH c.links l "
+			+ "INNER JOIN c.space s "
 			+ "WHERE s.id = :spaceId")
-	public List<Content> findBySpaceIdWithLinks(@Param("spaceId") Long spaceId);
+	public List<Content> findAllBySpaceIdWithLinks(@Param("spaceId") Long spaceId);
 	
 	/**
 	 * 모든 Content 개수 반환

@@ -44,8 +44,6 @@ public class ContentRestController {
 	
 	private final LinkService linkService;
 	
-	public static final int MAX_CONTENT_NUM = 50;
-	
 	/**
 	 * <pre>
 	 *  - 기능: createContent가 반환한 뷰에 사용자가 프로젝트 정보들을 입력하고 POST 전송하여 이를 해당 사용자의 프로젝트로 추가하기 위한 컨트롤러
@@ -76,7 +74,7 @@ public class ContentRestController {
 		}
 		
 		Space space = loginUser.getSpace();
-		if(space.getContents().size() >= MAX_CONTENT_NUM) {
+		if(space.getContents().size() >= Space.MAX_CONTENT_NUM) {
 			throw new ContentNumLimitExceedException(ContentErrorCode.CONTENT_NUM_LIMIT_EXCEEDED_ERROR.getDescription());
 		}
 		

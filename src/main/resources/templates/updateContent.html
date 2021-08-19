@@ -56,7 +56,7 @@
               <input type="text" th:id="|linkExistTag${link.id}|" th:value="${link.tag}">
               <label>URL</label>
               <input type="text" th:id="|linkExistURL${link.id}|" th:value="${link.url}">
-              <button type="button" class="btn" th:onclick="|deleteExistSelect(link.id)|">삭제</button>
+              <button type="button" class="btn" th:onclick="|deleteExistSelect(${link.id})|">삭제</button>
             </div>
           </div>
         </div>

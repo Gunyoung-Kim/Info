@@ -8,11 +8,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+/**
+ * {@link PrivacyController} 에 대한 테스트 클래스
+ * 테스트 범위:(통합 테스트) 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 <br>
+ * MockMvc 활용을 통한 통합 테스트
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
 public class PrivacyControllerTest {
 	
@@ -27,8 +32,13 @@ public class PrivacyControllerTest {
 	@Test
 	@DisplayName("개인정보 처리방침 페이지 with 버전 (실패- 해당 버전의 개인정보 처리방침이 존재하지 않을 때)")
 	public void privacyPolicyWithVersionNoVersion() throws Exception {
-		int latest_version = PrivacyController.LATEST_POLICY_VERSION;
-		mockMvc.perform(get("/privacypolicy/" + (latest_version+3)))
+		//Given
+		int nonExistVersion = PrivacyController.LATEST_POLICY_VERSION + 10;
+		
+		//When
+		mockMvc.perform(get("/privacypolicy/" + nonExistVersion))
+		
+		//Then
 				.andExpect(status().isNoContent());
 	}
 }

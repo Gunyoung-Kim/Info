@@ -114,20 +114,20 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Content> findBySpaceIdWithLinks(Long spaceId)
+	 * public List<Content> findAllBySpaceIdWithLinks(Long spaceId)
 	 */
 	
 	@Test
 	@DisplayName("Space ID로 Content들 찾기, Links 페치 조인 -> 정상")
-	public void findBySpaceIdWithLinksTest() {
+	public void findAllBySpaceIdWithLinksTest() {
 		//Given
 		Long spaceId = Long.valueOf(1);
 		
 		//When
-		contentService.findBySpaceIdWithLinks(spaceId);
+		contentService.findAllBySpaceIdWithLinks(spaceId);
 		
 		//Then
-		then(contentRepository).should(times(1)).findBySpaceIdWithLinks(spaceId);
+		then(contentRepository).should(times(1)).findAllBySpaceIdWithLinks(spaceId);
 	}
 	
 	/*

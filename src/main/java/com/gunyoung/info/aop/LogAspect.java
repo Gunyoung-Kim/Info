@@ -34,10 +34,6 @@ public class LogAspect {
 	
 	/**
 	 * 컨트롤러에 Request 가 들어오면 Request 메소드,uri, parameters, remote address, 처리 시간 들을 로깅 하기 위한 어드바이스
-	 * 
-	 * @param pjp
-	 * @return
-	 * @throws Throwable
 	 * @author kimgun-yeong
 	 */
 	@Around("com.gunyoung.info.aop.LogAspect.onRequest()")
@@ -52,22 +48,32 @@ public class LogAspect {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
 		
-		// Nginx 리버스 프록시 추가로 인해 추가된 코드
-		String remoteHost = Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteHost());
+		String remoteHost = getRemoteHostFromHttpRequest(request);
 		
-		long start = System.currentTimeMillis();
+		long beforeProceedTime = System.currentTimeMillis();
 		
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
-			long end = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, end- start);
+			long afterProccedTime = System.currentTimeMillis();
+			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, afterProccedTime- beforeProceedTime);
 		}
 	}
 	
 	/**
+	 * HttpRequest의 RemoteHost를 반환하는 메소드 <br>
+	 * 리버스 프록시인 Nginx의 사용으로 RemoteHost 값이 127.0.0.1(localhost)로 나타난다. <br>
+	 * 기존의 RemoteHost 값은 X-Real-IP 헤더에 담겨져 있기에 이를 반영 <br>
+	 * 리버스 프록시가 따로 없다면 기존의 RemoteHost 값 반환
+	 * @author kimgun-yeong
+	 */
+	private String getRemoteHostFromHttpRequest(HttpServletRequest request) {
+		return Optional.ofNullable(request.getHeader("X-Real-IP"))
+				.orElse(request.getRemoteHost());
+	}
+	
+	/**
 	 * Request Parameter 들을 로깅을 위해 한줄로 변환하는 메소드 
-	 * @param paramMap
 	 * @return Request Parameter 한줄
 	 * @author kimgun-yeong
 	 */
@@ -81,6 +87,9 @@ public class LogAspect {
 			sb.append(", ");
 		});
 		
-		return sb.toString();
+		String paramString = sb.toString();
+		paramString = paramString.substring(0, paramString.length()-2);
+		
+		return paramString;
 	}
 }
