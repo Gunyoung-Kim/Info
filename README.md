@@ -1,6 +1,6 @@
 # INFO [![Build Status](https://travis-ci.com/Gunyoung-Kim/Info.svg?branch=master)](https://travis-ci.com/Gunyoung-Kim/Info)
 
-최신 버전 : ver 0.1.0
+최신 버전 : ver 0.1.1
 
 ## 프로젝트 목적
 
