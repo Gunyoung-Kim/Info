@@ -44,7 +44,7 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 			+ "LEFT JOIN FETCH c.links l "
 			+ "INNER JOIN c.space s "
 			+ "WHERE s.id = :spaceId")
-	public List<Content> findBySpaceIdWithLinks(@Param("spaceId") Long spaceId);
+	public List<Content> findAllBySpaceIdWithLinks(@Param("spaceId") Long spaceId);
 	
 	/**
 	 * 모든 Content 개수 반환

@@ -36,7 +36,7 @@ public interface ContentService {
 	 * @param spaceId 찾으려는 Content들의 Space ID
 	 * @author kimgun-yeong
 	 */
-	public List<Content> findBySpaceIdWithLinks(Long spaceId);
+	public List<Content> findAllBySpaceIdWithLinks(Long spaceId);
 	
 	/**
 	 * Content 생성 및 수정

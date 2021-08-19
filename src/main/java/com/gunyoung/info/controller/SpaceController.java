@@ -80,7 +80,7 @@ public class SpaceController {
 		ProfileDTO profileDTO = ProfileDTO.createFromPersonAndSpace(spaceHost, space);
 		
 		Long spaceId = space.getId();
-		List<Content> contents = contentService.findBySpaceIdWithLinks(spaceId);
+		List<Content> contents = contentService.findAllBySpaceIdWithLinks(spaceId);
 		
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		boolean isSessionUserHost = loginUserEmail.equals(spaceHost.getEmail());
