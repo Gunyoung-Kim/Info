@@ -95,7 +95,7 @@ public class PersonController {
 		
 		mav.addObject("listObject",resultList);
 		
-		mav.setPageNumbers(page, PAGE_SIZE, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("index");
 		
