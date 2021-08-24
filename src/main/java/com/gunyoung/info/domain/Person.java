@@ -71,14 +71,6 @@ public class Person extends BaseEntity{
 	@Builder.Default
 	private Space space = Space.builder().build();
 	
-	public Person(String email, String password, String firstName, String lastName) {
-		this();
-		this.email = email;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-	
 	@Transient
 	public String getFullName() {
 		return this.firstName +" " + this.lastName;
