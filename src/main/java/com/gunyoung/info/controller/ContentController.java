@@ -60,7 +60,7 @@ public class ContentController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: url에 담긴 이메일 유저의 포트폴리오에 프로젝트 추가하는 페이지 반환하는 컨트롤러  
+	 *  - 기능: 유저의 포트폴리오에 프로젝트 추가하는 페이지 반환하는 컨트롤러  
 	 *  - 반환: 
 	 *  	- 성공 
 	 *  	View: createContent.html(포트폴리오에 프로젝트 추가하는 템플릿) 
