@@ -39,7 +39,6 @@ public class PersonRestController {
 		return String.valueOf(personService.existsByEmail(email));
 	}
 	
-	
 	/**
 	 * <pre>
 	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤
@@ -57,11 +56,15 @@ public class PersonRestController {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		if(!loginUserEmail.equals(targetPersonEmail)) {
+		if(isSessionPersonAndDeletePersonMisMatch(targetPerson.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		personService.delete(targetPerson);
+	}
+	
+	private boolean isSessionPersonAndDeletePersonMisMatch(String targetPersonEmail) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		return !loginUserEmail.equals(targetPersonEmail);
 	}
 }
