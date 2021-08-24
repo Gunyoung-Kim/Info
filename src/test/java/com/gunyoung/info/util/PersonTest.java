@@ -3,6 +3,7 @@ package com.gunyoung.info.util;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.enums.RoleType;
 
 /**
  * Test 클래스 전용 Person 엔티티 관련 유틸리티 클래스
@@ -12,18 +13,27 @@ import com.gunyoung.info.domain.Person;
 public class PersonTest {
 	
 	/**
-	 * 임의의 Person 인스턴스 반환
-	 * @param email 생성하려는 Person의 email
+	 * 임의의 Person 인스턴스 반환 <br>
+	 * email 커스터마이징 가능
 	 * @author kimgun-yeong
 	 */
 	public static Person getPersonInstance(String email) {
+		return getPersonInstance(email, RoleType.USER);
+	}
+	
+	/**
+	 * 임의의 Person 인스턴스 반환 <br>
+	 * email, role 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static Person getPersonInstance(String email, RoleType role) {
 		Person person = Person.builder()
 				.email(email)
 				.password("abcd1234")
 				.firstName("스트")
 				.lastName("테")
+				.role(role)
 				.build();
-		
 		return person;
 	}
 	

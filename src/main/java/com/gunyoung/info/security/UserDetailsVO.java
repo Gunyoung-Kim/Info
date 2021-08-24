@@ -26,7 +26,6 @@ public class UserDetailsVO implements UserDetails {
 			this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
 	
-	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.authorities;
@@ -48,25 +47,21 @@ public class UserDetailsVO implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
