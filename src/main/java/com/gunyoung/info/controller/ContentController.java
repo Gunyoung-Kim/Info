@@ -120,11 +120,8 @@ public class ContentController {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		// 해당 컨텐트가 현재 접속자의 것인지 확인하는 작업
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person contentHost = content.getSpace().getPerson();
-		String contentHostEmail = contentHost.getEmail();
-		if(!contentHostEmail.equals(loginUserEmail)) {
+		if(isContentHostAndSessionPersonNotMatch(contentHost)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription()); 
 		}
 		
@@ -140,5 +137,11 @@ public class ContentController {
 		mav.setViewName("updateContent");
 		
 		return mav;
+	}
+	
+	private boolean isContentHostAndSessionPersonNotMatch(Person contentHost) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		String contentHostEmail = contentHost.getEmail();
+		return !contentHostEmail.equals(loginUserEmail);
 	}
 }
