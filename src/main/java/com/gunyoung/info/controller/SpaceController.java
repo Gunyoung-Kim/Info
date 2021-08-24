@@ -82,8 +82,7 @@ public class SpaceController {
 		Long spaceId = space.getId();
 		List<Content> contents = contentService.findAllBySpaceIdWithLinks(spaceId);
 		
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		boolean isSessionUserHost = loginUserEmail.equals(spaceHost.getEmail());
+		boolean isSessionUserHost = getIsSessionUserHost(spaceHost.getEmail());
 		
 		mav.addObject("profile", profileDTO);
 		mav.addObject("contents",contents);
@@ -92,6 +91,11 @@ public class SpaceController {
 		mav.setViewName("portfolio");
 		
 		return mav;
+	}
+	
+	private boolean getIsSessionUserHost(String spaceHostEmail) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		return loginUserEmail.equals(spaceHostEmail);
 	}
 	
 	/** 
@@ -108,7 +112,6 @@ public class SpaceController {
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
 	public ModelAndView updateProfileView(ModelAndView mav) {
 		String userEmail = AuthorityUtil.getSessionUserEmail();
-		
 		Person user = personService.findByEmailWithSpace(userEmail);
 		if(user == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
