@@ -2,7 +2,6 @@ package com.gunyoung.info.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -45,7 +44,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class PersonController {
-	private static final int PAGE_SIZE = 10;
+	private static final int INDEX_VIEW_PAGE_SIZE = 10;
 	
 	private final PersonService personService;
 	
@@ -67,39 +66,40 @@ public class PersonController {
 	@RequestMapping(value ="/", method =RequestMethod.GET)
 	public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
 			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
-		Collection<? extends GrantedAuthority> loginUserAuthorities = AuthorityUtil.getSessionUserAuthorities();
-		if(loginUserAuthorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"))) {
+		if(isUserAuthoritiesContainsROLE_PRE()) {
 			return new ModelAndView("redirect:/oauth2/join");
 		}
 		
-		Page<Person> pageResult;
-		long totalPageNum;
-
-		if(keyword != null) {
-			pageResult = personService.findByNameKeywordInPage(page, keyword);
-			totalPageNum = personService.countWithNameKeyword(keyword)/PAGE_SIZE +1;
-		} else {
-			pageResult = personService.findAllInPage(page);
-			totalPageNum = personService.countAll()/PAGE_SIZE +1;
-		}
+		Page<Person> pageResult = getPageResultForIndexView(keyword, page);
+		long totalPageNum = getTotalPageNumForIndexView(keyword);
 		
-		List<MainListDTO> resultList = new LinkedList<>();
-		for(Person p : pageResult) {
-			MainListDTO mainListDTO = MainListDTO.builder()
-					.personId(p.getId())
-					.personName(p.getFullName())
-					.personEmail(p.getEmail())
-					.build();
-			resultList.add(mainListDTO);
-		}
-		
-		mav.addObject("listObject",resultList);
+		List<MainListDTO> resultList = MainListDTO.of(pageResult);
 		
 		mav.setPageNumbers(page, totalPageNum);
+		mav.addObject("listObject",resultList);
 		
 		mav.setViewName("index");
 		
 		return mav;
+	}
+	
+	private boolean isUserAuthoritiesContainsROLE_PRE() {
+		Collection<? extends GrantedAuthority> loginUserAuthorities = AuthorityUtil.getSessionUserAuthorities();
+		return loginUserAuthorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"));
+	}
+	
+	private Page<Person> getPageResultForIndexView(String keyword, Integer page) {
+		if(keyword == null) {
+			return personService.findAllInPage(page);
+		}
+		return personService.findByNameKeywordInPage(page, keyword);
+	}
+	
+	private long getTotalPageNumForIndexView(String keyword) {
+		if(keyword == null) {
+			return personService.countAll()/INDEX_VIEW_PAGE_SIZE +1;
+		}
+		return personService.countWithNameKeyword(keyword)/INDEX_VIEW_PAGE_SIZE +1;
 	}
 	
 	/**
@@ -220,14 +220,7 @@ public class PersonController {
 		
 		return new ModelAndView("redirect:/");
 	}
-	
-	/**
-	 * 회원 가입 후 축하 이메일 전송을 위한 메소드 <br>
-	 * 회원 가입 메소드 성공 이후 실행됨 
-	 * 
-	 * @param receiveMail mail을 받을 주체의 email 주소
-	 * @author kimgun-yeong
-	 */
+
 	private void sendEmailForJoin(String receiveMail) {
 		EmailDTO email = EmailDTO.builder()
 								 .senderMail("gun025bba@google.com")
