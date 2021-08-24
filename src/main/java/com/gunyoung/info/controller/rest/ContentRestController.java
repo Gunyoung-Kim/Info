@@ -63,7 +63,6 @@ public class ContentRestController {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person loginUser = personService.findByEmailWithSpace(loginUserEmail);
-		
 		if(loginUser == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -84,7 +83,7 @@ public class ContentRestController {
 		
 		List<Link> newLinkList = contentDTO.createLinkListOnlyWithContent(newContent);
 		linkService.saveAll(newLinkList);
-	}	
+	}
 	
 	/**
 	 * <pre>
@@ -106,13 +105,17 @@ public class ContentRestController {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		String hostEmail = targetContent.getSpace().getPerson().getEmail();
-		if(!hostEmail.equals(loginUserEmail)) {
+		if(isContentIsNotLoginUsersContent(targetContent)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		contentService.delete(targetContent);
+	}
+	
+	private boolean isContentIsNotLoginUsersContent(Content targetContent) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		String hostEmail = targetContent.getSpace().getPerson().getEmail();
+		return !hostEmail.equals(loginUserEmail);
 	}
 	
 	/**
@@ -143,15 +146,23 @@ public class ContentRestController {
 		}
 		
 		String hostEmail = host.getEmail();
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		if(!hostEmail.equals(loginUserEmail)) { 
+		if(isHostEmailAndLoginUserEmailMisMatch(hostEmail)) { 
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		contentDto.updateContentOnly(targetContent);
 		contentService.save(targetContent);
 		
-		List<LinkDTO> linkDTOs = contentDto.getLinks();
+		saveNewLinksForContentFromContentDTO(targetContent, contentDto);
+	}
+	
+	private boolean isHostEmailAndLoginUserEmailMisMatch(String hostEmail) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		return !hostEmail.equals(loginUserEmail);
+	}
+	
+	private void saveNewLinksForContentFromContentDTO(Content targetContent, ContentDTO contentDTO) {
+		List<LinkDTO> linkDTOs = contentDTO.getLinks();
 		List<Link> existContentLinks = targetContent.getLinks();
 		
 		linkService.saveByLinkDTOsAndExistContentLinks(targetContent,linkDTOs,existContentLinks);
