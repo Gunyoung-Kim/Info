@@ -18,8 +18,10 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	
 	private final PasswordEncoder passwordEncoder;
 	
-	/*
-	 *  인자로 전해지는 authentication에는 사용자의 로그인 폼에서 입력값을 나타낸다.
+	/**
+	 * DB 정보를 통해 생성한 UserDetails와 입력된 Authentication을 비교하여 유효성을 검증하고 검증 성공 시 새로운 Authentication 반환 <br>
+	 * @throws BadCredentialsException 유효성 검증 실패 시
+	 * @author kimgun-yeong
 	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
