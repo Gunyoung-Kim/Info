@@ -150,11 +150,15 @@ public class PersonController {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		};
 		
+		encodePasswordAndSavePerson(person);
+		sendEmailForJoin(person.getEmail());
+		
+		return new ModelAndView("redirect:/");
+	}
+	
+	private void encodePasswordAndSavePerson(Person person) {
 		person.setPassword(passwordEncoder.encode(person.getPassword()));
 		personService.save(person);
-		
-		sendEmailForJoin(person.getEmail());
-		return new ModelAndView("redirect:/");
 	}
 	
 	/**
@@ -199,36 +203,52 @@ public class PersonController {
 	
 	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
 	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
-		String userEmail = AuthorityUtil.getSessionUserEmail();
-		if(!userEmail.equals(formModel.getEmail())) {
+		if(isSessionUserEmailAndEmailInFormMisMatch(formModel.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
-		String encodedPassword = passwordEncoder.encode(formModel.getPassword());
-		Person person = formModel.createPersonFromOAuth2Join(encodedPassword);
-		personService.save(person);
-		
-		// 예비 사용자가 회원 가입 후 새로운 Authentication 부여
-		List<GrantedAuthority> newAuthorityList = new ArrayList<>();
-		newAuthorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
-		
-		UserDetails newUserDetails = new UserDetailsVO(person.getEmail(),person.getPassword(),person.getRole());
-		Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails,null,newAuthorityList);
-		SecurityContextHolder.getContext().setAuthentication(newAuth);
-		
+		Person person = getNewSavedPersonWithEncodedPassword(formModel);
+		setNewAuthenticationInSecurityContext(person);
 		sendEmailForJoin(formModel.getEmail());
 		
 		return new ModelAndView("redirect:/");
 	}
+	
+	private boolean isSessionUserEmailAndEmailInFormMisMatch(String emailInFormModel) {
+		String userEmail = AuthorityUtil.getSessionUserEmail();
+		return !userEmail.equals(emailInFormModel);
+	}
+	
+	private Person getNewSavedPersonWithEncodedPassword(OAuth2Join formModel) {
+		String encodedPassword = passwordEncoder.encode(formModel.getPassword());
+		Person person = formModel.createPersonFromOAuth2Join(encodedPassword);
+		personService.save(person);
+		
+		return person;
+	}
+	
+	private void setNewAuthenticationInSecurityContext(Person person) {
+		List<GrantedAuthority> newAuthorityList = getNewAuthroritiesForROLE_USER();
+		
+		UserDetails newUserDetails = new UserDetailsVO(person.getEmail(),person.getPassword(),person.getRole());
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails,null,newAuthorityList);
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
+	}
+	
+	private List<GrantedAuthority> getNewAuthroritiesForROLE_USER() {
+		List<GrantedAuthority> newAuthorityList = new ArrayList<>();
+		newAuthorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
+		return newAuthorityList;
+	}
 
 	private void sendEmailForJoin(String receiveMail) {
 		EmailDTO email = EmailDTO.builder()
-								 .senderMail("gun025bba@google.com")
-								 .senderName("INFO")
-								 .receiveMail(receiveMail)
-								 .subject("INFO 가입을 환영합니다.")
-								 .message("INFO 가입을 굉장히 환영합니다.")
-								 .build();
+				.senderMail("gun025bba@google.com")
+				.senderName("INFO")
+				.receiveMail(receiveMail)
+				.subject("INFO 가입을 환영합니다.")
+				.message("INFO 가입을 굉장히 환영합니다.")
+				.build();
 		
 		emailService.sendEmail(email);					
 	}
