@@ -39,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final UserDetailsService userDetailsService;
 	
-	
 	private final CustomOAuth2UserService customOAuth2UserService;
 	
 	@Override
@@ -86,13 +85,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return roleHierarchy;
 	}
 	
+	/**
+	 * roleHierarchy 빈 계급 체계 등록
+	 * @author kimgun-yeong
+	 */
 	@Bean
 	public SecurityExpressionHandler<FilterInvocation> expressionHandler() {
 		DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
 		webSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
 		return webSecurityExpressionHandler;
 	}
-	
 	
 	/**
 	 * Thymeleaf에서 <sec:authorize> 네임 스페이스 같은 확장 기능을 사용하기 위한 Bean 
@@ -104,17 +106,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return new SpringSecurityDialect();
 	}
 	
+	/**
+	 * AuthenticationProvider 빈으로 {@link UserAuthenticationProvider} 등록 
+	 * @author kimgun-yeong
+	 */
 	@Bean
 	public UserAuthenticationProvider authenticationProvider() {
 		return new UserAuthenticationProvider(userDetailsService,passwordEncoder());
 	}
 	
-	
+	/**
+	 * AuthenticationManager에 {@link UserAuthenticationProvider} 추가
+	 */
 	@Override 
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		 auth.authenticationProvider(authenticationProvider());
 	}
-	
 	
 	/**
 	 * Password 인코딩 시 사용되는 빈
