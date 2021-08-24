@@ -15,6 +15,14 @@ public class PersonTest {
 	public static final String DEFAULT_PERSON_EMAIL = "test@test.com";
 	
 	/**
+	 * 임의의 Person 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static Person getPersonInstance() {
+		return getPersonInstance(DEFAULT_PERSON_EMAIL);
+	}
+	
+	/**
 	 * 임의의 Person 인스턴스 반환 <br>
 	 * email 커스터마이징 가능
 	 * @author kimgun-yeong
