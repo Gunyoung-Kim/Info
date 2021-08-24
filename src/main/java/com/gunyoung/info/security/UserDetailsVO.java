@@ -38,10 +38,6 @@ public class UserDetailsVO implements UserDetails {
 	public String getPassword() {
 		return this.password;
 	}
-
-	public void setPassword(String password) {
-		this.password = null;
-	}
 	
 	@Override
 	public String getUsername() {
