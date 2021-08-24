@@ -9,7 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gunyoung.info.enums.RoleType;
 
+import lombok.NoArgsConstructor;
+
 @SuppressWarnings("serial")
+@NoArgsConstructor
 public class UserDetailsVO implements UserDetails {
 
 	private String email;

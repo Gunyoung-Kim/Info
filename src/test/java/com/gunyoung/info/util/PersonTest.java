@@ -12,6 +12,8 @@ import com.gunyoung.info.enums.RoleType;
  */
 public class PersonTest {
 	
+	public static final String DEFAULT_PERSON_EMAIL = "test@test.com";
+	
 	/**
 	 * 임의의 Person 인스턴스 반환 <br>
 	 * email 커스터마이징 가능
@@ -19,6 +21,15 @@ public class PersonTest {
 	 */
 	public static Person getPersonInstance(String email) {
 		return getPersonInstance(email, RoleType.USER);
+	}
+	
+	/**
+	 * 임의의 Person 인스턴스 반환 <br>
+	 * role 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static Person getPersonInstance(RoleType role) {
+		return getPersonInstance(DEFAULT_PERSON_EMAIL, role);
 	}
 	
 	/**
