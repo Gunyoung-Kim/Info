@@ -1,6 +1,5 @@
 package com.gunyoung.info.controller.rest;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,14 +35,7 @@ public class RestfulController {
 	public List<MainListDTO> index() {
 		List<Person> personList = personService.findAll();
 		
-		List<MainListDTO> result = new LinkedList<>();
-		for(Person p : personList) {
-			MainListDTO mainListDTO = MainListDTO.builder()
-					.personName(p.getFullName())
-					.personEmail(p.getEmail())
-					.build();
-			result.add(mainListDTO);
-		}
+		List<MainListDTO> result = MainListDTO.of(personList);
 		
 		return result;
 	}
