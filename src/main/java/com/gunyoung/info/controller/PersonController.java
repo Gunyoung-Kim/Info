@@ -44,7 +44,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class PersonController {
-	private static final int INDEX_VIEW_PAGE_SIZE = 10;
+	public static final int INDEX_VIEW_PAGE_SIZE = 10;
 	
 	private final PersonService personService;
 	
@@ -54,7 +54,7 @@ public class PersonController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 메인 뷰 반환하는 컨트롤러
+	 *  - 기능: 메인 뷰 반환
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: index.html
@@ -104,7 +104,7 @@ public class PersonController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 로그인 뷰를 반환하는 컨트롤
+	 *  - 기능: 로그인 뷰를 반환
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: login.html
@@ -118,7 +118,7 @@ public class PersonController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 회원 가입 뷰를 반환하는 컨트롤러
+	 *  - 기능: 회원 가입 뷰를 반환
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: join.html
@@ -135,7 +135,7 @@ public class PersonController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 회원 가입 처리를 하는 컨트롤러
+	 *  - 기능: 회원 가입 처리
 	 *  - 반환:
 	 *  	- 성공
 	 * 		View: join.html 
@@ -145,7 +145,7 @@ public class PersonController {
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join", method = RequestMethod.POST)
-	public ModelAndView join(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav) {
+	public ModelAndView join(@ModelAttribute("formModel") @Valid Person person) {
 		if(personService.existsByEmail(person.getEmail())) {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
 		};
@@ -163,7 +163,7 @@ public class PersonController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반 
+	 *  - 기능: 소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반환 
 	 *  - 반환:
 	 *  	- 성공: 
 	 *  	View: joinOAuth.html
@@ -190,7 +190,7 @@ public class PersonController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 소셜 로그인한 이메일 회원 가입 처리하는 컨트롤러
+	 *  - 기능: 소셜 로그인한 이메일 회원 가입 처리
 	 *  - 반환:
 	 *  	 - 성공:
 	 *  	View: redirect -> index.html

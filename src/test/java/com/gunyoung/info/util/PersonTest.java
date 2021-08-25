@@ -3,6 +3,7 @@ package com.gunyoung.info.util;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.enums.RoleType;
 
 /**
@@ -38,6 +39,30 @@ public class PersonTest {
 	 */
 	public static Person getPersonInstance(RoleType role) {
 		return getPersonInstance(DEFAULT_PERSON_EMAIL, role);
+	}
+	
+	/**
+	 * 테스트용 {@link OAuth2Join} 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static OAuth2Join getOAuth2JoinInstance() {
+		return getOAuth2JoinInstance(DEFAULT_PERSON_EMAIL);
+	}
+	
+	/**
+	 * 테스트용 {@link OAuth2Join} 인스턴스 반환 <br>
+	 * email 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static OAuth2Join getOAuth2JoinInstance(String email) {
+		OAuth2Join oAuth2Join = OAuth2Join.builder()
+				.email(email)
+				.password("abcd1234!")
+				.firstName("first")
+				.lastName("last")
+				.build();
+		
+		return oAuth2Join;
 	}
 	
 	/**
