@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.gunyoung.info</groupId>
 	<artifactId>Info</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.2-SNAPSHOT</version>
 	<name>Info</name>
 	<description>Info With Spring</description>
 	<properties>
