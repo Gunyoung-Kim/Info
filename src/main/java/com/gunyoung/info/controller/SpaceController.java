@@ -57,7 +57,7 @@ public class SpaceController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 개인 포트폴리오 페이지 반환, url에 포트폴리오 주인 이메일
+	 *  - 기능: 개인 포트폴리오 페이지 반환
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: portfolio.html (url에 입력된 이메일 유저의 포트폴리오)
@@ -66,7 +66,7 @@ public class SpaceController {
 	 *  		   isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부-> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
 	 *  </pre>
 	 *  @param userId 열람하려는 포트폴리오 주인의 Id
-	 *  @throws PersonNotFoundedException url에 입력된 email이 DB에 없으면 실패 페이지 반환
+	 *  @throws PersonNotFoundedException url에 입력된 id의 Person DB에 없으면
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/{userId}", method= RequestMethod.GET)
@@ -82,8 +82,7 @@ public class SpaceController {
 		Long spaceId = space.getId();
 		List<Content> contents = contentService.findAllBySpaceIdWithLinks(spaceId);
 		
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		boolean isSessionUserHost = loginUserEmail.equals(spaceHost.getEmail());
+		boolean isSessionUserHost = getIsSessionUserHost(spaceHost.getEmail());
 		
 		mav.addObject("profile", profileDTO);
 		mav.addObject("contents",contents);
@@ -94,9 +93,14 @@ public class SpaceController {
 		return mav;
 	}
 	
+	private boolean getIsSessionUserHost(String spaceHostEmail) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		return loginUserEmail.equals(spaceHostEmail);
+	}
+	
 	/** 
 	 * <pre>
-	 *  - 기능: 현재 로그인한 유저의 프로필을 변경하기 위한 뷰를 반환하는 컨트롤러
+	 *  - 기능: 현재 로그인한 유저의 프로필을 변경하기 위한 뷰를 반환
 	 *  - 반환: 
 	 *  	- 성공
 	 *  	View: updateProfile.html (프로필 업데이트 사항 작성을 위한 템플릿)
@@ -108,7 +112,6 @@ public class SpaceController {
 	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
 	public ModelAndView updateProfileView(ModelAndView mav) {
 		String userEmail = AuthorityUtil.getSessionUserEmail();
-		
 		Person user = personService.findByEmailWithSpace(userEmail);
 		if(user == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());

@@ -1,6 +1,6 @@
 # INFO [![Build Status](https://travis-ci.com/Gunyoung-Kim/Info.svg?branch=master)](https://travis-ci.com/Gunyoung-Kim/Info)
 
-최신 버전 : ver 0.1.1
+최신 버전 : ver 0.1.2
 
 ## 프로젝트 목적
 
@@ -58,15 +58,9 @@
 
 ### 테스트 방식 
 
-1. RestController, Controller 클래스 
+- 테스트 커버리지 : 100% - ver 0.1.2 기준
 
-   - 통합 테스트 : 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 
-
-2. Service 클래스 
-
-   - 통합 테스트 : 서비스 계층 - 영속성 계층 (com.gunyoung.info.services.domain.* 클래스들만)
-
-   - 단위 테스트 : 서비스 계층 
+<img width="657" alt="info_test_cover_0_1_2" src="https://user-images.githubusercontent.com/60494603/130809422-a41bb2c7-a840-47c8-96b4-e498a4dfdbb5.png">
 
 ---
 

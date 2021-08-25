@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthorityUtil {
 	
+	private AuthorityUtil() {};
+	
 	/**
 	 * SecurityContext에 저장된 유저의 이메일을 반환 <br>
 	 * Authentication name 이 email

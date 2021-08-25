@@ -46,7 +46,7 @@ public class ContentRestController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: createContent가 반환한 뷰에 사용자가 프로젝트 정보들을 입력하고 POST 전송하여 이를 해당 사용자의 프로젝트로 추가하기 위한 컨트롤러
+	 *  - 기능: 프로젝트 추가 처리
 	 *  - 반환: 
 	 *  	- 성공
 	 *  	DB: Content 테이블에 로우 추가
@@ -54,7 +54,7 @@ public class ContentRestController {
 	 *   @param personId 콘텐트 추가하려는 Person ID
 	 *   @param content 추가 되는 콘텐트 객체 
 	 *   @throws NotMyResourceException 로그인된 정보가 해당 포트폴리오 주인이 아닐때 
-	 *   @throws PersonNotFoundedException 일치하지만 데이터베이스에 저장되지 않은 이메일이면
+	 *   @throws PersonNotFoundedException 로그인 이메일의 Person 존재하지 않을
 	 *   @throws ContentNumLimitExceedException 개인 최대 프로젝트 개수 초과
 	 *   @author kimgun-yeong
 	 */
@@ -63,7 +63,6 @@ public class ContentRestController {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person loginUser = personService.findByEmailWithSpace(loginUserEmail);
-		
 		if(loginUser == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -84,11 +83,11 @@ public class ContentRestController {
 		
 		List<Link> newLinkList = contentDTO.createLinkListOnlyWithContent(newContent);
 		linkService.saveAll(newLinkList);
-	}	
+	}
 	
 	/**
 	 * <pre>
-	 *  - 기능: url에 명시된 id의 콘텐트 삭제하는 컨트롤러
+	 *  - 기능: url에 명시된 id의 콘텐트 삭제
 	 *  - 반환:
 	 *  	- 성공
 	 *  	View: /space(현재 접속자의 포트폴리오) 로 redirect
@@ -100,24 +99,28 @@ public class ContentRestController {
 	 *	@author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
-	public void deleteContent(@PathVariable long id) {
+	public void deleteContent(@PathVariable Long id) {
 		Content targetContent = contentService.findByIdWithSpaceAndPerson(id);
 		if(targetContent == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		String hostEmail = targetContent.getSpace().getPerson().getEmail();
-		if(!hostEmail.equals(loginUserEmail)) {
+		if(isContentIsNotLoginUsersContent(targetContent)) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		contentService.delete(targetContent);
 	}
 	
+	private boolean isContentIsNotLoginUsersContent(Content targetContent) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		String hostEmail = targetContent.getSpace().getPerson().getEmail();
+		return !hostEmail.equals(loginUserEmail);
+	}
+	
 	/**
 	 * <pre>
-	 *  - 기능: updateContent가 반환한 뷰에서 수정한 Content 정보를 반영하기 위한 사용자의 POST Request를 담당하는 컨트롤러
+	 *  - 기능: content 수정 처리
 	 *  - 반환:
 	 *  	- 성공
 	 * 		DB: content 변경 사항 save
@@ -130,7 +133,7 @@ public class ContentRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.PUT) 
-	public void updateContent(@PathVariable long id, @ModelAttribute ContentDTO contentDto) {
+	public void updateContent(@PathVariable Long id, @ModelAttribute ContentDTO contentDto) {
 		Content targetContent = contentService.findByIdWithLinks(id);
 		if(targetContent == null) {
 			throw new ContentNotFoundedException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.getDescription());
@@ -143,15 +146,23 @@ public class ContentRestController {
 		}
 		
 		String hostEmail = host.getEmail();
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		if(!hostEmail.equals(loginUserEmail)) { 
+		if(isHostEmailAndLoginUserEmailMisMatch(hostEmail)) { 
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		contentDto.updateContentOnly(targetContent);
 		contentService.save(targetContent);
 		
-		List<LinkDTO> linkDTOs = contentDto.getLinks();
+		saveNewLinksForContentFromContentDTO(targetContent, contentDto);
+	}
+	
+	private boolean isHostEmailAndLoginUserEmailMisMatch(String hostEmail) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		return !hostEmail.equals(loginUserEmail);
+	}
+	
+	private void saveNewLinksForContentFromContentDTO(Content targetContent, ContentDTO contentDTO) {
+		List<LinkDTO> linkDTOs = contentDTO.getLinks();
 		List<Link> existContentLinks = targetContent.getLinks();
 		
 		linkService.saveByLinkDTOsAndExistContentLinks(targetContent,linkDTOs,existContentLinks);

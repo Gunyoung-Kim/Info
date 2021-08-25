@@ -27,7 +27,7 @@ public class PersonRestController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 회원가입할때 Email 중복 여부 반환하는 컨트롤러
+	 *  - 기능: Email 중복 여부 반환
 	 *  - 반환: 
 	 *  	True or False
 	 *  </pre>
@@ -39,10 +39,9 @@ public class PersonRestController {
 		return String.valueOf(personService.existsByEmail(email));
 	}
 	
-	
 	/**
 	 * <pre>
-	 *  - 기능: 회원 탈퇴를 처리하는 컨트롤
+	 *  - 기능: 회원 탈퇴를 처리
 	 *  	   DB: 해당 person 삭제
 	 *  </pre>
 	 *  @param targetPersonEmail 회원 탈퇴하려는 주체의 email값
@@ -57,11 +56,15 @@ public class PersonRestController {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
-		if(!loginUserEmail.equals(targetPersonEmail)) {
+		if(isSessionPersonAndDeletePersonMisMatch(targetPerson.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		
 		personService.delete(targetPerson);
+	}
+	
+	private boolean isSessionPersonAndDeletePersonMisMatch(String targetPersonEmail) {
+		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
+		return !loginUserEmail.equals(targetPersonEmail);
 	}
 }

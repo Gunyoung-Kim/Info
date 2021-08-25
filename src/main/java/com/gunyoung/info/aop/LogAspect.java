@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,19 +23,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 public class LogAspect {
 	private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
-	
-	/**
-	 * 컨트롤러들의 포인트컷
-	 * @author kimgun-yeong
-	 */
-	@Pointcut("within(com.gunyoung.info.controller..*)")
-	public void onRequest() {}
-	
+
 	/**
 	 * 컨트롤러에 Request 가 들어오면 Request 메소드,uri, parameters, remote address, 처리 시간 들을 로깅 하기 위한 어드바이스
 	 * @author kimgun-yeong
 	 */
-	@Around("com.gunyoung.info.aop.LogAspect.onRequest()")
+	@Around("within(com.gunyoung.info.controller..*)")
 	public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		
