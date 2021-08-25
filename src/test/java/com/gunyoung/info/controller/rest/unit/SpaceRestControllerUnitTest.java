@@ -43,7 +43,7 @@ public class SpaceRestControllerUnitTest {
 	public void updateProfilePostTestPersonNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
-		ProfileDTO profileDTO = PersonTest.getProfileDTOProfileDTOInstance(nonExistEmail);
+		ProfileDTO profileDTO = PersonTest.getProfileDTOInstance(nonExistEmail);
 		given(personService.findByEmailWithSpace(nonExistEmail)).willReturn(null);
 		
 		//When, Then
@@ -57,7 +57,7 @@ public class SpaceRestControllerUnitTest {
 	public void updateProfilePostTestCheckPersonService() {
 		//Given
 		String personEmail = "test@test.com";
-		ProfileDTO profileDTO = PersonTest.getProfileDTOProfileDTOInstance(personEmail);
+		ProfileDTO profileDTO = PersonTest.getProfileDTOInstance(personEmail);
 		
 		Person person = PersonTest.getPersonInstance();
 		given(personService.findByEmailWithSpace(personEmail)).willReturn(person);

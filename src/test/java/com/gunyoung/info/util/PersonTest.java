@@ -46,7 +46,7 @@ public class PersonTest {
 	 * 테스트 용 {@link ProfileDTO} 인스턴스 반환
 	 * email 커스터마이징 가능
 	 */
-	public static ProfileDTO getProfileDTOProfileDTOInstance(String email) {
+	public static ProfileDTO getProfileDTOInstance(String email) {
 		ProfileDTO profileDTO = ProfileDTO.builder()
 				.email(email)
 				.firstName("firstPro")
