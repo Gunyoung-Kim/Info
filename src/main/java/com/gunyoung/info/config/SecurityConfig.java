@@ -18,11 +18,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import com.gunyoung.info.security.UserAuthenticationProvider;
+import com.gunyoung.info.services.domain.PersonService;
 import com.gunyoung.info.services.social.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final UserDetailsService userDetailsService;
 	
-	private final CustomOAuth2UserService customOAuth2UserService;
+	private final PersonService personService;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -61,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.oauth2Login()
 			.loginPage("/login")
 			.userInfoEndpoint()
-			.userService(customOAuth2UserService);
+			.userService(customOAuth2UserService());
 			
 		http.logout()
 			.logoutSuccessUrl("/")
@@ -130,5 +135,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Bean 
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	/**
+	 * CustomOAuth2UserService 에서 사용하기 위한 {@link DefaultOAuth2UserService}
+	 * @author kimgun-yeong
+	 */
+	@Bean 
+	public DefaultOAuth2UserService defaultOAuth2UserService() {
+		return new DefaultOAuth2UserService();
+	}
+	
+	/**
+	 * CustomOAuth2UserService 빈 선언
+	 * @author kimgun-yeong
+	 */
+	@Bean
+	public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService() {
+		return new CustomOAuth2UserService(personService, defaultOAuth2UserService());
 	}
 }
