@@ -29,7 +29,7 @@ public class SpaceRestController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: updateProfile이 반환한 뷰에서 작성한 프로필 변경 사항들을 유저가 POST Request로 보내면 이를 처리하기 위한 컨트롤러
+	 *  - 기능:Person 프로필(Person + Space) 수정
 	 * 	- 성공
 	 * 		DB: ProfileDTO에서 Person 및 Space의 변경 사항 추출 후 save
 	 * </pre>

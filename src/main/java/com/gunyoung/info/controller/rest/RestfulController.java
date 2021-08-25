@@ -25,7 +25,7 @@ public class RestfulController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: main 화면에서 노출할 리스트를 반환하는 컨트롤러
+	 *  - 기능: main 화면에서 노출할 리스트를 반환
 	 *  - 반환:
 	 *  	List<MainListDTO>, MainListDTO(DTO 객체) -> Person.fullname + Person.email
 	 *  </pre>

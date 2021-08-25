@@ -3,6 +3,7 @@ package com.gunyoung.info.util;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.ProfileDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.enums.RoleType;
 
@@ -39,6 +40,25 @@ public class PersonTest {
 	 */
 	public static Person getPersonInstance(RoleType role) {
 		return getPersonInstance(DEFAULT_PERSON_EMAIL, role);
+	}
+	
+	/**
+	 * 테스트 용 {@link ProfileDTO} 인스턴스 반환
+	 * email 커스터마이징 가능
+	 */
+	public static ProfileDTO getProfileDTOProfileDTOInstance(String email) {
+		ProfileDTO profileDTO = ProfileDTO.builder()
+				.email(email)
+				.firstName("firstPro")
+				.lastName("lastPro")
+				.description("desPro")
+				.github("gitPro")
+				.instagram("instaPro")
+				.tweeter("tweeterPro")
+				.facebook("facebookPro")
+				.build();
+		
+		return profileDTO;
 	}
 	
 	/**
