@@ -1,5 +1,6 @@
 package com.gunyoung.info.services.social.unit;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -61,17 +62,20 @@ public class CustomOAuth2UserServiceUnitTest {
 		given(defaultOAuth2UserService.loadUser(userRequest)).willReturn(oAuth2UserFromDefaultOAuth2UserService);
 		mockingUserRequestGetClientRegistration(userRequest, "google");
 		
+		given(personService.existsByEmail(existEmail)).willReturn(true);
 		//When
 		OAuth2User result = customOAuth2UserService.loadUser(userRequest);
 		
 		//Then
-		result.getAuthorities().stream().anyMatch((a) -> {
-			return a.getAuthority().equals("ROLE_USER");
-		});
+		assertTrue(
+			result.getAuthorities().stream().anyMatch((a) -> {
+				return a.getAuthority().equals("ROLE_USER");
+			})
+		);
 	}
 	
 	@Test
-	@DisplayName("DefaultOAuth2UserService를 사용하여 OAuth2User 로드하여 이 객체의 정보를 통해 비즈니스 요구사항에 맞게 새로운 DefaultOAuth2User 객체 생성 -> 구글, 이미 회원가입 유저")
+	@DisplayName("DefaultOAuth2UserService를 사용하여 OAuth2User 로드하여 이 객체의 정보를 통해 비즈니스 요구사항에 맞게 새로운 DefaultOAuth2User 객체 생성 -> 구글, 새로운 유저")
 	public void loadUserTestGoogleNewPerson() {
 		//Given
 		String newPersonEmail = "newby@test.com";
@@ -86,13 +90,16 @@ public class CustomOAuth2UserServiceUnitTest {
 		given(defaultOAuth2UserService.loadUser(userRequest)).willReturn(oAuth2UserFromDefaultOAuth2UserService);
 		mockingUserRequestGetClientRegistration(userRequest, "google");
 		
+		given(personService.existsByEmail(newPersonEmail)).willReturn(false);
 		//When
 		OAuth2User result = customOAuth2UserService.loadUser(userRequest);
 		
 		//Then
-		result.getAuthorities().stream().anyMatch((a) -> {
-			return a.getAuthority().equals("ROLE_PRE");
-		});
+		assertTrue(
+				result.getAuthorities().stream().anyMatch((a) -> {
+					return a.getAuthority().equals("ROLE_PRE");
+				})
+			);
 	}
 	
 	private void mockingUserRequestGetClientRegistration(OAuth2UserRequest userRequest, String registrationId) {
