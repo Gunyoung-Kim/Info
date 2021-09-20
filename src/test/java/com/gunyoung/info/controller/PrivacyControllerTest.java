@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.gunyoung.info.testutil.Integration;
+
 /**
  * {@link PrivacyController} 에 대한 테스트 클래스
  * 테스트 범위:(통합 테스트) 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 <br>
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PrivacyControllerTest {

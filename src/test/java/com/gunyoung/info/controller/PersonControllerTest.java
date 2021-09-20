@@ -27,6 +27,7 @@ import com.gunyoung.info.enums.RoleType;
 import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.repos.SpaceRepository;
+import com.gunyoung.info.testutil.Integration;
 import com.gunyoung.info.util.PersonTest;
 
 /**
@@ -36,6 +37,7 @@ import com.gunyoung.info.util.PersonTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PersonControllerTest {

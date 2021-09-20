@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.services.domain.ContentService;
+import com.gunyoung.info.testutil.Integration;
 import com.gunyoung.info.util.ContentTest;
 
 /**
@@ -22,6 +23,7 @@ import com.gunyoung.info.util.ContentTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ContentServiceTest {
 	

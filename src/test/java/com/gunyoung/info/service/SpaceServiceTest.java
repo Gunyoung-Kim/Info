@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.testutil.Integration;
 import com.gunyoung.info.util.SpaceTest;
 
 /**
@@ -21,6 +22,7 @@ import com.gunyoung.info.util.SpaceTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class SpaceServiceTest {
 	
