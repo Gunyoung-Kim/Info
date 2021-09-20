@@ -9,10 +9,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  *  로깅을 위한 클래스 
@@ -21,8 +22,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Component
 @Aspect
+@RequiredArgsConstructor
 public class LogAspect {
-	private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+	
+	private final Logger logger;
 
 	/**
 	 * 컨트롤러에 Request 가 들어오면 Request 메소드,uri, parameters, remote address, 처리 시간 들을 로깅 하기 위한 어드바이스
@@ -31,11 +34,8 @@ public class LogAspect {
 	@Around("within(com.gunyoung.info.controller..*)")
 	public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		
 		Map<String, String[]> paramMap = request.getParameterMap();
-		
 		String params = "";
-		
 		if(paramMap.isEmpty() == false) {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
@@ -43,7 +43,6 @@ public class LogAspect {
 		String remoteHost = getRemoteHostFromHttpRequest(request);
 		
 		long beforeProceedTime = System.currentTimeMillis();
-		
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
