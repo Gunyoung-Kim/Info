@@ -83,6 +83,40 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
+	 * public Person findByIdWithSpace(Long id)
+	 */
+	
+	@Test
+	@DisplayName("ID로 Person 찾기 -> 존재하지 않음")
+	public void findByIdWithSpaceTestNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(83);
+		
+		given(personRepository.findByIdWithSpace(nonExistId)).willReturn(Optional.empty());
+		
+		//When
+		Person result = personService.findByIdWithSpace(nonExistId);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	@Test
+	@DisplayName("ID로 Person 찾기 -> 정상")
+	public void findByIdWithSpaceTest() {
+		//Given
+		Long personId = Long.valueOf(24);
+		
+		given(personRepository.findByIdWithSpace(personId)).willReturn(Optional.of(person));
+		
+		//When
+		Person result = personService.findByIdWithSpace(personId);
+		
+		//Then
+		assertEquals(person, result);
+	}
+	
+	/*
 	 * public Content findByEmail(Long id)
 	 */
 	

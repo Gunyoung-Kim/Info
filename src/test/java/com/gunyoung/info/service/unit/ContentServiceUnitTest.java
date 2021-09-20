@@ -114,6 +114,40 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
+	 * public Content findByIdWithLinks(Long id)
+	 */
+	
+	@Test
+	@DisplayName("ID로 Content 찾기, Linke 페치조인 -> 존재하지 않음")
+	public void findByIdWithLinksTestNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(24);
+		
+		given(contentRepository.findByIdWithLinks(nonExistId)).willReturn(Optional.empty());
+		
+		//When
+		Content result = contentService.findByIdWithLinks(nonExistId);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	@Test
+	@DisplayName("ID로 Content 찾기, Linke 페치조인 -> 정상")
+	public void findByIdWithLinksTest() {
+		//Given
+		Long contentId = Long.valueOf(24);
+		
+		given(contentRepository.findByIdWithLinks(contentId)).willReturn(Optional.of(content));
+		
+		//When
+		Content result = contentService.findByIdWithLinks(contentId);
+		
+		//Then
+		assertEquals(content, result);
+	}
+	
+	/*
 	 * public List<Content> findAllBySpaceIdWithLinks(Long spaceId)
 	 */
 	
