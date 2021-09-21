@@ -165,6 +165,6 @@ public class ContentRestController {
 		List<LinkDTO> linkDTOs = contentDTO.getLinks();
 		List<Link> existContentLinks = targetContent.getLinks();
 		
-		linkService.saveByLinkDTOsAndExistContentLinks(targetContent,linkDTOs,existContentLinks);
+		linkService.updateLinksForContent(targetContent,linkDTOs,existContentLinks);
 	}
 }

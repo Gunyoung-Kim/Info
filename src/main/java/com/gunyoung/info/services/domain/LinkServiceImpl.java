@@ -46,46 +46,65 @@ public class LinkServiceImpl implements LinkService{
 	}
 	
 	@Override
-	public List<Link> saveByLinkDTOsAndExistContentLinks(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks) {
-		List<Link> saveLinkList = new ArrayList<>();
-		Map<Long, Link> existLinkMap = new HashMap<>();
-		for(Link existLink : existContentLinks) {
-			existLinkMap.put(existLink.getId(), existLink);
-		}
+	public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks) {
+		List<Link> linksForSave = new ArrayList<>();
+		Map<Long, LinkDTO> linkDTOMapForModifyingLink = getLinkDTOMapForModifyingLinkAndAddNewContentLinkToSaveLinkList(linkDTOs, linksForSave, content);
 		
+		Map<Long, Link> existLinkMap = getIdAndLinkMapForExistLinks(existContentLinks);
+		modifyOrDeleteExistLinks(existLinkMap, linkDTOMapForModifyingLink, linksForSave);
+		
+		return saveAll(linksForSave);
+	}
+	
+	private Map<Long, LinkDTO> getLinkDTOMapForModifyingLinkAndAddNewContentLinkToSaveLinkList(Iterable<LinkDTO> linkDTOs, List<Link> linksForSave, Content content) {
 		Map<Long, LinkDTO> linkDTOMap = new HashMap<>();
 		for(LinkDTO linkDTO : linkDTOs) {
 			Long linkDTOId = linkDTO.getId();
-			
 			if(linkDTOId == null) {
-				Link newLink = Link.builder()
-						.tag(linkDTO.getTag())
-						.url(linkDTO.getUrl())
-						.content(content)
-						.build();
-				
-				saveLinkList.add(newLink);
+				Link newLink = createLinkFromLinkDTOAndContent(linkDTO, content);
+				linksForSave.add(newLink);
 			} else {
 				linkDTOMap.put(linkDTOId, linkDTO);
 			}
 		}
 		
-		// 기존의 Link들 삭제 또는 업데이트
+		return linkDTOMap;
+	}
+	
+	private Link createLinkFromLinkDTOAndContent(LinkDTO linkDTO, Content content) {
+		Link newLink = Link.builder()
+				.tag(linkDTO.getTag())
+				.url(linkDTO.getUrl())
+				.content(content)
+				.build();
+		return newLink;
+	}
+	
+	private Map<Long, Link> getIdAndLinkMapForExistLinks(Iterable<Link> existContentLinks) {
+		Map<Long, Link> existLinkMap = new HashMap<>();
+		for(Link existLink : existContentLinks) {
+			existLinkMap.put(existLink.getId(), existLink);
+		}
+		return existLinkMap; 
+	}
+	
+	private void modifyOrDeleteExistLinks(Map<Long, Link> existLinkMap, Map<Long, LinkDTO> linkDTOMapForModifyingLink, List<Link> linksForSave) {
 		Set<Long> existLinkIds = existLinkMap.keySet();
 		for(Long existLinkId: existLinkIds) {
 			Link existLink = existLinkMap.get(existLinkId);
-			if(!linkDTOMap.containsKey(existLinkId)) {
-				delete(existLink);
+			if(linkDTOMapForModifyingLink.containsKey(existLinkId)) {
+				LinkDTO linkDTO = linkDTOMapForModifyingLink.get(existLinkId);
+				modifyExistLinkByLinkDTO(existLink, linkDTO);
+				linksForSave.add(existLink);
 			} else {
-				LinkDTO linkDTO = linkDTOMap.get(existLinkId);
-				existLink.setTag(linkDTO.getTag());
-				existLink.setUrl(linkDTO.getUrl());
-				saveLinkList.add(existLink);
+				delete(existLink);
 			}
 		}
-		
-		
-		return saveAll(saveLinkList);
+	}
+	
+	private void modifyExistLinkByLinkDTO(Link existLink, LinkDTO linkDTO) {
+		existLink.setTag(linkDTO.getTag());
+		existLink.setUrl(linkDTO.getUrl());
 	}
 	
 	@Override

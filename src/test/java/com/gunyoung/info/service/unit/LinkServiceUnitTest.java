@@ -119,12 +119,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Link> saveByLinkDTOsAndExistContentLinks(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
+	 * public List<Link> updateLinksForContent(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
 	 */
 	
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 기존의 Link 삭제")
-	public void saveByLinkDTOsAndExistContentLinksContenteDelete() {
+	public void updateLinksForContentContentDelete() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
@@ -139,7 +139,7 @@ public class LinkServiceUnitTest {
 		existContentLinks.add(existSoonDeleteLink);
 		
 		//When
-		linkService.saveByLinkDTOsAndExistContentLinks(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs, existContentLinks);
 		
 		//Then
 		then(linkRepository).should(times(1)).delete(any(Link.class));
@@ -147,7 +147,7 @@ public class LinkServiceUnitTest {
 	
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 기존의 Link 수정")
-	public void saveByLinkDTOsAndExistContentLinksContenteUpdate() {
+	public void updateLinksForContentContentUpdate() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
@@ -170,7 +170,7 @@ public class LinkServiceUnitTest {
 		linkDTOs.add(linkDTOToUpdate);
 		
 		//When
-		linkService.saveByLinkDTOsAndExistContentLinks(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs, existContentLinks);
 		
 		//Then
 		assertEquals(changeTag, existLink.getTag());
@@ -179,7 +179,7 @@ public class LinkServiceUnitTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 새로운 Link 추가")
-	public void saveByLinkDTOsAndExistContentLinksNewLinkTest() {
+	public void updateLinksForContentNewLinkTest() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
@@ -192,7 +192,7 @@ public class LinkServiceUnitTest {
 		linkDTOs.add(linkDTO);
 		
 		//When
-		linkService.saveByLinkDTOsAndExistContentLinks(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs, existContentLinks);
 		
 		//Then
 		then(linkRepository).should(times(1)).saveAll(any(Iterable.class));
