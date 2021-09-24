@@ -163,8 +163,7 @@ public class ContentRestController {
 	
 	private void saveNewLinksForContentFromContentDTO(Content targetContent, ContentDTO contentDTO) {
 		List<LinkDTO> linkDTOs = contentDTO.getLinks();
-		List<Link> existContentLinks = targetContent.getLinks();
 		
-		linkService.updateLinksForContent(targetContent,linkDTOs,existContentLinks);
+		linkService.updateLinksForContent(targetContent,linkDTOs);
 	}
 }

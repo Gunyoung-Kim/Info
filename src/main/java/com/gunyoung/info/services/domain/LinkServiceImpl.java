@@ -46,10 +46,11 @@ public class LinkServiceImpl implements LinkService{
 	}
 	
 	@Override
-	public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks) {
+	public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs) {
 		List<Link> linksForSave = new ArrayList<>();
 		Map<Long, LinkDTO> linkDTOMapForModifyingLink = getLinkDTOMapForModifyingLinkAndAddNewContentLinkToSaveLinkList(linkDTOs, linksForSave, content);
 		
+		List<Link> existContentLinks = content.getLinks();
 		Map<Long, Link> existLinkMap = getIdAndLinkMapForExistLinks(existContentLinks);
 		modifyOrDeleteExistLinks(existLinkMap, linkDTOMapForModifyingLink, linksForSave);
 		

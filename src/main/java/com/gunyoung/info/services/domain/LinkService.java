@@ -35,7 +35,7 @@ public interface LinkService {
 	 * 기존의 Content의 Link들을 LinkDTO를 통해 업데이트
 	 * @author kimgun-yeong
 	 */
-	public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks);
+	public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs);
 	
 	/**
 	 * 모든 Link들 저장

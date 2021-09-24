@@ -187,7 +187,7 @@ public class LinkServiceTest {
 		
 		Long linkId = link.getId();
 		//When
-		linkService.updateLinksForContent(content, emptyLinkDTOList, content.getLinks());
+		linkService.updateLinksForContent(content, emptyLinkDTOList);
 		
 		//Then
 		assertFalse(linkRepository.existsById(linkId));
@@ -213,7 +213,7 @@ public class LinkServiceTest {
 		Long linkId = link.getId();
 		
 		//When
-		linkService.updateLinksForContent(content, linkDTOList, content.getLinks());
+		linkService.updateLinksForContent(content, linkDTOList);
 		
 		//Then
 		assertEquals(changeURL, linkRepository.findById(linkId).get().getUrl());
@@ -239,7 +239,7 @@ public class LinkServiceTest {
 		long beforeLinkNum = linkRepository.count();
 		
 		//When
-		linkService.updateLinksForContent(content, linkDTOList, content.getLinks());
+		linkService.updateLinksForContent(content, linkDTOList);
 		
 		//Then
 		assertEquals(beforeLinkNum + 1, linkRepository.count() + 1);

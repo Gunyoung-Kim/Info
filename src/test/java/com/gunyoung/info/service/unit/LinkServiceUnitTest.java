@@ -128,18 +128,17 @@ public class LinkServiceUnitTest {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
-		List<Link> existContentLinks = new ArrayList<>();
 		
 		Long existLinkId = Long.valueOf(1);
-		Link existSoonDeleteLink = Link.builder()
+		Link existbutDeleteSoonLink = Link.builder()
 				.id(existLinkId)
 				.tag("tag")
 				.url("test.com")
 				.build();
-		existContentLinks.add(existSoonDeleteLink);
+		content.getLinks().add(existbutDeleteSoonLink);
 		
 		//When
-		linkService.updateLinksForContent(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs);
 		
 		//Then
 		then(linkRepository).should(times(1)).delete(any(Link.class));
@@ -151,7 +150,6 @@ public class LinkServiceUnitTest {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
-		List<Link> existContentLinks = new ArrayList<>();
 		
 		Long existLinkId = Long.valueOf(1);
 		Link existLink = Link.builder()
@@ -159,7 +157,7 @@ public class LinkServiceUnitTest {
 				.tag("tag")
 				.url("test.com")
 				.build();
-		existContentLinks.add(existLink);
+		content.getLinks().add(existLink);
 		
 		String changeTag = "changedTag";
 		LinkDTO linkDTOToUpdate = LinkDTO.builder()
@@ -170,7 +168,7 @@ public class LinkServiceUnitTest {
 		linkDTOs.add(linkDTOToUpdate);
 		
 		//When
-		linkService.updateLinksForContent(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs);
 		
 		//Then
 		assertEquals(changeTag, existLink.getTag());
@@ -183,7 +181,6 @@ public class LinkServiceUnitTest {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
-		List<Link> existContentLinks = new ArrayList<>();
 		
 		LinkDTO linkDTO = LinkDTO.builder()
 				.tag("tag")
@@ -192,7 +189,7 @@ public class LinkServiceUnitTest {
 		linkDTOs.add(linkDTO);
 		
 		//When
-		linkService.updateLinksForContent(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs);
 		
 		//Then
 		then(linkRepository).should(times(1)).saveAll(any(Iterable.class));
