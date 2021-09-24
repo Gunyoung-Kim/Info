@@ -22,27 +22,21 @@ public class ContentServiceImpl implements ContentService{
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
 		 Optional<Content> result = contentRepository.findById(id);
-		 if(!result.isPresent()) 
-			 return null;
-		 return result.get();
+		 return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Content findByIdWithSpaceAndPerson(Long id) {
 		Optional<Content> result = contentRepository.findByIdWithSpaceAndPerson(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Content findByIdWithLinks(Long id) {
 		Optional<Content> result = contentRepository.findByIdWithLinks(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override

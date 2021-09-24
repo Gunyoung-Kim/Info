@@ -28,10 +28,7 @@ public class LinkServiceImpl implements LinkService{
 	@Transactional(readOnly=true)
 	public Link findById(Long id) {
 		Optional<Link> result = linkRepository.findById(id);
-		if(!result.isPresent()) {
-			return null;
-		}
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override

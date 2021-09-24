@@ -26,54 +26,42 @@ public class PersonServiceImpl implements PersonService {
 	@Transactional(readOnly=true)
 	public Person findById(Long id) {
 		Optional<Person> result = personRepository.findById(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByIdWithSpace(Long id) {
 		Optional<Person> result = personRepository.findByIdWithSpace(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmail(String email) {
 		Optional<Person> result = personRepository.findByEmail(email);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmailWithSpace(String email) {
 		Optional<Person> result = personRepository.findByEmailWithSpace(email);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByIdWithSpaceAndContents(Long id) {
 		Optional<Person> result = personRepository.findByIdWithSpaceAndContents(id);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmailWithSpaceAndContents(String email) {
 		Optional<Person> result = personRepository.findByEmailWithSpaceAndContents(email);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override

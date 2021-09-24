@@ -25,9 +25,7 @@ public class SpaceServiceImpl implements SpaceService {
 	@Transactional(readOnly=true)
 	public Space findById(Long id) {
 		Optional<Space> result = spaceRepository.findById(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
