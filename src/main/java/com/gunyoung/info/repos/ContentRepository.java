@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -57,4 +58,14 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 	 * @author kimgun-yeong
 	 */
 	public boolean existsById(Long id);
+	
+	/**
+	 * Space ID로 Content들 삭제
+	 * @param spaceId 삭제하려는 Content들의 Space ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE c FROM Content c "
+			+ "WHERE c.space.id = :spaceId")
+	public void deleteBySpaceIdInQuery(@Param("spaceId") Long spaceId);
 }
