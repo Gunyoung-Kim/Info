@@ -36,6 +36,16 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 	public Optional<Content> findByIdWithLinks(@Param("contentId") Long contentId);
 	
 	/**
+	 * Space ID로 Content들 찾기
+	 * @param spaceId 찾으려는 Content들의 Space ID
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT c FROM Content c "
+			+ "INNER JOIN c.space s "
+			+ "WHERE s.id = :spaceId")
+	public List<Content> findAllBySpaceIdInQuery(@Param("spaceId") Long spaceId);
+	
+	/**
 	 * Space ID로 Content들 찾기 <br>
 	 * Links 페치 조인
 	 * @param spaceId 찾으려는 Content들의 Space ID
@@ -65,7 +75,7 @@ public interface ContentRepository extends JpaRepository<Content,Long>{
 	 * @author kimgun-yeong
 	 */
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
-	@Query("DELETE c FROM Content c "
+	@Query("DELETE FROM Content c "
 			+ "WHERE c.space.id = :spaceId")
-	public void deleteBySpaceIdInQuery(@Param("spaceId") Long spaceId);
+	public void deleteAllBySpaceIdInQuery(@Param("spaceId") Long spaceId);
 }

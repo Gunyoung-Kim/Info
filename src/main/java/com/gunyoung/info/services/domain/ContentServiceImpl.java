@@ -18,6 +18,8 @@ public class ContentServiceImpl implements ContentService{
 
 	private final ContentRepository contentRepository;
 	
+	private final LinkService linkService;
+	
 	@Override
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
@@ -60,6 +62,24 @@ public class ContentServiceImpl implements ContentService{
 		Content content = findById(id);
 		if(content != null)
 			contentRepository.delete(content);
+	}
+	
+	@Override
+	public void deleteAllBySpaceId(Long spaceId) {
+		List<Content> contentsForSpace = contentRepository.findAllBySpaceIdInQuery(spaceId);
+		deleteAllLinksForSpaceContents(contentsForSpace);
+		contentRepository.deleteAllBySpaceIdInQuery(spaceId);
+	}
+	
+	private void deleteAllLinksForSpaceContents(Iterable<Content> contentsForSpace) {
+		for(Content content: contentsForSpace) {
+			deleteAllLinksForContent(content);
+		}
+	}
+	
+	private void deleteAllLinksForContent(Content content) {
+		Long contentId = content.getId();
+		linkService.deleteAllByContentId(contentId);
 	}
 
 	@Override

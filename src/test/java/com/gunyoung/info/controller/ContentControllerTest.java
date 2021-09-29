@@ -201,12 +201,14 @@ public class ContentControllerTest {
 	public void updateContentTest() throws Exception {
 		//Given
 		Space space = person.getSpace();
-		Content content = ContentTest.getContentInstance("title");
+		Content content = ContentTest.getContentInstance();
 		content.setSpace(space);
 		
 		contentRepository.save(content);
 		
 		Long contentId = content.getId();
+		System.out.println(contentId);
+		System.out.println(contentRepository.findById(contentId).get());
 		
 		content = contentRepository.findByIdWithSpaceAndPerson(contentId).get();
 		

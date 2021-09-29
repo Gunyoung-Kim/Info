@@ -56,4 +56,11 @@ public interface LinkService {
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);
+	
+	/**
+	 * Content Id로 해당 Link들 모두 삭제 
+	 * @param contentId 삭제하려는 Link들의 Content ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByContentId(Long contentId);
 }

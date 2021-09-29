@@ -30,6 +30,13 @@ public interface SpaceService {
 	public Space save(Space space);
 	
 	/**
+	 * Person ID로 Space 삭제
+	 * @param personId 삭제하려는 Space의 Person ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteByPerson(Long personId);
+	
+	/**
 	 * Id로 Space 존재 여부 반환
 	 * @param id 존재 여부 확인하려는 Space의 id
 	 * @author kimgun-yeong

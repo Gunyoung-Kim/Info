@@ -121,4 +121,9 @@ public class LinkServiceImpl implements LinkService{
 		if(link != null)
 			delete(link);
 	}
+
+	@Override
+	public void deleteAllByContentId(Long contentId) {
+		linkRepository.deleteAllByContentIdInQuery(contentId);
+	}
 }

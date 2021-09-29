@@ -24,6 +24,8 @@ import org.springframework.data.domain.PageRequest;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.services.domain.PersonServiceImpl;
+import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.util.PersonTest;
 
 /**
  * {@link PersonServiceImpl}에 대한 테스트 클래스 <br>
@@ -38,6 +40,9 @@ public class PersonServiceUnitTest {
 	@Mock
 	PersonRepository personRepository;
 	
+	@Mock
+	SpaceService spaceService;
+	
 	@InjectMocks
 	PersonServiceImpl personService;
 	
@@ -45,7 +50,7 @@ public class PersonServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
-		person = new Person();
+		person = PersonTest.getPersonInstance();
 	}
 	
 	/*
@@ -381,8 +386,8 @@ public class PersonServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Person 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Person 삭제 -> 정상, check person Repo")
+	public void deleteTestCheckPersonRepo() {
 		//Given
 		
 		//When
@@ -390,6 +395,20 @@ public class PersonServiceUnitTest {
 		
 		//Then
 		then(personRepository).should(times(1)).delete(person);
+	}
+	
+	@Test
+	@DisplayName("Person 삭제 -> 정상, check spaceService")
+	public void deleteTestCheckSpaceService() {
+		//Given
+		Long personId = Long.valueOf(73);
+		person.setId(personId);
+		
+		//When
+		personService.delete(person);
+		
+		//Then
+		then(spaceService).should(times(1)).deleteByPerson(personId);
 	}
 	
 	/*

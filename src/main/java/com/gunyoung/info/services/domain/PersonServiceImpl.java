@@ -22,6 +22,8 @@ public class PersonServiceImpl implements PersonService {
 	
 	private final PersonRepository personRepository;
 	
+	private final SpaceService spaceService;
+	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findById(Long id) {
@@ -106,12 +108,15 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public Person save(Person person) {
+		spaceService.save(person.getSpace());
 		return personRepository.save(person);
 	}
 
 	@Override
 	public void delete(Person person) {
 		personRepository.delete(person);
+		Long personIdForRemove = person.getId();
+		spaceService.deleteByPerson(personIdForRemove);
 	}
 
 	@Override

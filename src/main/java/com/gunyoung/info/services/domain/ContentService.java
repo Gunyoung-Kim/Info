@@ -61,6 +61,13 @@ public interface ContentService {
 	public void deleteById(Long id);
 	
 	/**
+	 * Space ID로 해당 Content들 모두 삭제 
+	 * @param spaceId 삭제하려는 Content들의 Space ID
+	 * @author kimgun-yeong
+	 */ 
+	public void deleteAllBySpaceId(Long spaceId);
+	
+	/**
 	 * 모든 Content 개수 반환 
 	 * @author kimgun-yeong
 	 */

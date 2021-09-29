@@ -66,7 +66,7 @@ public class Person extends BaseEntity{
 	@Column
 	private String lastName;
 	
-	@OneToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL , orphanRemoval = true)
+	@OneToOne(fetch = FetchType.LAZY, cascade= CascadeType.PERSIST, orphanRemoval = true)
 	@JoinColumn(name="space_id")
 	@Builder.Default
 	private Space space = Space.builder().build();

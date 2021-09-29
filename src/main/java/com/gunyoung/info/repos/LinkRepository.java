@@ -27,7 +27,7 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 	 * @author kimgun-yeong
 	 */
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
-	@Query("DELETE l FROM Link l "
+	@Query("DELETE FROM Link l "
 			+ "WHERE l.content.id = :contentId")
-	public void deleteByContentIdInQuery(@Param("contentId") Long contentId);
+	public void deleteAllByContentIdInQuery(@Param("contentId") Long contentId);
 }

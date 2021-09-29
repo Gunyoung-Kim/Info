@@ -38,6 +38,16 @@ public class SpaceServiceImpl implements SpaceService {
 	public Space save(Space space) {
 		return spaceRepository.save(space);
 	}
+	
+	@Override
+	public void deleteByPerson(Long personId) {
+		Optional<Space> spaceForRemove = spaceRepository.findByPersonIdInQuery(personId);
+		spaceForRemove.ifPresent((space) -> {
+			Long spaceId = space.getId();
+			contentService.deleteAllBySpaceId(spaceId);
+			spaceRepository.deleteByIdInQuery(spaceId);
+		});
+	}
 
 	@Override
 	@Transactional(readOnly=true)
@@ -52,6 +62,4 @@ public class SpaceServiceImpl implements SpaceService {
 		
 		space.getContents().add(content);
 	}
-	
-	
 }
