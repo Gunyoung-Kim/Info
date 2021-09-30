@@ -2,12 +2,15 @@ package com.gunyoung.info.service.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.services.domain.ContentServiceImpl;
+import com.gunyoung.info.services.domain.LinkService;
+import com.gunyoung.info.util.ContentTest;
 
 /**
  * {@link ContentServiceImpl}에 대한 테스트 클래스 <br>
@@ -35,6 +40,9 @@ public class ContentServiceUnitTest {
 	@Mock
 	ContentRepository contentRepository;
 	
+	@Mock
+	LinkService linkService;
+	
 	@InjectMocks
 	ContentServiceImpl contentService;
 	
@@ -42,7 +50,7 @@ public class ContentServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
-		content = new Content();
+		content = ContentTest.getContentInstance();
 	}
 	
 	/*
@@ -186,8 +194,8 @@ public class ContentServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Content 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Content 삭제 -> 정상, check contentRepo")
+	public void deleteTestCheckContentRepo() {
 		//Given
 		
 		//When
@@ -195,6 +203,20 @@ public class ContentServiceUnitTest {
 		
 		//Then
 		then(contentRepository).should(times(1)).delete(content);
+	}
+	
+	@Test
+	@DisplayName("Content 삭제 -> 정상, check linkService")
+	public void deleteTestCheckLinkService() {
+		//Given
+		Long contentId = Long.valueOf(82);
+		content.setId(contentId);
+		
+		//When
+		contentService.delete(content);
+		
+		//Then
+		then(linkService).should(times(1)).deleteAllByContentId(contentId);
 	}
 	
 	/*
@@ -229,6 +251,51 @@ public class ContentServiceUnitTest {
 		
 		//Then
 		then(contentRepository).should(times(1)).delete(content);
+	}
+	
+	/*
+	 * public void deleteAllBySpaceId(Long spaceId)
+	 */
+	
+	@Test
+	@DisplayName("Space ID로 Content들 삭제 -> 정상, check contentRepo")
+	public void deleteAllBySpaceIdTestCheckContentRepo() {
+		//Given
+		Long spaceId = Long.valueOf(62);
+		List<Content> contentsForSpace = new ArrayList<>();
+		given(contentRepository.findAllBySpaceIdInQuery(spaceId)).willReturn(contentsForSpace);
+		
+		//When
+		contentService.deleteAllBySpaceId(spaceId);
+		
+		//Then
+		then(contentRepository).should(times(1)).deleteAllBySpaceIdInQuery(spaceId);
+	}
+	
+	@Test
+	@DisplayName("Space ID로 Content들 삭제 -> 정상, check LinkService")
+	public void deleteAllBySpaceIdTestCheckLinkService() {
+		//Given
+		Long spaceId = Long.valueOf(79);
+		int numOfContentsForSpace = 17;
+		List<Content> contentsForSpace = getContentsForSpace(numOfContentsForSpace);
+		given(contentRepository.findAllBySpaceIdInQuery(spaceId)).willReturn(contentsForSpace);
+		
+		//When
+		contentService.deleteAllBySpaceId(spaceId);
+		
+		//Then
+		then(linkService).should(times(numOfContentsForSpace)).deleteAllByContentId(anyLong());
+	}
+	
+	private List<Content> getContentsForSpace(int numOfContentsForSpace) {
+		List<Content> contents = new ArrayList<>();
+		for(int i = 0; i < numOfContentsForSpace; i++) {
+			Content content = ContentTest.getContentInstance();
+			content.setId(Long.valueOf(1));
+			contents.add(content);
+		}
+		return contents;
 	}
 	
 	/*

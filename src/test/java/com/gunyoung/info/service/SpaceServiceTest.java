@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Content;
-import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.ContentRepository;
 import com.gunyoung.info.repos.PersonRepository;
@@ -23,7 +22,6 @@ import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.services.domain.SpaceService;
 import com.gunyoung.info.testutil.Integration;
 import com.gunyoung.info.util.ContentTest;
-import com.gunyoung.info.util.PersonTest;
 import com.gunyoung.info.util.SpaceTest;
 
 /**
@@ -82,41 +80,34 @@ public class SpaceServiceTest {
 	}
 	
 	/*
-	 * public void deleteByPersonId(Long personId)
+	 * public void delete(Space space)
 	 */
 	
 	@Test
 	@Transactional
-	@DisplayName("Person ID로 Space 삭제 -> 정상, Space 삭제 확인")
-	public void deleteByPersonIdTestCheckSpaceRemove() {
+	@DisplayName(" Space 삭제 -> 정상, Space 삭제 확인")
+	public void deleteTestCheckSpaceRemove() {
 		//Given
-		System.out.println("sfafsa");
-		Person personForSpace = addNewPersonForSpace();
-		Long personId = personForSpace.getId();
 		Long spaceId = space.getId();
 		
 		//When
-		spaceService.deleteByPerson(personId);
+		spaceService.delete(space);
 		
 		//Then
 		assertFalse(spaceRepository.existsById(spaceId));
-		System.out.println("sfafsa");
 	}
 	
 	@Test
 	@Transactional
-	@DisplayName("Person ID로 Space 삭제 -> 정상, 관련 Content 삭제 확인")
-	public void deleteByPersonIdTestCheckContentsRemove() {
+	@DisplayName("Space 삭제 -> 정상, 관련 Content 삭제 확인")
+	public void deleteTestCheckContentsRemove() {
 		//Given
 		int newContentsNum = 10;
 		addNewContentsForSpace(newContentsNum);
-		
-		Person personForSpace = addNewPersonForSpace();
-		Long personId = personForSpace.getId();
 		long beforeContentNum = contentRepository.count();
 		
 		//When
-		spaceService.deleteByPerson(personId);
+		spaceService.delete(space);
 		
 		//Then
 		assertEquals(beforeContentNum - newContentsNum, contentRepository.count());
@@ -131,15 +122,5 @@ public class SpaceServiceTest {
 		}
 		contentRepository.saveAll(newContents);
 		return newContents;
-	}
-	
-	private Person addNewPersonForSpace() {
-		Person person = PersonTest.getPersonInstance();
-		person.setSpace(space);
-		personRepository.save(person);
-		
-		space.setPerson(person);
-		spaceRepository.save(space);
-		return person;
 	}
 }

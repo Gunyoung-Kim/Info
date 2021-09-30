@@ -245,4 +245,20 @@ public class LinkServiceUnitTest {
 		then(linkRepository).should(times(1)).delete(link);
 	}
 	
+	/*
+	 * public void deleteAllByContentId(Long contentId)
+	 */
+	
+	@Test
+	@DisplayName("Content ID에 해당하는 Link들 삭제 -> 정상")
+	public void deleteAllByContentIdTest() {
+		//Given
+		Long contentId = Long.valueOf(24);
+		
+		//When
+		linkService.deleteAllByContentId(contentId);
+		
+		//Then
+		then(linkRepository).should(times(1)).deleteAllByContentIdInQuery(contentId);
+	}
 }

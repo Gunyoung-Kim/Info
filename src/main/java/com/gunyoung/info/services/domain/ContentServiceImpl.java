@@ -54,14 +54,16 @@ public class ContentServiceImpl implements ContentService{
 
 	@Override
 	public void delete(Content content) {
+		deleteAllLinksForContent(content);
 		contentRepository.delete(content);
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		Content content = findById(id);
-		if(content != null)
-			contentRepository.delete(content);
+		Optional<Content> contentById = Optional.ofNullable(findById(id));
+		contentById.ifPresent((content) -> {
+			delete(content);
+		});
 	}
 	
 	@Override

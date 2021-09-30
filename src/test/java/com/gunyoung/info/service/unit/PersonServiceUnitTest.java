@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.services.domain.PersonServiceImpl;
 import com.gunyoung.info.services.domain.SpaceService;
@@ -404,11 +405,13 @@ public class PersonServiceUnitTest {
 		Long personId = Long.valueOf(73);
 		person.setId(personId);
 		
+		Space spaceForPerson = person.getSpace();
+		
 		//When
 		personService.delete(person);
 		
 		//Then
-		then(spaceService).should(times(1)).deleteByPerson(personId);
+		then(spaceService).should(times(1)).delete(spaceForPerson);
 	}
 	
 	/*

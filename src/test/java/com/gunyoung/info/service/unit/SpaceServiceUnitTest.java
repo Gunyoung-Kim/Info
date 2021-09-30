@@ -3,11 +3,8 @@ package com.gunyoung.info.service.unit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
@@ -126,23 +123,8 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteByPersonId(Long personId) 
+	 * public void delete(Space space) 
 	 */
-	
-	@Test
-	@DisplayName("Person ID로 Space 삭제 -> 해당 Person ID의 Space 없을 때")
-	public void deleteByPersonIdTestNonExist() {
-		//Given
-		Long personIdForNonExistSpace = Long.valueOf(24);
-		given(spaceRepository.findByPersonIdInQuery(personIdForNonExistSpace)).willReturn(Optional.empty());
-		
-		//When
-		spaceService.deleteByPerson(personIdForNonExistSpace);
-		
-		//Then
-		then(contentService).should(never()).deleteAllBySpaceId(anyLong());
-		then(spaceRepository).should(never()).delete(any(Space.class));
-	}
 	
 	@Test
 	@DisplayName("Person ID로 Space 삭제 -> 정상")
@@ -151,15 +133,12 @@ public class SpaceServiceUnitTest {
 		Long spaceId = Long.valueOf(25);
 		space.setId(spaceId);
 		
-		Long personIdForSpace = Long.valueOf(75);
-		given(spaceRepository.findByPersonIdInQuery(personIdForSpace)).willReturn(Optional.of(space));
-		
 		//When
-		spaceService.deleteByPerson(personIdForSpace);
+		spaceService.delete(space);
 		
 		//Then
 		then(contentService).should(times(1)).deleteAllBySpaceId(spaceId);
-		then(spaceRepository).should(times(1)).delete(space);
+		then(spaceRepository).should(times(1)).deleteByIdInQuery(spaceId);
 	}
 	
 	/*

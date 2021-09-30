@@ -117,9 +117,10 @@ public class LinkServiceImpl implements LinkService{
 
 	@Override
 	public void deleteById(Long id) {
-		Link link = findById(id);
-		if(link != null)
+		Optional<Link> linkById = Optional.ofNullable(findById(id));
+		linkById.ifPresent((link) -> {
 			delete(link);
+		});
 	}
 
 	@Override

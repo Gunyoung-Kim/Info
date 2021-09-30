@@ -40,13 +40,10 @@ public class SpaceServiceImpl implements SpaceService {
 	}
 	
 	@Override
-	public void deleteByPerson(Long personId) {
-		Optional<Space> spaceForRemove = spaceRepository.findByPersonIdInQuery(personId);
-		spaceForRemove.ifPresent((space) -> {
-			Long spaceId = space.getId();
-			contentService.deleteAllBySpaceId(spaceId);
-			spaceRepository.deleteByIdInQuery(spaceId);
-		});
+	public void delete(Space space) {
+		Long spaceId = space.getId();
+		contentService.deleteAllBySpaceId(spaceId);
+		spaceRepository.deleteByIdInQuery(spaceId);
 	}
 
 	@Override

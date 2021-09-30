@@ -113,23 +113,6 @@ public class LinkServiceTest {
 		verifyLinksNumAndThereContents(allLinkNum, content, result);
 	}
 	
-	private void addNewLinks(int newLinkNum) {
-		List<Link> newLinks = new ArrayList<>();
-		for(int i=0;i<newLinkNum;i++) {
-			Link link = LinkTest.getLinkInstance();
-			newLinks.add(link);
-		}
-		linkRepository.saveAll(newLinks);
-	}
-	
-	private void setContentToAllLinks(Content content) {
-		List<Link> links = linkRepository.findAll();
-		for(Link link: links) {
-			link.setContent(content);
-		}
-		linkRepository.saveAll(links);
-	}
-	
 	private void verifyLinksNumAndThereContents(long allLinksNum, Content content, List<Link> result) {
 		assertEquals(allLinksNum, result.size());
 		for(Link link: result) {
@@ -315,5 +298,44 @@ public class LinkServiceTest {
 		
 		//Then
 		assertFalse(linkRepository.existsById(deleteLinkId));
+	}
+	
+	/*
+	 * public void deleteAllByContentId(Long contentId)
+	 */
+	
+	@Test
+	@DisplayName("Content ID로 Link들 삭제 -> 정상")
+	public void deleteAllByContentIdTest() {
+		//Given
+		int newLinkNum = 10;
+		addNewLinks(newLinkNum);
+		
+		Content content = ContentTest.getContentInstance();
+		contentRepository.save(content);
+		setContentToAllLinks(content);
+		
+		//When
+		linkService.deleteAllByContentId(content.getId());
+		
+		//Then
+		assertEquals(0, linkRepository.count());
+	}
+	
+	private void addNewLinks(int numOfNewLinks) {
+		List<Link> links = new ArrayList<>();
+		for(int i = 0; i < numOfNewLinks; i++) {
+			Link link = LinkTest.getLinkInstance();
+			links.add(link);
+		}
+		linkRepository.saveAll(links);
+	}
+	
+	private void setContentToAllLinks(Content content) {
+		List<Link> links = linkRepository.findAll();
+		for(Link link: links) {
+			link.setContent(content);
+		}
+		linkRepository.saveAll(links);
 	}
 }

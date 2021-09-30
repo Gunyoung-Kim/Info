@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.info.domain.Content;
+import com.gunyoung.info.domain.Link;
 import com.gunyoung.info.domain.Person;
 import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.ContentRepository;
@@ -26,6 +28,8 @@ import com.gunyoung.info.repos.LinkRepository;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.testutil.Integration;
+import com.gunyoung.info.util.ContentTest;
+import com.gunyoung.info.util.LinkTest;
 import com.gunyoung.info.util.PersonTest;
 
 /**
@@ -185,4 +189,52 @@ public class PersonRestControllerTest {
 
 		assertFalse(spaceRepository.existsById(spaceId));
 	}
+	
+	
+	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
+	@Test
+	@Transactional
+	@DisplayName("회원탈퇴 DELETE (성공, 관련 Content 삭제 확인)")
+	public void personWithdrawTestCheckContent() throws Exception {
+		//Given
+		Space space = person.getSpace();
+		Content content = ContentTest.getContentInstance("title");
+		content.setSpace(space);
+		contentRepository.save(content);
+		Long contentId = content.getId();
+			
+		//When
+		mockMvc.perform(delete("/withdraw")
+				.param("email", MAIN_PERSON_EMAIL))
+			
+		//Then
+				.andExpect(status().isOk());
+		assertFalse(contentRepository.existsById(contentId));
+	}
+		
+	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
+	@Test
+	@Transactional
+	@DisplayName("회원탈퇴 DELETE (성공, 관련 LINK 삭제 확인)")
+	public void personWithdrawTestCheckLink() throws Exception {
+		//Given
+		Space space = person.getSpace();
+		Content content = ContentTest.getContentInstance("title");
+		content.setSpace(space);
+		contentRepository.save(content);
+			
+		Link link = LinkTest.getLinkInstance();
+		link.setContent(content);
+		linkRepository.save(link);
+			
+		Long linkId = link.getId();
+			
+		//When
+		mockMvc.perform(delete("/withdraw")
+				.param("email", MAIN_PERSON_EMAIL))
+		
+		//Then
+				.andExpect(status().isOk());
+		assertFalse(linkRepository.existsById(linkId));
+	}	
 }

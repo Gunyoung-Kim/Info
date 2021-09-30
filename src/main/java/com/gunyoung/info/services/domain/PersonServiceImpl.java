@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.PersonRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -115,8 +116,10 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public void delete(Person person) {
 		personRepository.delete(person);
-		Long personIdForRemove = person.getId();
-		spaceService.deleteByPerson(personIdForRemove);
+		Optional<Space> spaceForPerson = Optional.ofNullable(person.getSpace());
+		spaceForPerson.ifPresent((space) -> {
+			spaceService.delete(space);
+		});
 	}
 
 	@Override
