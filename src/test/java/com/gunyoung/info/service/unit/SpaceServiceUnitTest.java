@@ -2,6 +2,7 @@ package com.gunyoung.info.service.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -127,7 +128,18 @@ public class SpaceServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Person ID로 Space 삭제 -> 정상")
+	@DisplayName("Space 삭제 -> space null")
+	public void deleteTestSpaceNull() {
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			spaceService.delete(null);
+		});
+	}
+	
+	@Test
+	@DisplayName("Space 삭제 -> 정상")
 	public void deleteByPersonIdTest() {
 		//Given
 		Long spaceId = Long.valueOf(25);

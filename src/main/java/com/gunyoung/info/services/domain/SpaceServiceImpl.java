@@ -1,6 +1,7 @@
 package com.gunyoung.info.services.domain;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class SpaceServiceImpl implements SpaceService {
 	
 	@Override
 	public void delete(Space space) {
+		Objects.requireNonNull(space);
 		Long spaceId = space.getId();
 		contentService.deleteAllBySpaceId(spaceId);
 		spaceRepository.deleteByIdInQuery(spaceId);
