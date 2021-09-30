@@ -55,14 +55,11 @@ public class PersonController {
 	/**
 	 * <pre>
 	 *  - 기능: 메인 뷰 반환
-	 *  - 반환:
-	 *  	- 성공
-	 *  	View: index.html
+	 *  - View: index.html
 	 *  </pre>
 	 *  @param page 메인 뷰에 보여줄 리스트의 페이지 값 (default=1)
 	 *  @author kimgun-yeong
 	 */
-	
 	@RequestMapping(value ="/", method =RequestMethod.GET)
 	public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
 			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
@@ -105,9 +102,7 @@ public class PersonController {
 	/**
 	 * <pre>
 	 *  - 기능: 로그인 뷰를 반환
-	 *  - 반환:
-	 *  	- 성공
-	 *  	View: login.html
+	 *  - View: login.html
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
@@ -119,9 +114,7 @@ public class PersonController {
 	/**
 	 * <pre>
 	 *  - 기능: 회원 가입 뷰를 반환
-	 *  - 반환:
-	 *  	- 성공
-	 *  	View: join.html
+	 *  - View: join.html
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
@@ -136,9 +129,7 @@ public class PersonController {
 	/**
 	 * <pre>
 	 *  - 기능: 회원 가입 처리
-	 *  - 반환:
-	 *  	- 성공
-	 * 		View: join.html 
+	 * 	- View: join.html 
 	 *  </pre>
 	 *  @param person 회원가입을 위한 Person 객체
 	 *  @throws PersonDuplicateException 이미 존재하는 이메일로 회원가입 시도시 발생
@@ -164,9 +155,7 @@ public class PersonController {
 	/**
 	 * <pre>
 	 *  - 기능: 소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반환 
-	 *  - 반환:
-	 *  	- 성공: 
-	 *  	View: joinOAuth.html
+	 *  - View: joinOAuth.html
 	 *  </pre>
 	 *  @throws PersonDuplicateException 해당 접속자가 이미 가입되있는 사람일 경우
 	 *  @author kimgun-yeong 
@@ -191,10 +180,8 @@ public class PersonController {
 	/**
 	 * <pre>
 	 *  - 기능: 소셜 로그인한 이메일 회원 가입 처리
-	 *  - 반환:
-	 *  	 - 성공:
-	 *  	View: redirect -> index.html
-	 *   	DB: 해당 person 추가
+	 *  - View: redirect -> index.html
+	 *  - DB: 해당 person 추가
 	 *  </pre>
 	 *   @param formModel 소셜 로그인한 주체의 회원가입을 위한 OAuth2Join DTO 객체
 	 *   @throws NotMyResourceException 접속한 이메일과 전송된 이메일이 불일치할 때 

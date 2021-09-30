@@ -13,7 +13,7 @@ import com.gunyoung.info.services.domain.PersonService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 브라우저와 Ajax 통신을 위한 컨트롤러
+ * 메인 화면에서 필요한 리소스 반환하는 컨트롤러
  * @author kimgun-yeong
  *
  */
@@ -24,11 +24,8 @@ public class RestfulController {
 	private final PersonService personService;
 	
 	/**
-	 * <pre>
-	 *  - 기능: main 화면에서 노출할 리스트를 반환
-	 *  - 반환:
-	 *  	List<MainListDTO>, MainListDTO(DTO 객체) -> Person.fullname + Person.email
-	 *  </pre>
+	 *  main 화면에서 노출할 리스트를 반환
+	 *  @return {@code List<MainListDTO>}, MainListDTO(DTO 객체) -> Person.fullname + Person.email
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/main/list",method=RequestMethod.GET)

@@ -45,12 +45,7 @@ public class ContentRestController {
 	private final LinkService linkService;
 	
 	/**
-	 * <pre>
-	 *  - 기능: 프로젝트 추가 처리
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	DB: Content 테이블에 로우 추가
-	 *   </pre>
+	 *   프로젝트 추가 처리, Content 테이블에 로우 추가
 	 *   @param personId 콘텐트 추가하려는 Person ID
 	 *   @param content 추가 되는 콘텐트 객체 
 	 *   @throws NotMyResourceException 로그인된 정보가 해당 포트폴리오 주인이 아닐때 
@@ -86,13 +81,7 @@ public class ContentRestController {
 	}
 	
 	/**
-	 * <pre>
-	 *  - 기능: url에 명시된 id의 콘텐트 삭제
-	 *  - 반환:
-	 *  	- 성공
-	 *  	View: /space(현재 접속자의 포트폴리오) 로 redirect
-	 *  	DB: content 삭제
-	 *	</pre>
+	 *  url에 명시된 id의 콘텐트 삭제 
 	 *	@param id 삭제하려는 콘텐트의 id 값
 	 *  @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때
 	 *  @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
@@ -119,12 +108,7 @@ public class ContentRestController {
 	}
 	
 	/**
-	 * <pre>
-	 *  - 기능: content 수정 처리
-	 *  - 반환:
-	 *  	- 성공
-	 * 		DB: content 변경 사항 save
-	 *	</pre>
+	 * content 수정 처리
 	 * @param id 수정하려는 콘텐트의 id 값
 	 * @param contentDto 콘텐트에 대한 수정 사항을 담은 DTO 객체
 	 * @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때
