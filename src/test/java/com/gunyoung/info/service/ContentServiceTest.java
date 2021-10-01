@@ -3,18 +3,27 @@ package com.gunyoung.info.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Content;
+import com.gunyoung.info.domain.Link;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.ContentRepository;
+import com.gunyoung.info.repos.LinkRepository;
+import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.services.domain.ContentService;
+import com.gunyoung.info.testutil.Integration;
 import com.gunyoung.info.util.ContentTest;
+import com.gunyoung.info.util.LinkTest;
+import com.gunyoung.info.util.SpaceTest;
 
 /**
  * {@link ContentService} 에 대한 테스트 클래스 <br>
@@ -22,11 +31,18 @@ import com.gunyoung.info.util.ContentTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ContentServiceTest {
 	
 	@Autowired
 	ContentService contentService;
+	
+	@Autowired
+	LinkRepository linkRepository;
+	
+	@Autowired
+	SpaceRepository spaceRepository;
 	
 	@Autowired
 	ContentRepository contentRepository;
@@ -41,6 +57,7 @@ public class ContentServiceTest {
 	
 	@AfterEach
 	void tearDown() {
+		linkRepository.deleteAll();
 		contentRepository.deleteAll();
 	}
 	
@@ -103,7 +120,6 @@ public class ContentServiceTest {
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Content Delete (실패 - 존재하지 않음)")
 	public void deleteContentNonExist() {
 		//Given
@@ -118,9 +134,8 @@ public class ContentServiceTest {
 	}
 	
 	@Test
-	@Transactional
-	@DisplayName("Content Delete(성공)")
-	public void deleteContentTest() {
+	@DisplayName("Content Delete (성공), Content 삭제 확인")
+	public void deleteContentTestCheckContentRemove() {
 		//Given
 		Long contentId = content.getId();
 		
@@ -131,13 +146,28 @@ public class ContentServiceTest {
 		assertFalse(contentRepository.existsById(contentId));
 	}
 	
+	@Test
+	@DisplayName("Content Delete (성공), 관련 Link들 삭제")
+	public void deleteContentTestCheckLinksRemove() {
+		//Given
+		int numOfLinksForContent = 8;
+		setLinksForContent(content, numOfLinksForContent);
+		
+		long beforeLinkNum = linkRepository.count();
+		
+		//When
+		contentService.delete(content);
+		
+		//Then
+		assertEquals(beforeLinkNum - numOfLinksForContent, linkRepository.count());
+	}
+	
 	/*
 	 *  - 대상 메소드:
 	 *  	public void deleteContentById(Long id);
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Content Delete By Id (실패- 존재하지 않음)")
 	public void deleteContentByIdNonExist() {
 		//Given
@@ -152,9 +182,8 @@ public class ContentServiceTest {
 	}
 	
 	@Test
-	@Transactional
-	@DisplayName("Content Delete By Id (성공)")
-	public void deleteContentByIdTest() {
+	@DisplayName("Content Delete By Id (성공), Check Content Remove")
+	public void deleteContentByIdTestCheckContentRemove() {
 		//Given
 		Long contentId = content.getId();
 		
@@ -163,5 +192,101 @@ public class ContentServiceTest {
 		
 		//Then
 		assertFalse(contentRepository.existsById(contentId));
+	}
+	
+	@Test
+	@DisplayName("Content Delete By Id (성공), Check Links Remove")
+	public void deleteContentByIdTestCheckLinksRemove() {
+		//Given
+		int numOfLinksForContent = 8;
+		setLinksForContent(content, numOfLinksForContent);
+		Long contentId = content.getId();
+		long beforeLinkNum = linkRepository.count();
+		
+		//When
+		contentService.deleteById(contentId);
+		
+		//Then
+		assertEquals(beforeLinkNum - numOfLinksForContent, linkRepository.count());
+	}
+	
+	/*
+	 * public void deleteAllBySpaceId(Long spaceId)
+	 */
+	
+	@Test
+	@DisplayName("Space ID로 Content들 삭제 -> 정상, Check Contents Remove")
+	public void deleteAllBySpaceIdTestCheckContentsRemove() {
+		//Given
+		int newContentsNum = 9;
+		addNewContents(newContentsNum);
+		
+		Space space = SpaceTest.getSpaceInstance();
+		spaceRepository.save(space);
+		setSpaceForAllContents(space);
+		
+		//When
+		contentService.deleteAllBySpaceId(space.getId());
+		
+		//Then
+		assertEquals(0, contentRepository.count());
+	}
+	
+	@Test
+	@DisplayName("Space ID로 Content들 삭제 -> 정상, Check Links Remove")
+	public void deleteAllBySpaceIdTestCheckLinksRemove() {
+		//Given
+		int newContentsNum = 3;
+		addNewContents(newContentsNum);
+		
+		Space space = SpaceTest.getSpaceInstance();
+		spaceRepository.save(space);
+		setSpaceForAllContents(space);
+		
+		long numOfAllContent = contentRepository.count();
+		int numOfLinksForContent = 2;
+		setLinksForAllContent(numOfLinksForContent);
+		
+		long beforeLinkNum = linkRepository.count();
+		
+		//When
+		contentService.deleteAllBySpaceId(space.getId());
+		
+		//Then
+		assertEquals(beforeLinkNum - numOfAllContent * numOfLinksForContent, linkRepository.count());
+	}
+	
+	private void setLinksForAllContent(int numOfLinksForContent) {
+		List<Content> contents = contentRepository.findAll();
+		for(Content content: contents) {
+			setLinksForContent(content, numOfLinksForContent);
+		}
+	}
+	
+	private void addNewContents(int newContentsNum) {
+		List<Content> contents = new ArrayList<>();
+		for(int i = 0; i < newContentsNum; i++) {
+			Content content = ContentTest.getContentInstance();
+			contents.add(content);
+		}
+		contentRepository.saveAll(contents);
+	}
+	
+	private void setSpaceForAllContents(Space space) {
+		List<Content> contents = contentRepository.findAll();
+		for(Content content: contents) {
+			content.setSpace(space);
+		}
+		contentRepository.saveAll(contents);
+	}
+	
+	private void setLinksForContent(Content content, int numOfLinksForContent) {
+		List<Link> links = new ArrayList<>();
+		for(int i = 0; i < numOfLinksForContent; i++) {
+			Link link = LinkTest.getLinkInstance();
+			link.setContent(content);
+			links.add(link);
+		}
+		linkRepository.saveAll(links);
 	}
 }

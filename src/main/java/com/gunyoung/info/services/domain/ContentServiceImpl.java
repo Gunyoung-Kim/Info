@@ -18,31 +18,27 @@ public class ContentServiceImpl implements ContentService{
 
 	private final ContentRepository contentRepository;
 	
+	private final LinkService linkService;
+	
 	@Override
 	@Transactional(readOnly= true)
 	public Content findById(Long id) {
 		 Optional<Content> result = contentRepository.findById(id);
-		 if(!result.isPresent()) 
-			 return null;
-		 return result.get();
+		 return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Content findByIdWithSpaceAndPerson(Long id) {
 		Optional<Content> result = contentRepository.findByIdWithSpaceAndPerson(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Content findByIdWithLinks(Long id) {
 		Optional<Content> result = contentRepository.findByIdWithLinks(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
@@ -58,14 +54,34 @@ public class ContentServiceImpl implements ContentService{
 
 	@Override
 	public void delete(Content content) {
+		deleteAllLinksForContent(content);
 		contentRepository.delete(content);
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		Content content = findById(id);
-		if(content != null)
-			contentRepository.delete(content);
+		Optional<Content> contentById = Optional.ofNullable(findById(id));
+		contentById.ifPresent((content) -> {
+			delete(content);
+		});
+	}
+	
+	@Override
+	public void deleteAllBySpaceId(Long spaceId) {
+		List<Content> contentsForSpace = contentRepository.findAllBySpaceIdInQuery(spaceId);
+		deleteAllLinksForSpaceContents(contentsForSpace);
+		contentRepository.deleteAllBySpaceIdInQuery(spaceId);
+	}
+	
+	private void deleteAllLinksForSpaceContents(Iterable<Content> contentsForSpace) {
+		for(Content content: contentsForSpace) {
+			deleteAllLinksForContent(content);
+		}
+	}
+	
+	private void deleteAllLinksForContent(Content content) {
+		Long contentId = content.getId();
+		linkService.deleteAllByContentId(contentId);
 	}
 
 	@Override

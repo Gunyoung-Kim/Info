@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.PersonRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,58 +23,48 @@ public class PersonServiceImpl implements PersonService {
 	
 	private final PersonRepository personRepository;
 	
+	private final SpaceService spaceService;
+	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findById(Long id) {
 		Optional<Person> result = personRepository.findById(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByIdWithSpace(Long id) {
 		Optional<Person> result = personRepository.findByIdWithSpace(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmail(String email) {
 		Optional<Person> result = personRepository.findByEmail(email);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmailWithSpace(String email) {
 		Optional<Person> result = personRepository.findByEmailWithSpace(email);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByIdWithSpaceAndContents(Long id) {
 		Optional<Person> result = personRepository.findByIdWithSpaceAndContents(id);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Person findByEmailWithSpaceAndContents(String email) {
 		Optional<Person> result = personRepository.findByEmailWithSpaceAndContents(email);
-		if(!result.isPresent()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
@@ -118,12 +109,17 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public Person save(Person person) {
+		spaceService.save(person.getSpace());
 		return personRepository.save(person);
 	}
 
 	@Override
 	public void delete(Person person) {
 		personRepository.delete(person);
+		Optional<Space> spaceForPerson = Optional.ofNullable(person.getSpace());
+		spaceForPerson.ifPresent((space) -> {
+			spaceService.delete(space);
+		});
 	}
 
 	@Override

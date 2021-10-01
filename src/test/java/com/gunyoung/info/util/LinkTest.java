@@ -1,5 +1,7 @@
 package com.gunyoung.info.util;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.gunyoung.info.domain.Link;
 
 /**
@@ -20,5 +22,20 @@ public class LinkTest {
 				.build();
 		
 		return link;
+	}
+	
+	/**
+	 * repository에 저장되지 않은 Link ID 반환
+	 * @author kimgun-yeong
+	 */
+	public static Long getNonExistLinkId(JpaRepository<Link, Long> repository) {
+		Long nonExistLinkId = Long.valueOf(1);
+		for(Link link : repository.findAll()) {
+			nonExistLinkId = Math.max(nonExistLinkId, link.getId());
+		}
+		
+		nonExistLinkId++;
+		
+		return nonExistLinkId;
 	}
 }

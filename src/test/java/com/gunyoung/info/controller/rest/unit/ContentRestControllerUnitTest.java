@@ -294,7 +294,7 @@ public class ContentRestControllerUnitTest {
 		
 		//Then
 		then(contentService).should(times(1)).save(content);
-		then(linkService).should(times(1)).saveByLinkDTOsAndExistContentLinks(content, contentDTO.getLinks(), content.getLinks());
+		then(linkService).should(times(1)).updateLinksForContent(content, contentDTO.getLinks());
 	}
 	
 	private Content mockingContentServiceFindByIdWithLinks(Long contentId) {

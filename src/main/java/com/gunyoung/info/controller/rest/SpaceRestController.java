@@ -28,11 +28,7 @@ public class SpaceRestController {
 	private final PersonService personService;
 	
 	/**
-	 * <pre>
-	 *  - 기능:Person 프로필(Person + Space) 수정
-	 * 	- 성공
-	 * 		DB: ProfileDTO에서 Person 및 Space의 변경 사항 추출 후 save
-	 * </pre>
+	 * Person 프로필(Person + Space) 수정, DB: ProfileDTO에서 Person 및 Space의 변경 사항 추출 후 save
 	 * @param profileDTO Person의 필드 및 Space의 필드 값 수정을 위한 ProfileDTO
 	 * @throws PersonNotFoundedException 전달된 ProfileDTO에 있는 이메일이 DB에 존재하지 않을때 
 	 * @author kimgun-yeong
@@ -43,7 +39,6 @@ public class SpaceRestController {
 		if(person == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		Space space = person.getSpace();
 		profileDTO.updatePersonAndSpace(person, space);
 		

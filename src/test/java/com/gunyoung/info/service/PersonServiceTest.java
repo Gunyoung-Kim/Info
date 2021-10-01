@@ -1,6 +1,7 @@
 package com.gunyoung.info.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,11 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.PersonRepository;
+import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.services.domain.PersonService;
+import com.gunyoung.info.testutil.Integration;
 import com.gunyoung.info.util.PersonTest;
 
 /**
@@ -21,11 +24,15 @@ import com.gunyoung.info.util.PersonTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class PersonServiceTest {
 	
 	@Autowired
 	PersonRepository personRepository;
+	
+	@Autowired
+	SpaceRepository spaceRepository;
 	
 	@Autowired
 	PersonService personService;
@@ -68,7 +75,6 @@ public class PersonServiceTest {
 	}
 	
 	@Test
-	@Transactional
 	@DisplayName("Person save (성공, 수정, 개수 동일 확인)")
 	public void modifyPersonTestCheckCount() {
 		//Given
@@ -85,7 +91,6 @@ public class PersonServiceTest {
 	}
 	
 	@Test
-	@Transactional
 	@DisplayName("Person save (성공, 수정, 변경 사항 적용 확인)")
 	public void modifyPersonTestCheckChanged() {
 		//Given
@@ -102,7 +107,6 @@ public class PersonServiceTest {
 	}
 	
 	@Test
-	@Transactional
 	@DisplayName("Person save (성공, 추가)")
 	public void addPersonTestCheckNum() {
 		//Given
@@ -123,7 +127,6 @@ public class PersonServiceTest {
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Person Delete (실패- 해당 Person 없음)")
 	public void deletePersonNonExist() {
 		//Given
@@ -138,8 +141,7 @@ public class PersonServiceTest {
 	}
 	
 	@Test
-	@Transactional
-	@DisplayName("Person Delete (성공)")
+	@DisplayName("Person Delete (성공), Person 삭제 확인")
 	public void deletePersonTest() {
 		//Given
 		long givenPersonNum = personRepository.count();
@@ -151,4 +153,17 @@ public class PersonServiceTest {
 		assertEquals(givenPersonNum-1, personRepository.count());
 	}
 	
+	@Test
+	@DisplayName("Person Delete (성공), Space 삭제 확인")
+	public void deletePersonTestCheckSpaceRemove() {
+		//Given
+		Space spaceForPerson = person.getSpace();
+		Long spaceId = spaceForPerson.getId();
+		
+		//When
+		personService.delete(person);
+		
+		//Then
+		assertFalse(spaceRepository.existsById(spaceId));
+	}
 }

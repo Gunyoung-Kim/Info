@@ -119,27 +119,26 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Link> saveByLinkDTOsAndExistContentLinks(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
+	 * public List<Link> updateLinksForContent(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
 	 */
 	
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 기존의 Link 삭제")
-	public void saveByLinkDTOsAndExistContentLinksContenteDelete() {
+	public void updateLinksForContentContentDelete() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
-		List<Link> existContentLinks = new ArrayList<>();
 		
 		Long existLinkId = Long.valueOf(1);
-		Link existSoonDeleteLink = Link.builder()
+		Link existbutDeleteSoonLink = Link.builder()
 				.id(existLinkId)
 				.tag("tag")
 				.url("test.com")
 				.build();
-		existContentLinks.add(existSoonDeleteLink);
+		content.getLinks().add(existbutDeleteSoonLink);
 		
 		//When
-		linkService.saveByLinkDTOsAndExistContentLinks(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs);
 		
 		//Then
 		then(linkRepository).should(times(1)).delete(any(Link.class));
@@ -147,11 +146,10 @@ public class LinkServiceUnitTest {
 	
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 기존의 Link 수정")
-	public void saveByLinkDTOsAndExistContentLinksContenteUpdate() {
+	public void updateLinksForContentContentUpdate() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
-		List<Link> existContentLinks = new ArrayList<>();
 		
 		Long existLinkId = Long.valueOf(1);
 		Link existLink = Link.builder()
@@ -159,7 +157,7 @@ public class LinkServiceUnitTest {
 				.tag("tag")
 				.url("test.com")
 				.build();
-		existContentLinks.add(existLink);
+		content.getLinks().add(existLink);
 		
 		String changeTag = "changedTag";
 		LinkDTO linkDTOToUpdate = LinkDTO.builder()
@@ -170,7 +168,7 @@ public class LinkServiceUnitTest {
 		linkDTOs.add(linkDTOToUpdate);
 		
 		//When
-		linkService.saveByLinkDTOsAndExistContentLinks(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs);
 		
 		//Then
 		assertEquals(changeTag, existLink.getTag());
@@ -179,11 +177,10 @@ public class LinkServiceUnitTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 새로운 Link 추가")
-	public void saveByLinkDTOsAndExistContentLinksNewLinkTest() {
+	public void updateLinksForContentNewLinkTest() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
-		List<Link> existContentLinks = new ArrayList<>();
 		
 		LinkDTO linkDTO = LinkDTO.builder()
 				.tag("tag")
@@ -192,7 +189,7 @@ public class LinkServiceUnitTest {
 		linkDTOs.add(linkDTO);
 		
 		//When
-		linkService.saveByLinkDTOsAndExistContentLinks(content, linkDTOs, existContentLinks);
+		linkService.updateLinksForContent(content, linkDTOs);
 		
 		//Then
 		then(linkRepository).should(times(1)).saveAll(any(Iterable.class));
@@ -248,4 +245,20 @@ public class LinkServiceUnitTest {
 		then(linkRepository).should(times(1)).delete(link);
 	}
 	
+	/*
+	 * public void deleteAllByContentId(Long contentId)
+	 */
+	
+	@Test
+	@DisplayName("Content ID에 해당하는 Link들 삭제 -> 정상")
+	public void deleteAllByContentIdTest() {
+		//Given
+		Long contentId = Long.valueOf(24);
+		
+		//When
+		linkService.deleteAllByContentId(contentId);
+		
+		//Then
+		then(linkRepository).should(times(1)).deleteAllByContentIdInQuery(contentId);
+	}
 }

@@ -35,7 +35,7 @@ public interface LinkService {
 	 * 기존의 Content의 Link들을 LinkDTO를 통해 업데이트
 	 * @author kimgun-yeong
 	 */
-	public List<Link> saveByLinkDTOsAndExistContentLinks(Content content, Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks);
+	public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs);
 	
 	/**
 	 * 모든 Link들 저장
@@ -56,4 +56,11 @@ public interface LinkService {
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);
+	
+	/**
+	 * Content Id로 해당 Link들 모두 삭제 
+	 * @param contentId 삭제하려는 Link들의 Content ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByContentId(Long contentId);
 }

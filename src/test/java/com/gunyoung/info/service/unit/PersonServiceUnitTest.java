@@ -22,8 +22,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.domain.Space;
 import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.services.domain.PersonServiceImpl;
+import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.util.PersonTest;
 
 /**
  * {@link PersonServiceImpl}에 대한 테스트 클래스 <br>
@@ -38,6 +41,9 @@ public class PersonServiceUnitTest {
 	@Mock
 	PersonRepository personRepository;
 	
+	@Mock
+	SpaceService spaceService;
+	
 	@InjectMocks
 	PersonServiceImpl personService;
 	
@@ -45,7 +51,7 @@ public class PersonServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
-		person = new Person();
+		person = PersonTest.getPersonInstance();
 	}
 	
 	/*
@@ -77,6 +83,40 @@ public class PersonServiceUnitTest {
 		
 		//When
 		Person result = personService.findById(personId);
+		
+		//Then
+		assertEquals(person, result);
+	}
+	
+	/*
+	 * public Person findByIdWithSpace(Long id)
+	 */
+	
+	@Test
+	@DisplayName("ID로 Person 찾기 -> 존재하지 않음")
+	public void findByIdWithSpaceTestNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(83);
+		
+		given(personRepository.findByIdWithSpace(nonExistId)).willReturn(Optional.empty());
+		
+		//When
+		Person result = personService.findByIdWithSpace(nonExistId);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	@Test
+	@DisplayName("ID로 Person 찾기 -> 정상")
+	public void findByIdWithSpaceTest() {
+		//Given
+		Long personId = Long.valueOf(24);
+		
+		given(personRepository.findByIdWithSpace(personId)).willReturn(Optional.of(person));
+		
+		//When
+		Person result = personService.findByIdWithSpace(personId);
 		
 		//Then
 		assertEquals(person, result);
@@ -347,8 +387,8 @@ public class PersonServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Person 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Person 삭제 -> 정상, check person Repo")
+	public void deleteTestCheckPersonRepo() {
 		//Given
 		
 		//When
@@ -356,6 +396,22 @@ public class PersonServiceUnitTest {
 		
 		//Then
 		then(personRepository).should(times(1)).delete(person);
+	}
+	
+	@Test
+	@DisplayName("Person 삭제 -> 정상, check spaceService")
+	public void deleteTestCheckSpaceService() {
+		//Given
+		Long personId = Long.valueOf(73);
+		person.setId(personId);
+		
+		Space spaceForPerson = person.getSpace();
+		
+		//When
+		personService.delete(person);
+		
+		//Then
+		then(spaceService).should(times(1)).delete(spaceForPerson);
 	}
 	
 	/*

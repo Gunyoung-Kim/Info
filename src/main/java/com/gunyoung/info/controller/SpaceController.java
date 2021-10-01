@@ -35,11 +35,8 @@ public class SpaceController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 현재 로그인되있는 사용자 본인의 포트폴리오 페이지 반환
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	View: portfolio.html (현재 로그인 유저의 포트폴리오), login.html(로그인 안되있으면)
-	 *  	- 실패 
+	 *  - 기능: 현재 로그인되있는 사용자 본인의 포트폴리오 페이지 반
+	 *  - View: portfolio.html (현재 로그인 유저의 포트폴리오), login.html(로그인 안되있으면)
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
@@ -58,12 +55,10 @@ public class SpaceController {
 	/**
 	 * <pre>
 	 *  - 기능: 개인 포트폴리오 페이지 반환
-	 *  - 반환:
-	 *  	- 성공
-	 *  	View: portfolio.html (url에 입력된 이메일 유저의 포트폴리오)
-	 *  	Model: profile -> ProfileDTO (포트폴리오 주인의 프로필 정보를 전달하는 DTO- Person+Space 일부 필드)
-	 *  		   contents -> List<Content> (포트폴리오에 있는 프로젝트 리스트)
-	 *  		   isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부-> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
+	 *  - View: portfolio.html (url에 입력된 이메일 유저의 포트폴리오)
+	 *  - Model: profile -> ProfileDTO (포트폴리오 주인의 프로필 정보를 전달하는 DTO - Person+Space 일부 필드)
+	 *  		 contents -> List<Content> (포트폴리오에 있는 프로젝트 리스트)
+	 *  		 isHost -> boolean (현재 로그인된 유저가 해당 포트폴리오의 주인인지 여부 -> 템플릿에 변화 주기위함(ex. 프로젝트 수정 버튼 추가))
 	 *  </pre>
 	 *  @param userId 열람하려는 포트폴리오 주인의 Id
 	 *  @throws PersonNotFoundedException url에 입력된 id의 Person DB에 없으면
@@ -101,10 +96,8 @@ public class SpaceController {
 	/** 
 	 * <pre>
 	 *  - 기능: 현재 로그인한 유저의 프로필을 변경하기 위한 뷰를 반환
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	View: updateProfile.html (프로필 업데이트 사항 작성을 위한 템플릿)
-	 *  	Model: formModel->ProfileDTO(프로필 업데이트 사항 전달을 위한 DTO객체, Person+ Space 일부필드)
+	 *  - View: updateProfile.html (프로필 업데이트 사항 작성을 위한 템플릿)
+	 *  - Model: formModel -> ProfileDTO(프로필 업데이트 사항 전달을 위한 DTO객체, Person+ Space 일부필드)
 	 *  </pre>
 	 *  @throws PersonNotFoundedException 현재 로그인된 유저의 이메일이 DB에 없으면
 	 *  @author kimgun-yeong

@@ -1,6 +1,7 @@
 package com.gunyoung.info.services.domain;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -25,9 +26,7 @@ public class SpaceServiceImpl implements SpaceService {
 	@Transactional(readOnly=true)
 	public Space findById(Long id) {
 		Optional<Space> result = spaceRepository.findById(id);
-		if(!result.isPresent())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
@@ -39,6 +38,14 @@ public class SpaceServiceImpl implements SpaceService {
 	@Override
 	public Space save(Space space) {
 		return spaceRepository.save(space);
+	}
+	
+	@Override
+	public void delete(Space space) {
+		Objects.requireNonNull(space);
+		Long spaceId = space.getId();
+		contentService.deleteAllBySpaceId(spaceId);
+		spaceRepository.deleteByIdInQuery(spaceId);
 	}
 
 	@Override
@@ -54,6 +61,4 @@ public class SpaceServiceImpl implements SpaceService {
 		
 		space.getContents().add(content);
 	}
-	
-	
 }

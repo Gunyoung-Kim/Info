@@ -60,11 +60,9 @@ public class ContentController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 유저의 포트폴리오에 프로젝트 추가하는 페이지 반환하는 컨트롤러  
-	 *  - 반환: 
-	 *  	- 성공 
-	 *  	View: createContent.html(포트폴리오에 프로젝트 추가하는 템플릿) 
-	 *  	Model: formModel->Content(프로젝트 내용 추가할 Content 객체)
+	 *  - 기능: 유저의 포트폴리오에 프로젝트 추가하는 페이지 반환
+	 *  - View: createContent.html(포트폴리오에 프로젝트 추가하는 템플릿) 
+	 *  - Model: formModel -> Content(프로젝트 내용 추가할 Content 객체)
 	 *  </pre>
 	 *  @param personId 콘텐트 추가하려는 Person의 Id
 	 *  @throws NotMyResourceException 로그인된 계정과 일치하지 않으면
@@ -103,10 +101,8 @@ public class ContentController {
 	/**
 	 * <pre>
 	 *  - 기능: url에 입력된 id에 해당하는 콘텐츠의 정보 수정을 가능케하는 페이지 반환
-	 *  - 반환: 
-	 *  	- 성공
-	 *		View: updateContent.html(콘텐츠의 정보를 수정하는 템플릿)
-	 *		Model: formModel->ContentDTO(프로젝트 작성자 이메일 + 프로젝트 정보 DTO
+	 *  - View: updateContent.html(콘텐츠의 정보를 수정하는 템플릿)
+	 *  - Model: formModel -> ContentDTO(프로젝트 작성자 이메일 + 프로젝트 정보 DTO)
 	 * </pre>
 	 * @param contentId 수정하려는 콘텐트의 id 값
 	 * @throws ContentNotFoundedException 입력된 id에 해당하는 content가 DB 테이블에 없을때 

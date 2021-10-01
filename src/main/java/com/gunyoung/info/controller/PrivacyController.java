@@ -21,10 +21,8 @@ public class PrivacyController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: 가장 최근에 적용된 개인정보처리 방침 문서를 보여주는 컨트롤러
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	View: privacyPolicy_LATEST_POLICY_VERSION.html
+	 *  - 기능: 가장 최근에 적용된 개인정보처리 방침 문서 화면 반환
+	 *  - View: privacyPolicy_LATEST_POLICY_VERSION.html
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 *  
@@ -38,10 +36,8 @@ public class PrivacyController {
 	
 	/**
 	 * <pre>
-	 *  - 기능: url에 표시된 버전의 개인정보처리 방침 문서를 보여주는 컨트롤러
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	View: privacyPolicy_version.html  
+	 *  - 기능: url에 표시된 버전의 개인정보처리 방침 문서 화면 반환 
+	 *  - View: privacyPolicy_version.html  
 	 *  </pre>
 	 *  @param version 열람하려는 개인정보 처리방침의 버전 값
 	 *  @throws PrivacyPolicyNotFoundedException 해당하는 버전의 개인정보 처리방침이 없을 때

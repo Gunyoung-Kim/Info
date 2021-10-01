@@ -1,6 +1,10 @@
 package com.gunyoung.info.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.info.domain.Content;
 import com.gunyoung.info.domain.Space;
+import com.gunyoung.info.repos.ContentRepository;
+import com.gunyoung.info.repos.PersonRepository;
 import com.gunyoung.info.repos.SpaceRepository;
 import com.gunyoung.info.services.domain.SpaceService;
+import com.gunyoung.info.testutil.Integration;
+import com.gunyoung.info.util.ContentTest;
 import com.gunyoung.info.util.SpaceTest;
 
 /**
@@ -21,11 +30,18 @@ import com.gunyoung.info.util.SpaceTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class SpaceServiceTest {
 	
 	@Autowired
 	SpaceRepository spaceRepository;
+	
+	@Autowired
+	PersonRepository personRepository;
+	
+	@Autowired
+	ContentRepository contentRepository;
 	
 	@Autowired
 	SpaceService spaceService;
@@ -44,12 +60,10 @@ public class SpaceServiceTest {
 	}
 	
 	/*
-	 *  - 대상 메소드:
-	 *  	 public Space save(Space space);
+	 *   public Space save(Space space);
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Space save (성공, 수정)")
 	public void saveSpaceTest() {
 		//Given
@@ -62,7 +76,51 @@ public class SpaceServiceTest {
 		spaceService.save(space);
 		
 		//Then
-		assertEquals(changeDescription, spaceRepository.getById(spaceId).getDescription());
+		assertEquals(changeDescription, spaceRepository.findById(spaceId).get().getDescription());
 	}
 	
+	/*
+	 * public void delete(Space space)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName(" Space 삭제 -> 정상, Space 삭제 확인")
+	public void deleteTestCheckSpaceRemove() {
+		//Given
+		Long spaceId = space.getId();
+		
+		//When
+		spaceService.delete(space);
+		
+		//Then
+		assertFalse(spaceRepository.existsById(spaceId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Space 삭제 -> 정상, 관련 Content 삭제 확인")
+	public void deleteTestCheckContentsRemove() {
+		//Given
+		int newContentsNum = 10;
+		addNewContentsForSpace(newContentsNum);
+		long beforeContentNum = contentRepository.count();
+		
+		//When
+		spaceService.delete(space);
+		
+		//Then
+		assertEquals(beforeContentNum - newContentsNum, contentRepository.count());
+	}
+	
+	private List<Content> addNewContentsForSpace(int newContentsNum) {
+		List<Content> newContents = new ArrayList<>();
+		for(int i=0; i < newContentsNum; i++) {
+			Content content = ContentTest.getContentInstance();
+			content.setSpace(space);
+			newContents.add(content);
+		}
+		contentRepository.saveAll(newContents);
+		return newContents;
+	}
 }

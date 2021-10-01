@@ -26,11 +26,7 @@ public class PersonRestController {
 	private final PersonService personService;
 	
 	/**
-	 * <pre>
-	 *  - 기능: Email 중복 여부 반환
-	 *  - 반환: 
-	 *  	True or False
-	 *  </pre>
+	 *  Email 중복 여부 반환
 	 *  @param email 중복여부를 확인하려는 email 값
 	 *  @author kimgun-yeong
 	 */
@@ -40,10 +36,7 @@ public class PersonRestController {
 	}
 	
 	/**
-	 * <pre>
-	 *  - 기능: 회원 탈퇴를 처리
-	 *  	   DB: 해당 person 삭제
-	 *  </pre>
+	 *	회원 탈퇴를 처리, DB: 해당 person 삭제
 	 *  @param targetPersonEmail 회원 탈퇴하려는 주체의 email값
 	 *  @throws PersonNotFoundedException 해당 계정이 DB에 존재하지 않을 때
 	 *  @throws NotMyResourceException 로그인 계정이 탈퇴 계정과 일치하지 않을 때

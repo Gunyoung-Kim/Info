@@ -3,7 +3,6 @@ package com.gunyoung.info.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -63,7 +62,7 @@ public class Space extends BaseEntity{
 	@Builder.Default
 	private String facebook = ""; 
 	
-	@OneToMany(mappedBy="space",cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy="space", orphanRemoval = true)
 	@Builder.Default
 	private List<Content> contents = new ArrayList<>();
 	

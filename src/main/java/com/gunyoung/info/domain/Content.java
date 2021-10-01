@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -66,7 +65,7 @@ public class Content extends BaseEntity{
 	@NotEmpty
 	private String contributors;
 	
-	@OneToMany(mappedBy="content", cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy="content", orphanRemoval = true)
 	@Builder.Default
 	private List<Link> links = new ArrayList<>();
 	
