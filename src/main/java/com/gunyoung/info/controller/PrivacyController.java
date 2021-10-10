@@ -1,9 +1,8 @@
 package com.gunyoung.info.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.error.code.PrivacyPolicyErrorCode;
@@ -27,7 +26,7 @@ public class PrivacyController {
 	 *  @author kimgun-yeong
 	 *  
 	 */
-	@RequestMapping(value="/privacypolicy", method = RequestMethod.GET)
+	@GetMapping(value="/privacypolicy")
 	public ModelAndView privacyPolicyLastest(ModelAndView mav) {
 		mav.setViewName("privacyPolicy_" +LATEST_POLICY_VERSION);
 		
@@ -43,7 +42,7 @@ public class PrivacyController {
 	 *  @throws PrivacyPolicyNotFoundedException 해당하는 버전의 개인정보 처리방침이 없을 때
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/privacypolicy/{version}", method = RequestMethod.GET)
+	@GetMapping(value="/privacypolicy/{version}")
 	public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav) {
 		if(version <=0 || version > LATEST_POLICY_VERSION) {
 			throw new PrivacyPolicyNotFoundedException(PrivacyPolicyErrorCode.PRIVACY_POLICY_VERSION_IS_NOT_VALID_ERROR.getDescription());
