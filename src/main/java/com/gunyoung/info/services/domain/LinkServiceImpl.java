@@ -70,12 +70,11 @@ public class LinkServiceImpl implements LinkService{
 	}
 	
 	private Link createLinkFromLinkDTOAndContent(LinkDTO linkDTO, Content content) {
-		Link newLink = Link.builder()
+		return Link.builder()
 				.tag(linkDTO.getTag())
 				.url(linkDTO.getUrl())
 				.content(content)
 				.build();
-		return newLink;
 	}
 	
 	private Map<Long, Link> getIdAndLinkMapForExistLinks(Iterable<Link> existContentLinks) {
@@ -118,9 +117,7 @@ public class LinkServiceImpl implements LinkService{
 	@Override
 	public void deleteById(Long id) {
 		Optional<Link> linkById = Optional.ofNullable(findById(id));
-		linkById.ifPresent((link) -> {
-			delete(link);
-		});
+		linkById.ifPresent(this::delete);
 	}
 
 	@Override

@@ -61,9 +61,7 @@ public class ContentServiceImpl implements ContentService{
 	@Override
 	public void deleteById(Long id) {
 		Optional<Content> contentById = Optional.ofNullable(findById(id));
-		contentById.ifPresent((content) -> {
-			delete(content);
-		});
+		contentById.ifPresent(this::delete);
 	}
 	
 	@Override

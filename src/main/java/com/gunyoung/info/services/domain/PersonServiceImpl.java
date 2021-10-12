@@ -117,9 +117,7 @@ public class PersonServiceImpl implements PersonService {
 	public void delete(Person person) {
 		personRepository.delete(person);
 		Optional<Space> spaceForPerson = Optional.ofNullable(person.getSpace());
-		spaceForPerson.ifPresent((space) -> {
-			spaceService.delete(space);
-		});
+		spaceForPerson.ifPresent(spaceService::delete);
 	}
 
 	@Override
