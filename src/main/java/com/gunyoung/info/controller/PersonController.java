@@ -193,7 +193,6 @@ public class PersonController {
 		if(isSessionUserEmailAndEmailInFormMisMatch(formModel.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
-		
 		Person person = getNewSavedPersonWithEncodedPassword(formModel);
 		setNewAuthenticationInSecurityContext(person);
 		sendEmailForJoin(formModel.getEmail());

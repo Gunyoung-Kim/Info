@@ -31,7 +31,7 @@ import com.gunyoung.info.services.social.CustomOAuth2UserService;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class CustomOAuth2UserServiceUnitTest {
+class CustomOAuth2UserServiceUnitTest {
 	
 	@Mock
 	PersonService personService;
@@ -43,12 +43,12 @@ public class CustomOAuth2UserServiceUnitTest {
 	CustomOAuth2UserService customOAuth2UserService;
 	
 	/*
-	 * public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException
+	 * OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException
 	 */
 	
 	@Test
 	@DisplayName("DefaultOAuth2UserService를 사용하여 OAuth2User 로드하여 이 객체의 정보를 통해 비즈니스 요구사항에 맞게 새로운 DefaultOAuth2User 객체 생성 -> 구글, 이미 회원가입 유저")
-	public void loadUserTestGoogleAlreadyExistPerson() {
+	void loadUserTestGoogleAlreadyExistPerson() {
 		//Given
 		String existEmail = "test@test.com";
 		String personName = "person";
@@ -76,7 +76,7 @@ public class CustomOAuth2UserServiceUnitTest {
 	
 	@Test
 	@DisplayName("DefaultOAuth2UserService를 사용하여 OAuth2User 로드하여 이 객체의 정보를 통해 비즈니스 요구사항에 맞게 새로운 DefaultOAuth2User 객체 생성 -> 구글, 새로운 유저")
-	public void loadUserTestGoogleNewPerson() {
+	void loadUserTestGoogleNewPerson() {
 		//Given
 		String newPersonEmail = "newby@test.com";
 		String personName = "person";
