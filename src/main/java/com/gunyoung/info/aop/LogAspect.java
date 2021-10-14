@@ -47,7 +47,7 @@ public class LogAspect {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
 			long afterProccedTime = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, afterProccedTime- beforeProceedTime);
+			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, afterProccedTime - beforeProceedTime);
 		}
 	}
 	

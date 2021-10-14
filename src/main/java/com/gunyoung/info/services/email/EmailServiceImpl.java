@@ -9,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.gunyoung.info.dto.email.EmailDTO;
@@ -26,6 +27,7 @@ public class EmailServiceImpl implements EmailService{
 	private final Logger logger;
 	
 	@Override
+	@Async
 	public void sendEmail(EmailDTO email){
 		try {
 			MimeMessage msg = mailSender.createMimeMessage();

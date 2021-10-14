@@ -139,8 +139,7 @@ public class PersonController {
 	public ModelAndView join(@ModelAttribute("formModel") @Valid Person person) {
 		if(personService.existsByEmail(person.getEmail())) {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
-		};
-		
+		}
 		encodePasswordAndSavePerson(person);
 		sendEmailForJoin(person.getEmail());
 		
@@ -194,9 +193,9 @@ public class PersonController {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
 		Person person = getNewSavedPersonWithEncodedPassword(formModel);
-		setNewAuthenticationInSecurityContext(person);
+		setNewAuthenticationInSecurityContext(person);		
 		sendEmailForJoin(formModel.getEmail());
-		
+
 		return new ModelAndView("redirect:/");
 	}
 	
