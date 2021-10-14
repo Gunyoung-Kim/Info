@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler{
+public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 	
 	private final Logger logger;
 
