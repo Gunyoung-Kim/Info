@@ -13,17 +13,26 @@ import com.gunyoung.info.async.AsyncExceptionHandler;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 비동기 메소드의 실행을 위한 설정 클래스
+ * @author kimgun-yeong
+ *
+ */
 @Configuration
 @EnableAsync
 @RequiredArgsConstructor
 public class AsyncConfig implements AsyncConfigurer {
 	
-	private static final int CORE_POOL_SIZE = 1;
-	private static final int MAX_POOL_SIZE = 3;
-	private static final int QUEUE_CAPACITY = 3;
+	private static final int CORE_POOL_SIZE = 10;
+	private static final int MAX_POOL_SIZE = 20;
+	private static final int QUEUE_CAPACITY = 1000;
 	
 	private AsyncExceptionHandler asyncExceptionHandler;
 	
+	/**
+	 * Reject Task 발생 처리 정책으로 {@link ThreadPoolExecutor.CallerRunsPolicy} 채택
+	 * @author kimgun-yeong
+	 */
 	@Override
 	public Executor getAsyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -31,6 +40,7 @@ public class AsyncConfig implements AsyncConfigurer {
 		executor.setMaxPoolSize(MAX_POOL_SIZE);
 		executor.setQueueCapacity(QUEUE_CAPACITY);
 		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		executor.setWaitForTasksToCompleteOnShutdown(true);
 		executor.setThreadNamePrefix("info-asyncExecutor-");
 		executor.initialize();
 		return executor;
