@@ -43,7 +43,7 @@ import com.gunyoung.info.util.SpaceTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ContentRestControllerUnitTest {
+class ContentRestControllerUnitTest {
 	
 	@Mock
 	ContentService contentService;
@@ -73,12 +73,12 @@ public class ContentRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void createContent(@PathVariable Long personId, @Valid @ModelAttribute ContentDTO contentDTO)
+	 * void createContent(@PathVariable Long personId, @Valid @ModelAttribute ContentDTO contentDTO)
 	 */
 	
 	@Test
 	@DisplayName("프로젝트 추가 처리 -> 로그인 이메일의 Person 존재하지 않을때")
-	public void createContentTestPersonNonExist() {
+	void createContentTestPersonNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		mockingAuthorityutilGetSessionUserEmail(nonExistEmail);
@@ -94,7 +94,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("프로젝트 추가 처리 -> 로그인된 정보가 해당 포트폴리오 주인이 아닐때")
-	public void createContentTestNotMyResource() {
+	void createContentTestNotMyResource() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginPersonEmail);
@@ -113,7 +113,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("프로젝트 추가 처리 -> 개인 최대 프로젝트 개수 초과")
-	public void createContentTestContentNumLimitExceeded() {
+	void createContentTestContentNumLimitExceeded() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginPersonEmail);
@@ -132,7 +132,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("프로젝트 추가 처리 -> 정상, check services")
-	public void createContentTestCheckServices() {
+	void createContentTestCheckServices() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginPersonEmail);
@@ -159,12 +159,12 @@ public class ContentRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void deleteContent(@PathVariable long id)
+	 * void deleteContent(@PathVariable long id)
 	 */
 	
 	@Test
 	@DisplayName("url에 명시된 id의 콘텐트 삭제 -> 입력된 id에 해당하는 content가 DB 테이블에 없을때")
-	public void deleteContentTestContentNonExist() {
+	void deleteContentTestContentNonExist() {
 		//Given
 		Long nonExistContentId = Long.valueOf(25);
 		given(contentService.findByIdWithSpaceAndPerson(nonExistContentId)).willReturn(null);
@@ -177,7 +177,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("url에 명시된 id의 콘텐트 삭제 -> 현재 로그인 유저 != 해당 프로젝트 작성자")
-	public void deleteContentTestNoMyResource() {
+	void deleteContentTestNoMyResource() {
 		//Given
 		Long contentId = Long.valueOf(53);
 		Content content = mockingContentServiceFindByIdWithSpaceAndPerson(contentId);
@@ -197,7 +197,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("url에 명시된 id의 콘텐트 삭제 -> 정상, contentService delete check")
-	public void deleteContentTestCheckContentServiceDelete() {
+	void deleteContentTestCheckContentServiceDelete() {
 		//Given
 		Long contentId = Long.valueOf(53);
 		Content content = mockingContentServiceFindByIdWithSpaceAndPerson(contentId);
@@ -226,12 +226,12 @@ public class ContentRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void updateContent(@PathVariable Long id, @ModelAttribute ContentDTO contentDto)
+	 * void updateContent(@PathVariable Long id, @ModelAttribute ContentDTO contentDto)
 	 */
 	
 	@Test
 	@DisplayName("content 수정 처리 -> 입력된 id에 해당하는 content가 DB 테이블에 없을때")
-	public void updateContentTestContentNonExist() {
+	void updateContentTestContentNonExist() {
 		//Given
 		Long nonExistContentId = Long.valueOf(52);
 		given(contentService.findByIdWithLinks(nonExistContentId)).willReturn(null);
@@ -244,7 +244,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("content 수정 처리 -> 폼에 보내진 hostId에 해당하는 Person 없을때")
-	public void updateContentTestPersonNonExist() {
+	void updateContentTestPersonNonExist() {
 		//Given
 		Long contentId = Long.valueOf(52);
 		mockingContentServiceFindByIdWithLinks(contentId);
@@ -261,7 +261,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("content 수정 처리 -> 현재 로그인 유저 != 해당 프로젝트 작성자")
-	public void updateContentTestNotMyResource() {
+	void updateContentTestNotMyResource() {
 		//Given
 		Long contentId = Long.valueOf(52);
 		mockingContentServiceFindByIdWithLinks(contentId);
@@ -280,7 +280,7 @@ public class ContentRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("content 수정 처리 -> 정상, sevices check")
-	public void updateContentTestCheckServices() {
+	void updateContentTestCheckServices() {
 		//Given
 		Long contentId = Long.valueOf(52);
 		Content content = mockingContentServiceFindByIdWithLinks(contentId);

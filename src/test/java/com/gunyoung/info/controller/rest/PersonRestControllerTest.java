@@ -42,7 +42,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PersonRestControllerTest {
+class PersonRestControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -79,12 +79,12 @@ public class PersonRestControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@GetMapping("/join/idverification")
-	 *		public String idVerification(@RequestParam("email") String email)
+	 *		String idVerification(@RequestParam("email") String email)
 	 */
 	
 	@Test
 	@DisplayName("Email 중복 여부 확인 (성공, 중복임)")
-	public void emailVerificationTestTrue() throws Exception {
+	void emailVerificationTestTrue() throws Exception {
 		//Given
 		String existEmail = person.getEmail();
 		
@@ -99,7 +99,7 @@ public class PersonRestControllerTest {
 	
 	@Test
 	@DisplayName("Email 중복 여부 확인 (성공, 중복아님)")
-	public void emailVerificationTestFalse() throws Exception {
+	void emailVerificationTestFalse() throws Exception {
 		//Given
 		String nonExistEMail = "nonexist@test.com";
 		
@@ -115,13 +115,13 @@ public class PersonRestControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
-	 * 		public ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav)
+	 * 		ModelAndView personWithdraw(@RequestParam("email") String email,ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="none@google.com", roles= {"USER"})
 	@Test
 	@DisplayName("회원탈퇴 DELETE (실패-해당 계정이 DB에 존재하지 않을때)")
-	public void personWithdrawNonExist() throws Exception {
+	void personWithdrawNonExist() throws Exception {
 		//Given
 		String nonExistEmail = "none@google.com";
 		//When
@@ -135,7 +135,7 @@ public class PersonRestControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("회원탈퇴 DELETE (실패-로그인 계정이 탈퇴 계정과 일치하지 않을때")
-	public void personWithdrawNotMatch() throws Exception {
+	void personWithdrawNotMatch() throws Exception {
 		//Given
 		Person anotherPerson = PersonTest.getPersonInstance("second@test.com");
 		personRepository.save(anotherPerson);
@@ -157,7 +157,7 @@ public class PersonRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원탈퇴 DELETE (성공, Person 삭제 확인)")
-	public void personWithdrawTestCheckPerson() throws Exception {
+	void personWithdrawTestCheckPerson() throws Exception {
 		//Given
 		
 		//When
@@ -175,7 +175,7 @@ public class PersonRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원탈퇴 DELETE (성공, 관련 Space 삭제 확인)")
-	public void personWithdrawTestCheckSpace() throws Exception {
+	void personWithdrawTestCheckSpace() throws Exception {
 		//Given
 		Space space = person.getSpace();
 		Long spaceId = space.getId();
@@ -195,7 +195,7 @@ public class PersonRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원탈퇴 DELETE (성공, 관련 Content 삭제 확인)")
-	public void personWithdrawTestCheckContent() throws Exception {
+	void personWithdrawTestCheckContent() throws Exception {
 		//Given
 		Space space = person.getSpace();
 		Content content = ContentTest.getContentInstance("title");
@@ -216,7 +216,7 @@ public class PersonRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원탈퇴 DELETE (성공, 관련 LINK 삭제 확인)")
-	public void personWithdrawTestCheckLink() throws Exception {
+	void personWithdrawTestCheckLink() throws Exception {
 		//Given
 		Space space = person.getSpace();
 		Content content = ContentTest.getContentInstance("title");

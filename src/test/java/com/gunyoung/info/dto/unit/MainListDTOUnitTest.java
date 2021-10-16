@@ -18,15 +18,15 @@ import com.gunyoung.info.util.PersonTest;
  * @author kimgun-yeong
  *
  */
-public class MainListDTOUnitTest {
+class MainListDTOUnitTest {
 	
 	/*
-	 * public static List<MainListDTO> of(Iterable<Person> people)
+	 * static List<MainListDTO> of(Iterable<Person> people)
 	 */
 	
 	@Test
 	@DisplayName("Person 컬렉션을 통해 MainListDTO 리스트 반환 -> 정상")
-	public void ofListTest() {
+	void ofListTest() {
 		//Given
 		List<Person> givenPeople = new ArrayList<>();
 		Long givenPersonNum = Long.valueOf(24);
@@ -47,7 +47,7 @@ public class MainListDTOUnitTest {
 	}
 	
 	private void verifyMainListDTOListWithPeopleList(List<Person> people, Long givenPersonNum, List<MainListDTO> result) {
-		for(int i=0;i<givenPersonNum;i++) {
+		for(int i = 0; i < givenPersonNum; i++) {
 			Person person = people.get(i);
 			MainListDTO dto = result.get(i);
 			assertEquals(person.getId(), dto.getPersonId());

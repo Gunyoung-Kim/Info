@@ -32,7 +32,7 @@ import com.gunyoung.info.util.SpaceTest;
  */
 @Integration
 @SpringBootTest
-public class SpaceServiceTest {
+class SpaceServiceTest {
 	
 	@Autowired
 	SpaceRepository spaceRepository;
@@ -60,12 +60,12 @@ public class SpaceServiceTest {
 	}
 	
 	/*
-	 *   public Space save(Space space);
+	 *   Space save(Space space);
 	 */
 	
 	@Test
 	@DisplayName("Space save (성공, 수정)")
-	public void saveSpaceTest() {
+	void saveSpaceTest() {
 		//Given
 		String changeDescription = "changeDescription";
 		space.setDescription(changeDescription);
@@ -80,13 +80,13 @@ public class SpaceServiceTest {
 	}
 	
 	/*
-	 * public void delete(Space space)
+	 * void delete(Space space)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName(" Space 삭제 -> 정상, Space 삭제 확인")
-	public void deleteTestCheckSpaceRemove() {
+	void deleteTestCheckSpaceRemove() {
 		//Given
 		Long spaceId = space.getId();
 		
@@ -100,7 +100,7 @@ public class SpaceServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Space 삭제 -> 정상, 관련 Content 삭제 확인")
-	public void deleteTestCheckContentsRemove() {
+	void deleteTestCheckContentsRemove() {
 		//Given
 		int newContentsNum = 10;
 		addNewContentsForSpace(newContentsNum);

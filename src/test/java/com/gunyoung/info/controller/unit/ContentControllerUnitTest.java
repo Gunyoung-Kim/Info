@@ -43,7 +43,7 @@ import com.gunyoung.info.util.SpaceTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ContentControllerUnitTest {
+class ContentControllerUnitTest {
 	
 	@Mock
 	PersonService personService;
@@ -75,12 +75,12 @@ public class ContentControllerUnitTest {
 	
 	
 	/*
-	 * public ModelAndView createMyContentView()
+	 * ModelAndView createMyContentView()
 	 */
 	
 	@Test
 	@DisplayName("세션 유저의 포트폴리오에 프로젝트 추가화면으로 리다이렉트 -> Session 에 저장된 email의 Person 없을 때")
-	public void createMyContentViewTestPersonNonExist() {
+	void createMyContentViewTestPersonNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		mockingAuthorityutilGetSessionUserEmail(nonExistEmail);
@@ -95,7 +95,7 @@ public class ContentControllerUnitTest {
 	
 	@Test
 	@DisplayName("세션 유저의 포트폴리오에 프로젝트 추가화면으로 리다이렉트 -> 정상")
-	public void createMyContentViewTestCheckMav() {
+	void createMyContentViewTestCheckMav() {
 		//Given
 		String loginUserEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginUserEmail);
@@ -111,12 +111,12 @@ public class ContentControllerUnitTest {
 	
 	
 	/*
-	 * public ModelAndView createContentView(@PathVariable Long personId,@ModelAttribute("formModel") Content content, ModelAndView mav)
+	 * ModelAndView createContentView(@PathVariable Long personId,@ModelAttribute("formModel") Content content, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("유저의 포트폴리오에 프로젝트 추가하는 페이지 반환 -> 해당 이메일의 유저가 없으면")
-	public void createContentViewTestPersonNonExist() {
+	void createContentViewTestPersonNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		mockingAuthorityutilGetSessionUserEmail(nonExistEmail);
@@ -132,7 +132,7 @@ public class ContentControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저의 포트폴리오에 프로젝트 추가하는 페이지 반환 -> 로그인된 계정과 일치하지 않으면")
-	public void createContentViewTestNotMyResource() {
+	void createContentViewTestNotMyResource() {
 		//Given
 		String loginUserEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginUserEmail);
@@ -148,7 +148,7 @@ public class ContentControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저의 포트폴리오에 프로젝트 추가하는 페이지 반환 -> 개인에게 할당 된 최대 프로젝트 수 초과 시")
-	public void createContentViewTestContentLimitExceeded() {
+	void createContentViewTestContentLimitExceeded() {
 		//Given
 		String loginUserEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginUserEmail);
@@ -169,7 +169,7 @@ public class ContentControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저의 포트폴리오에 프로젝트 추가하는 페이지 반환 -> 정상, ModelAndView check")
-	public void createContentViewTestCheckMav() {
+	void createContentViewTestCheckMav() {
 		//Given
 		String loginUserEmail = "test@test.com";
 		mockingAuthorityutilGetSessionUserEmail(loginUserEmail);
@@ -200,12 +200,12 @@ public class ContentControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView updateContentView(@PathVariable Long contentId, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
+	 * ModelAndView updateContentView(@PathVariable Long contentId, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("url에 입력된 id에 해당하는 콘텐츠의 정보 수정을 가능케하는 페이지 반환 -> 입력된 id에 해당하는 content가 DB 테이블에 없을때")
-	public void updateContentViewTestContentNonExist() {
+	void updateContentViewTestContentNonExist() {
 		//Given
 		Long nonExistContentId = Long.valueOf(63);
 		given(contentService.findByIdWithSpaceAndPerson(nonExistContentId)).willReturn(null);
@@ -219,7 +219,7 @@ public class ContentControllerUnitTest {
 	
 	@Test
 	@DisplayName("url에 입력된 id에 해당하는 콘텐츠의 정보 수정을 가능케하는 페이지 반환 ->  현재 로그인 유저 != 해당 프로젝트 작성자")
-	public void updateContentViewTestNotMyResource() {
+	void updateContentViewTestNotMyResource() {
 		//Given
 		Long contentId = Long.valueOf(53);
 		Content content = mockingContentServiceFindByIdWithSpaceAndPerson(contentId);
@@ -241,7 +241,7 @@ public class ContentControllerUnitTest {
 	
 	@Test
 	@DisplayName("url에 입력된 id에 해당하는 콘텐츠의 정보 수정을 가능케하는 페이지 반환 ->  정상, ModelAndView check")
-	public void updateContentViewTestCheckMav() {
+	void updateContentViewTestCheckMav() {
 		//Given
 		Long contentId = Long.valueOf(53);
 		Content content = mockingContentServiceFindByIdWithSpaceAndPerson(contentId);

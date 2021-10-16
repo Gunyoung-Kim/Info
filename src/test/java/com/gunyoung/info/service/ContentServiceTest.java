@@ -33,7 +33,7 @@ import com.gunyoung.info.util.SpaceTest;
  */
 @Integration
 @SpringBootTest
-public class ContentServiceTest {
+class ContentServiceTest {
 	
 	@Autowired
 	ContentService contentService;
@@ -64,12 +64,12 @@ public class ContentServiceTest {
 	
 	/*
 	 *  - 대상 메소드:
-	 *  	public Content save(Content content);
+	 *  	Content save(Content content);
 	 */
 	
 	@Test
 	@DisplayName("Content Save (성공, 생성)") 
-	public void addContentTest() {
+	void addContentTest() {
 		//Given
 		long givenContentNum = contentRepository.count();
 		String newContentTitle = "new title";
@@ -84,7 +84,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Content Save (성공, 수정, 개수 변하지 않음 확인)") 
-	public void modifyContentTestCount() {
+	void modifyContentTestCount() {
 		//Given
 		long givenContentNum = contentRepository.count();
 		String changeTitle = "changed Title";
@@ -100,7 +100,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Content Save (성공, 수정, 변경 반영 확인)") 
-	public void modifyContentTestNewTitle() {
+	void modifyContentTestNewTitle() {
 		//Given
 		String changeTitle = "changed Title";
 		content.setTitle(changeTitle);
@@ -116,12 +116,12 @@ public class ContentServiceTest {
 	
 	/*
 	 *  - 대상 메소드:
-	 *  	public void deleteContent(Content content);
+	 *  	void deleteContent(Content content);
 	 */
 	
 	@Test
 	@DisplayName("Content Delete (실패 - 존재하지 않음)")
-	public void deleteContentNonExist() {
+	void deleteContentNonExist() {
 		//Given
 		long givenContentNum = contentRepository.count();
 		Content nonExistContentInDB = ContentTest.getContentInstance("not in db");
@@ -135,7 +135,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Content Delete (성공), Content 삭제 확인")
-	public void deleteContentTestCheckContentRemove() {
+	void deleteContentTestCheckContentRemove() {
 		//Given
 		Long contentId = content.getId();
 		
@@ -148,7 +148,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Content Delete (성공), 관련 Link들 삭제")
-	public void deleteContentTestCheckLinksRemove() {
+	void deleteContentTestCheckLinksRemove() {
 		//Given
 		int numOfLinksForContent = 8;
 		setLinksForContent(content, numOfLinksForContent);
@@ -164,12 +164,12 @@ public class ContentServiceTest {
 	
 	/*
 	 *  - 대상 메소드:
-	 *  	public void deleteContentById(Long id);
+	 *  	void deleteContentById(Long id);
 	 */
 	
 	@Test
 	@DisplayName("Content Delete By Id (실패- 존재하지 않음)")
-	public void deleteContentByIdNonExist() {
+	void deleteContentByIdNonExist() {
 		//Given
 		long givenContentNum = contentRepository.count();
 		Long nonExistContentId = ContentTest.getNonExistContentId(contentRepository);
@@ -183,7 +183,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Content Delete By Id (성공), Check Content Remove")
-	public void deleteContentByIdTestCheckContentRemove() {
+	void deleteContentByIdTestCheckContentRemove() {
 		//Given
 		Long contentId = content.getId();
 		
@@ -196,7 +196,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Content Delete By Id (성공), Check Links Remove")
-	public void deleteContentByIdTestCheckLinksRemove() {
+	void deleteContentByIdTestCheckLinksRemove() {
 		//Given
 		int numOfLinksForContent = 8;
 		setLinksForContent(content, numOfLinksForContent);
@@ -211,12 +211,12 @@ public class ContentServiceTest {
 	}
 	
 	/*
-	 * public void deleteAllBySpaceId(Long spaceId)
+	 * void deleteAllBySpaceId(Long spaceId)
 	 */
 	
 	@Test
 	@DisplayName("Space ID로 Content들 삭제 -> 정상, Check Contents Remove")
-	public void deleteAllBySpaceIdTestCheckContentsRemove() {
+	void deleteAllBySpaceIdTestCheckContentsRemove() {
 		//Given
 		int newContentsNum = 9;
 		addNewContents(newContentsNum);
@@ -234,7 +234,7 @@ public class ContentServiceTest {
 	
 	@Test
 	@DisplayName("Space ID로 Content들 삭제 -> 정상, Check Links Remove")
-	public void deleteAllBySpaceIdTestCheckLinksRemove() {
+	void deleteAllBySpaceIdTestCheckLinksRemove() {
 		//Given
 		int newContentsNum = 3;
 		addNewContents(newContentsNum);

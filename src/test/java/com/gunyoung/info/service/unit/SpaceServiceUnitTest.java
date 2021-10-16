@@ -34,7 +34,7 @@ import com.gunyoung.info.services.domain.SpaceServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class SpaceServiceUnitTest {
+class SpaceServiceUnitTest {
 	
 	@Mock
 	SpaceRepository spaceRepository;
@@ -54,12 +54,12 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public Space findById(Long id)
+	 * Space findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Space 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -74,7 +74,7 @@ public class SpaceServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Space 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long spaceId = Long.valueOf(1);
 		
@@ -88,12 +88,12 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Space> findAll()
+	 * List<Space> findAll()
 	 */
 	
 	@Test
 	@DisplayName("모든 Space 찾기 -> 정상")
-	public void findAllTest() {
+	void findAllTest() {
 		//Given
 		List<Space> spaces = new ArrayList<>();
 		
@@ -107,12 +107,12 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public Space save(Space space)
+	 * Space save(Space space)
 	 */
 	
 	@Test
 	@DisplayName("Space 생성 및 수정 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(spaceRepository.save(space)).willReturn(space);
 		
@@ -124,12 +124,12 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(Space space) 
+	 * void delete(Space space) 
 	 */
 	
 	@Test
 	@DisplayName("Space 삭제 -> space null")
-	public void deleteTestSpaceNull() {
+	void deleteTestSpaceNull() {
 		//Given
 		
 		//When, Then
@@ -140,7 +140,7 @@ public class SpaceServiceUnitTest {
 	
 	@Test
 	@DisplayName("Space 삭제 -> 정상")
-	public void deleteByPersonIdTest() {
+	void deleteByPersonIdTest() {
 		//Given
 		Long spaceId = Long.valueOf(25);
 		space.setId(spaceId);
@@ -154,12 +154,12 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public boolean existsById(Long id)
+	 * boolean existsById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Space 존재 여부 반환 -> true")
-	public void existsByIdTrueTest() {
+	void existsByIdTrueTest() {
 		//Given
 		Long existId = Long.valueOf(1);
 		boolean isExist = true;
@@ -175,7 +175,7 @@ public class SpaceServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Space 존재 여부 반환 -> false")
-	public void existsByIdFalseTest() {
+	void existsByIdFalseTest() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		boolean isExist = false;
@@ -190,12 +190,12 @@ public class SpaceServiceUnitTest {
 	}
 	
 	/*
-	 * public void addContent(Space space, Content content);
+	 * void addContent(Space space, Content content);
 	 */
 	
 	@Test
 	@DisplayName("Space의 Contents에 Content 추가 -> 정상")
-	public void addContentTest() {
+	void addContentTest() {
 		//Given
 		Content content = new Content();
 		

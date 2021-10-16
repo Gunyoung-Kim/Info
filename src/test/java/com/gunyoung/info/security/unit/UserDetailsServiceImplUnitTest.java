@@ -27,7 +27,7 @@ import com.gunyoung.info.util.PersonTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserDetailsServiceImplUnitTest {
+class UserDetailsServiceImplUnitTest {
 	
 	@InjectMocks
 	UserDetailsServiceImpl userDetailsService;
@@ -36,12 +36,12 @@ public class UserDetailsServiceImplUnitTest {
 	PersonService personService;
 	
 	/**
-	 *   public UserDetails loadPersonByPersonname(String email) throws PersonnameNotFoundException
+	 *   UserDetails loadPersonByPersonname(String email) throws PersonnameNotFoundException
 	 */
 	
 	@Test
 	@DisplayName("DB에서 가져온 Person 정보로 UserDetails 반환 -> Personservice에서 가져온 Person가 없을 때")
-	public void loadPersonByPersonnameNonExist() {
+	void loadPersonByPersonnameNonExist() {
 		//Given
 		String nonExistEmail = "nonExist@test.com";
 		given(personService.findByEmail(nonExistEmail)).willReturn(null);
@@ -54,7 +54,7 @@ public class UserDetailsServiceImplUnitTest {
 	
 	@Test
 	@DisplayName("관리자 권한의 UserDetails 반환 -> 정상")
-	public void loadPersonByPersonnameForAdminTest() {
+	void loadPersonByPersonnameForAdminTest() {
 		//Given
 		String adminEmail = "admin@test.com";
 		Person person = PersonTest.getPersonInstance(adminEmail,RoleType.ADMIN);
@@ -72,7 +72,7 @@ public class UserDetailsServiceImplUnitTest {
 	
 	@Test
 	@DisplayName("일반 유저 권한의 PersonDetials 반환 -> 정상")
-	public void loadPersonByPersonnameForPersonTest() {
+	void loadPersonByPersonnameForPersonTest() {
 		//Given
 		String personEmail ="person@test.com";
 		Person person = PersonTest.getPersonInstance(personEmail,RoleType.USER);

@@ -22,7 +22,7 @@ import com.gunyoung.info.testutil.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PrivacyControllerTest {
+class PrivacyControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -30,11 +30,11 @@ public class PrivacyControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/privacypolicy/{version}", method = RequestMethod.GET)
-	 *		public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav)
+	 *		ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav)
 	 */
 	@Test
 	@DisplayName("개인정보 처리방침 페이지 with 버전 (실패- 해당 버전의 개인정보 처리방침이 존재하지 않을 때)")
-	public void privacyPolicyWithVersionNoVersion() throws Exception {
+	void privacyPolicyWithVersionNoVersion() throws Exception {
 		//Given
 		int nonExistVersion = PrivacyController.LATEST_POLICY_VERSION + 10;
 		

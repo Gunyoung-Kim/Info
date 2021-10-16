@@ -26,7 +26,7 @@ import com.gunyoung.info.util.PersonTest;
  */
 @Integration
 @SpringBootTest
-public class PersonServiceTest {
+class PersonServiceTest {
 	
 	@Autowired
 	PersonRepository personRepository;
@@ -54,12 +54,12 @@ public class PersonServiceTest {
 	
 	/*
 	 *  - 대상 메소드: 
-	 *  	public Person save(Person person);
+	 *  	Person save(Person person);
 	 */
 	
 	@Test
 	@DisplayName("Person save (성공, 수정, 버전 변경 확인)")
-	public void modifyPersonTestCheckVersion() {
+	void modifyPersonTestCheckVersion() {
 		//Given
 		String changedFirstName = "변경";
 		person.setFirstName(changedFirstName);
@@ -76,7 +76,7 @@ public class PersonServiceTest {
 	
 	@Test
 	@DisplayName("Person save (성공, 수정, 개수 동일 확인)")
-	public void modifyPersonTestCheckCount() {
+	void modifyPersonTestCheckCount() {
 		//Given
 		long givenPersonNum = personRepository.count();
 		
@@ -92,7 +92,7 @@ public class PersonServiceTest {
 	
 	@Test
 	@DisplayName("Person save (성공, 수정, 변경 사항 적용 확인)")
-	public void modifyPersonTestCheckChanged() {
+	void modifyPersonTestCheckChanged() {
 		//Given
 		String changedFirstName = "변경";
 		person.setFirstName(changedFirstName);
@@ -108,7 +108,7 @@ public class PersonServiceTest {
 	
 	@Test
 	@DisplayName("Person save (성공, 추가)")
-	public void addPersonTestCheckNum() {
+	void addPersonTestCheckNum() {
 		//Given
 		long givenPersonNum = personRepository.count();
 		
@@ -123,12 +123,12 @@ public class PersonServiceTest {
 	
 	/*
 	 *  - 대상 메소드: 
-	 *  	public void deletePerson(Person person);
+	 *  	void deletePerson(Person person);
 	 */
 	
 	@Test
 	@DisplayName("Person Delete (실패- 해당 Person 없음)")
-	public void deletePersonNonExist() {
+	void deletePersonNonExist() {
 		//Given
 		long givenPersonNum = personRepository.count();
 		Person nonExistInDBPerson = PersonTest.getPersonInstance("newperson@test.com");
@@ -142,7 +142,7 @@ public class PersonServiceTest {
 	
 	@Test
 	@DisplayName("Person Delete (성공), Person 삭제 확인")
-	public void deletePersonTest() {
+	void deletePersonTest() {
 		//Given
 		long givenPersonNum = personRepository.count();
 	
@@ -155,7 +155,7 @@ public class PersonServiceTest {
 	
 	@Test
 	@DisplayName("Person Delete (성공), Space 삭제 확인")
-	public void deletePersonTestCheckSpaceRemove() {
+	void deletePersonTestCheckSpaceRemove() {
 		//Given
 		Space spaceForPerson = person.getSpace();
 		Long spaceId = spaceForPerson.getId();

@@ -33,7 +33,7 @@ import com.gunyoung.info.util.LinkTest;
  */
 @Integration
 @SpringBootTest
-public class LinkServiceTest {
+class LinkServiceTest {
 	
 	@Autowired
 	LinkRepository linkRepository;
@@ -58,12 +58,12 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public Link findById(Long id)
+	 * Link findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Link 찾기 -> 존재하지 않음")
-	public void findByIdTestNonExist() {
+	void findByIdTestNonExist() {
 		//Given
 		Long nonExistId = LinkTest.getNonExistLinkId(linkRepository);
 		
@@ -76,7 +76,7 @@ public class LinkServiceTest {
 	
 	@Test
 	@DisplayName("ID로 Link 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long linkId = link.getId();
 		
@@ -88,13 +88,13 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public List<Link> findAllByContentId(Long contentId)
+	 * List<Link> findAllByContentId(Long contentId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Content Id를 만족하는 모든 Link 반환 -> 정상")
-	public void findAllByContentIdTest() {
+	void findAllByContentIdTest() {
 		//Given
 		int newLinkNum = 10;
 		addNewLinks(newLinkNum);
@@ -121,12 +121,12 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public Link save(Link link)
+	 * Link save(Link link)
 	 */
 	
 	@Test
 	@DisplayName("Link 생성 및 수정 -> 수정, link url 수정") 
-	public void saveTestModifyURL() {
+	void saveTestModifyURL() {
 		//Given
 		String changeURL = "https://change.com";
 		link.setUrl(changeURL);
@@ -142,7 +142,7 @@ public class LinkServiceTest {
 	
 	@Test
 	@DisplayName("Link 생성 및 수정 -> 새로운 Link 추가")
-	public void saveTestAddNewLink() {
+	void saveTestAddNewLink() {
 		//Given
 		Link newLink = LinkTest.getLinkInstance();
 		
@@ -156,13 +156,13 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
+	 * List<Link> updateLinksForContent(Content content, Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 정상, Content의 기존 Link 삭제확인")
-	public void updateLinksForContentTestCheckDeleteLink() {
+	void updateLinksForContentTestCheckDeleteLink() {
 		//Given
 		Content content = getContentForLink();
 		
@@ -179,7 +179,7 @@ public class LinkServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 정상, 기존의 Link 변경, URL 변경")
-	public void updateLinksForContentModifyLink() {
+	void updateLinksForContentModifyLink() {
 		//Given
 		String changeURL = "https://change.com";
 		Content content = getContentForLink();
@@ -205,7 +205,7 @@ public class LinkServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 정상, 새로운 Link 추가")
-	public void updateLinksForContentTestAddLink() {
+	void updateLinksForContentTestAddLink() {
 		//Given
 		Content content = getContentForLink();
 		String newLinkTag = "newTag";
@@ -239,12 +239,12 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public List<Link> saveAll(Iterable<Link> links)
+	 * List<Link> saveAll(Iterable<Link> links)
 	 */
 	
 	@Test
 	@DisplayName("모든 Link들 저장 -> 정상")
-	public void saveAllTest() {
+	void saveAllTest() {
 		//Given
 		long beforeLinkNum = linkRepository.count();
 		long newLinksNum = 6;
@@ -267,12 +267,12 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public void delete(Link link)
+	 * void delete(Link link)
 	 */
 	
 	@Test
 	@DisplayName("Link 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		Long deleteLinkId = link.getId();
 		
@@ -284,12 +284,12 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public void deleteById(Long id);
+	 * void deleteById(Long id);
 	 */
 	
 	@Test
 	@DisplayName("ID로 Link 삭제 -> 정상")
-	public void deleteByIdTest() {
+	void deleteByIdTest() {
 		//Given
 		Long deleteLinkId = link.getId();
 		
@@ -301,12 +301,12 @@ public class LinkServiceTest {
 	}
 	
 	/*
-	 * public void deleteAllByContentId(Long contentId)
+	 * void deleteAllByContentId(Long contentId)
 	 */
 	
 	@Test
 	@DisplayName("Content ID로 Link들 삭제 -> 정상")
-	public void deleteAllByContentIdTest() {
+	void deleteAllByContentIdTest() {
 		//Given
 		int newLinkNum = 10;
 		addNewLinks(newLinkNum);
