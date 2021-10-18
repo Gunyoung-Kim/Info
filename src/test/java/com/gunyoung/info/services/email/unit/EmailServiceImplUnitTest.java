@@ -8,8 +8,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -79,8 +77,8 @@ class EmailServiceImplUnitTest {
 	
 	@Test
 	@DisplayName("EmailDTO에 담긴 정보를 통해 email 전송 -> InternetAddress 객체 생성 과정에서 예외 발생")
-	void sendEmailUnsupportedEncodingException() throws UnsupportedEncodingException, MessagingException {
-		// to-do
+	void sendEmailUnsupportedEncodingException(){
+		// to -do
 	}
 	
 	@Test

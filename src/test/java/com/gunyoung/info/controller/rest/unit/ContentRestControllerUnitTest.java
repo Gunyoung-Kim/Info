@@ -124,9 +124,11 @@ class ContentRestControllerUnitTest {
 			loginPerson.getSpace().getContents().add(content);
 		}
 		
+		Long loginPersonId = loginPerson.getId();
+		
 		//When, Then
 		assertThrows(ContentNumLimitExceedException.class, () -> {
-			contentRestController.createContent(loginPerson.getId(), contentDTO);
+			contentRestController.createContent(loginPersonId, contentDTO);
 		});
 	}
 	
