@@ -1,9 +1,6 @@
 package com.gunyoung.info.services.email;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -18,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service("emailService")
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 	
 	private static final String CHAR_SET_FOR_MESSAGE = "utf-8";
 
@@ -40,11 +37,9 @@ public class EmailServiceImpl implements EmailService{
 			msg.setText(email.getMessage(), CHAR_SET_FOR_MESSAGE);
 			mailSender.send(msg);
 			logger.info("Email Send for {} to {} ", email.getSubject(), email.getReceiveMail());
-		} catch(MessagingException e) {
-			logger.debug("MessagingException occurred while setting MimeMessage", e);
-		} catch (UnsupportedEncodingException e) {
-			logger.debug("UnsupportedEncodingException occurred while creating InternetAddress", e);
-		}	
+		} catch(Exception e) {
+			logger.debug("Exception occured while sending email", e);
+		}
 	}
 }
 

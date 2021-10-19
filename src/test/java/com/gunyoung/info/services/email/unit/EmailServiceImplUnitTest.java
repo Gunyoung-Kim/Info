@@ -76,12 +76,6 @@ class EmailServiceImplUnitTest {
 	}
 	
 	@Test
-	@DisplayName("EmailDTO에 담긴 정보를 통해 email 전송 -> InternetAddress 객체 생성 과정에서 예외 발생")
-	void sendEmailUnsupportedEncodingException(){
-		// to -do
-	}
-	
-	@Test
 	@DisplayName("EmailDTO에 담긴 정보를 통해 email 전송 -> 정상, mailSender check")
 	void sendEmailTestCheckMailSender() {
 		//Given
