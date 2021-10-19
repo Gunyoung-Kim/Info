@@ -32,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.info.controller.PersonController;
 import com.gunyoung.info.controller.util.ModelAndPageView;
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.JoinDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
 import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
@@ -187,13 +188,13 @@ class PersonControllerUnitTest {
 	@DisplayName("회원 가입 뷰를 반환 -> 정상")
 	void joinViewTestCheckMav() {
 		//Given
-		Person person = PersonTest.getPersonInstance();
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance();
 		
 		//When
-		personController.joinView(person, mav);
+		personController.joinView(joinDTO, mav);
 		
 		//Then
-		then(mav).should(times(1)).addObject("formModel", person);
+		then(mav).should(times(1)).addObject("formModel", joinDTO);
 		then(mav).should(times(1)).setViewName("join");
 	}
 	
@@ -208,10 +209,10 @@ class PersonControllerUnitTest {
 		String exsitEmail = "exist@test.com";
 		mockingPersonServiceExistByEmail(exsitEmail, true);
 		
-		Person person = PersonTest.getPersonInstance(exsitEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(exsitEmail);
 		//When, Then
 		assertThrows(PersonDuplicateException.class, () -> {
-			personController.join(person);
+			personController.join(joinDTO);
 		});
 	}
 	
@@ -221,16 +222,16 @@ class PersonControllerUnitTest {
 		//Given
 		String personEmail = "test@test.com";
 		mockingPersonServiceExistByEmail(personEmail, false);
-		Person person = PersonTest.getPersonInstance(personEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(personEmail);
 		
 		String encodedPassword = "245trgd4635";
-		given(passwordEncoder.encode(person.getPassword())).willReturn(encodedPassword);
+		given(passwordEncoder.encode(joinDTO.getPassword())).willReturn(encodedPassword);
 		
 		//When
-		personController.join(person);
+		personController.join(joinDTO);
 		
 		//Then
-		assertEquals(encodedPassword, person.getPassword());
+		assertEquals(encodedPassword, joinDTO.getPassword());
 	}
 	
 	@Test
@@ -239,13 +240,13 @@ class PersonControllerUnitTest {
 		//Given
 		String personEmail = "test@test.com";
 		mockingPersonServiceExistByEmail(personEmail, false);
-		Person person = PersonTest.getPersonInstance(personEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(personEmail);
 		
 		//When
-		personController.join(person);
+		personController.join(joinDTO);
 		
 		//Then
-		then(personService).should(times(1)).save(person);
+		then(personService).should(times(1)).save(any(Person.class));
 	}
 	
 	@Test
@@ -254,10 +255,10 @@ class PersonControllerUnitTest {
 		//Given
 		String personEmail = "test@test.com";
 		mockingPersonServiceExistByEmail(personEmail, false);
-		Person person = PersonTest.getPersonInstance(personEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(personEmail);
 		
 		//When
-		ModelAndView result = personController.join(person);
+		ModelAndView result = personController.join(joinDTO);
 		
 		//Then
 		assertEquals("redirect:/", result.getViewName());

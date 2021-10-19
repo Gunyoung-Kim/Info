@@ -3,6 +3,7 @@ package com.gunyoung.info.util;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.JoinDTO;
 import com.gunyoung.info.dto.ProfileDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.enums.RoleType;
@@ -45,9 +46,10 @@ public class PersonTest {
 	/**
 	 * 테스트 용 {@link ProfileDTO} 인스턴스 반환
 	 * email 커스터마이징 가능
+	 * @author kimgun-yeong
 	 */
 	public static ProfileDTO getProfileDTOInstance(String email) {
-		ProfileDTO profileDTO = ProfileDTO.builder()
+		return ProfileDTO.builder()
 				.email(email)
 				.firstName("firstPro")
 				.lastName("lastPro")
@@ -57,8 +59,28 @@ public class PersonTest {
 				.tweeter("tweeterPro")
 				.facebook("facebookPro")
 				.build();
-		
-		return profileDTO;
+	}
+	
+	/**
+	 * 테스트 용 {@link JoinDTO} 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static JoinDTO getJoinDTOInstance() {
+		return getJoinDTOInstance(DEFAULT_PERSON_EMAIL);
+	}
+	
+	/**
+	 * 테스트 용 {@link JoinDTO} 인스턴스 반환 <br>
+	 * email 커스터마이징 가능  
+	 * @author kimgun-yeong
+	 */
+	public static JoinDTO getJoinDTOInstance(String email) {
+		return JoinDTO.builder()
+				.email(email)
+				.password("abcd1234")
+				.firstName("스트")
+				.lastName("테")
+				.build();
 	}
 	
 	/**
@@ -81,7 +103,6 @@ public class PersonTest {
 				.firstName("first")
 				.lastName("last")
 				.build();
-		
 		return oAuth2Join;
 	}
 	
@@ -91,14 +112,13 @@ public class PersonTest {
 	 * @author kimgun-yeong
 	 */
 	public static Person getPersonInstance(String email, RoleType role) {
-		Person person = Person.builder()
+		return Person.builder()
 				.email(email)
 				.password("abcd1234")
 				.firstName("스트")
 				.lastName("테")
 				.role(role)
 				.build();
-		return person;
 	}
 	
 	/**
@@ -107,11 +127,9 @@ public class PersonTest {
 	 */
 	public static Long getNonExistPersonId(JpaRepository<Person, Long> repository) {
 		Long nonExistPersonId = Long.valueOf(1);
-		
 		for(Person p : repository.findAll()) {
 			nonExistPersonId = Math.max(nonExistPersonId, p.getId());
 		}
-		
 		nonExistPersonId++;
 		
 		return nonExistPersonId;
