@@ -36,7 +36,7 @@ import com.gunyoung.info.util.PersonTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class PersonServiceUnitTest {
+class PersonServiceUnitTest {
 	
 	@Mock
 	PersonRepository personRepository;
@@ -55,12 +55,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findById(Long id)
+	 * Content findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Person 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -75,7 +75,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Person 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long personId = Long.valueOf(1);
 		
@@ -89,12 +89,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Person findByIdWithSpace(Long id)
+	 * Person findByIdWithSpace(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Person 찾기 -> 존재하지 않음")
-	public void findByIdWithSpaceTestNonExist() {
+	void findByIdWithSpaceTestNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(83);
 		
@@ -109,7 +109,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Person 찾기 -> 정상")
-	public void findByIdWithSpaceTest() {
+	void findByIdWithSpaceTest() {
 		//Given
 		Long personId = Long.valueOf(24);
 		
@@ -123,12 +123,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findByEmail(Long id)
+	 * Content findByEmail(Long id)
 	 */
 	
 	@Test
 	@DisplayName("Email로 Person 찾기 -> 존재하지 않음")
-	public void findByEmailNonExist() {
+	void findByEmailNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		
@@ -143,7 +143,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("Email로 Person 찾기 -> 정상")
-	public void findByEmailTest() {
+	void findByEmailTest() {
 		//Given
 		String personEmail = "test@test.com";
 		
@@ -157,12 +157,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findByEmailWithSpace(Long id)
+	 * Content findByEmailWithSpace(Long id)
 	 */
 	
 	@Test
 	@DisplayName("Email로 Person 찾기, Space 페치 조인 -> 존재하지 않음")
-	public void findByEmailWithSpaceNonExist() {
+	void findByEmailWithSpaceNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		
@@ -177,7 +177,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("Email로 Person 찾기, Space 페치 조인 -> 정상")
-	public void findByEmailWithSpaceTest() {
+	void findByEmailWithSpaceTest() {
 		//Given
 		String personEmail = "test@test.com";
 		
@@ -191,12 +191,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findByEmailWithSpaceAndContents(Long id)
+	 * Content findByEmailWithSpaceAndContents(Long id)
 	 */
 	
 	@Test
 	@DisplayName("Email로 Person 찾기, Space, Contents 페치 조인 -> 존재하지 않음")
-	public void findByEmailWithSpaceAndContentsNonExist() {
+	void findByEmailWithSpaceAndContentsNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		
@@ -211,7 +211,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("Email로 Person 찾기, Space, Contents 페치 조인 -> 정상")
-	public void findByEmailWithSpaceAndContentsTest() {
+	void findByEmailWithSpaceAndContentsTest() {
 		//Given
 		String personEmail = "test@test.com";
 		
@@ -225,12 +225,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findByIdWithSpaceAndContents(Long id)
+	 * Content findByIdWithSpaceAndContents(Long id)
 	 */
 	
 	@Test
 	@DisplayName("Id로 Person 찾기, Space, Contents 페치 조인 -> 존재하지 않음")
-	public void findByIdWithSpaceAndContentsNonExist() {
+	void findByIdWithSpaceAndContentsNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -245,7 +245,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("Id로 Person 찾기, Space, Contents 페치 조인 -> 정상")
-	public void findByIdWithSpaceAndContentsTest() {
+	void findByIdWithSpaceAndContentsTest() {
 		//Given
 		Long personId = Long.valueOf(1);
 		
@@ -259,12 +259,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Person> findAll()
+	 * List<Person> findAll()
 	 */
 	
 	@Test
 	@DisplayName("모든 Person 찾기 -> 정상")
-	public void findAllTest() {
+	void findAllTest() {
 		//Given
 		List<Person> people = new ArrayList<>();
 		
@@ -278,12 +278,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Person> findAllOrderByCreatedAtDesc()
+	 * List<Person> findAllOrderByCreatedAtDesc()
 	 */
 	
 	@Test
 	@DisplayName("모든 Person 찾기, 생성 오래된순으로 정렬 -> 정상")
-	public void findAllOrderByCreatedAtDescTest() {
+	void findAllOrderByCreatedAtDescTest() {
 		//Given
 		List<Person> people = new ArrayList<>();
 		
@@ -297,12 +297,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Person> findAllInPage(Integer pageNumber)
+	 * Page<Person> findAllInPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@DisplayName("모든 Person 페이지 반환 -> 정상")
-	public void findAllInPageTest() {
+	void findAllInPageTest() {
 		//Given
 		int pageNum = 1;
 		
@@ -314,12 +314,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Person> findAllOrderByCreatedAtDescInPage(Integer pageNumber)
+	 * Page<Person> findAllOrderByCreatedAtDescInPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@DisplayName("모든 Person 페이지 반환, 생성 오래된 순으로 정렬 -> 정상")
-	public void findAllOrderByCreatedAtDescInPageTest() {
+	void findAllOrderByCreatedAtDescInPageTest() {
 		//Given
 		int pageNum = 1;
 		
@@ -331,12 +331,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Person> findAllOrderByCreatedAtAscInPage(Integer pageNumber)
+	 * Page<Person> findAllOrderByCreatedAtAscInPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@DisplayName("모든 Person 페이지 반환, 생성 최신 순으로 정렬 -> 정상")
-	public void findAllOrderByCreatedAtAscInPageTest() {
+	void findAllOrderByCreatedAtAscInPageTest() {
 		//Given
 		int pageNum = 1;
 		
@@ -348,12 +348,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Person> findByNameKeywordInPage(Integer pageNumber)
+	 * Page<Person> findByNameKeywordInPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@DisplayName("이름 검색 키워드 만족하는 모든 Person 페이지 반환 -> 정상")
-	public void findByNameKeywordInPageTest() {
+	void findByNameKeywordInPageTest() {
 		//Given
 		int pageNum = 1;
 		String keyword = "keyword";
@@ -366,12 +366,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public Person save(Person person)
+	 * Person save(Person person)
 	 */
 	
 	@Test
 	@DisplayName("Person 생성 및 수정 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(personRepository.save(person)).willReturn(person);
 		
@@ -383,12 +383,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 *  public void delete(Person person)
+	 *  void delete(Person person)
 	 */
 	
 	@Test
 	@DisplayName("Person 삭제 -> 정상, check person Repo")
-	public void deleteTestCheckPersonRepo() {
+	void deleteTestCheckPersonRepo() {
 		//Given
 		
 		//When
@@ -400,7 +400,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("Person 삭제 -> 정상, check spaceService")
-	public void deleteTestCheckSpaceService() {
+	void deleteTestCheckSpaceService() {
 		//Given
 		Long personId = Long.valueOf(73);
 		person.setId(personId);
@@ -415,12 +415,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public boolean existsByEmail(String email)
+	 * boolean existsByEmail(String email)
 	 */
 	
 	@Test
 	@DisplayName("Email로 Person 존재 여부 반환 -> true")
-	public void existsByEmailTrueTest() {
+	void existsByEmailTrueTest() {
 		//Given
 		String existEmail = "test@test.com";
 		boolean isExist = true;
@@ -436,7 +436,7 @@ public class PersonServiceUnitTest {
 	
 	@Test
 	@DisplayName("Email로 Person 존재 여부 반환 -> false")
-	public void existsByEmailFalseTest() {
+	void existsByEmailFalseTest() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		boolean isExist = false;
@@ -451,12 +451,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public long countAll()
+	 * long countAll()
 	 */
 	
 	@Test
 	@DisplayName("모든 Person 개수 세기 -> 정상")
-	public void countAllTest() {
+	void countAllTest() {
 		//Given
 		long num = 1;
 		
@@ -470,12 +470,12 @@ public class PersonServiceUnitTest {
 	}
 	
 	/*
-	 * public long countWithNameKeyword(String keyword)
+	 * long countWithNameKeyword(String keyword)
 	 */
 	
 	@Test
 	@DisplayName("이름 키워드를 만족하는 모든 Person 개수 반환 -> 정상")
-	public void countWithNameKeywordTest() {
+	void countWithNameKeywordTest() {
 		//Given
 		String keyword = "keyword";
 		long num = 1;

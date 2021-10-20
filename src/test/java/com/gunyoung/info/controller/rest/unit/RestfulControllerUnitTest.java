@@ -27,7 +27,7 @@ import com.gunyoung.info.util.PersonTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class RestfulControllerUnitTest {
+class RestfulControllerUnitTest {
 	
 	@Mock
 	PersonService personService;
@@ -36,12 +36,12 @@ public class RestfulControllerUnitTest {
 	RestfulController restfulController;
 	
 	/*
-	 * public List<MainListDTO> index() 
+	 * List<MainListDTO> index() 
 	 */
 	
 	@Test
 	@DisplayName("main 화면에서 노출할 리스트를 반환 -> 정상")
-	public void indexTest() {
+	void indexTest() {
 		//Given
 		Long givenPersonNum = Long.valueOf(15);
 		List<Person> givenPeople = new ArrayList<>();

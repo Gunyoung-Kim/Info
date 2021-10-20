@@ -17,15 +17,15 @@ import com.gunyoung.info.util.SpaceTest;
  * @author kimgun-yeong
  *
  */
-public class ProfileDTOUnitTest {
+class ProfileDTOUnitTest {
 	
 	/*
-	 * public void updatePersonAndSpace(Person person, Space space)
+	 * void updatePersonAndSpace(Person person, Space space)
 	 */
 	
 	@Test
 	@DisplayName("ProfileDTO에 담긴 정보로 Person, Space 정보 업데이트-> 정상, 필드 확인")
-	public void updatePersonAndSpaceTestCheckField() {
+	void updatePersonAndSpaceTestCheckField() {
 		//Given
 		Person person = Person.builder().build();
 		Space space = Space.builder().build();
@@ -54,12 +54,12 @@ public class ProfileDTOUnitTest {
 	}
 	
 	/*
-	 * public static ProfileDTO createFromPersonAndSpace(Person person, Space space)
+	 * static ProfileDTO createFromPersonAndSpace(Person person, Space space)
 	 */
 	
 	@Test
 	@DisplayName("Person, Space 를 통해 ProfileDTO 생성 후 반환 -> 정상, Field Check")
-	public void createFromPersonAndSpaceTestCheckField() {
+	void createFromPersonAndSpaceTestCheckField() {
 		//Given
 		Person person = PersonTest.getPersonInstance();
 		Space space = SpaceTest.getSpaceInstance();

@@ -2,8 +2,7 @@ package com.gunyoung.info.controller.rest;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.info.domain.Person;
@@ -28,12 +27,9 @@ public class RestfulController {
 	 *  @return {@code List<MainListDTO>}, MainListDTO(DTO 객체) -> Person.fullname + Person.email
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/main/list",method=RequestMethod.GET)
+	@GetMapping(value="/main/list")
 	public List<MainListDTO> index() {
 		List<Person> personList = personService.findAll();
-		
-		List<MainListDTO> result = MainListDTO.of(personList);
-		
-		return result;
+		return MainListDTO.of(personList);
 	}
 }

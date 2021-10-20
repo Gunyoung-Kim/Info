@@ -4,10 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.info.domain.Content;
@@ -53,9 +54,8 @@ public class ContentRestController {
 	 *   @throws ContentNumLimitExceedException 개인 최대 프로젝트 개수 초과
 	 *   @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/makecontent/{personId}", method = RequestMethod.POST)
+	@PostMapping(value="/space/makecontent/{personId}")
 	public void createContent(@PathVariable Long personId, @Valid @ModelAttribute ContentDTO contentDTO) {
-		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person loginUser = personService.findByEmailWithSpace(loginUserEmail);
 		if(loginUser == null) {
@@ -87,7 +87,7 @@ public class ContentRestController {
 	 *  @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 *	@author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value="/space/deletecontent/{id}")
 	public void deleteContent(@PathVariable Long id) {
 		Content targetContent = contentService.findByIdWithSpaceAndPerson(id);
 		if(targetContent == null) {
@@ -116,7 +116,7 @@ public class ContentRestController {
 	 * @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.PUT) 
+	@PutMapping(value="/space/updatecontent/{id}") 
 	public void updateContent(@PathVariable Long id, @ModelAttribute ContentDTO contentDto) {
 		Content targetContent = contentService.findByIdWithLinks(id);
 		if(targetContent == null) {

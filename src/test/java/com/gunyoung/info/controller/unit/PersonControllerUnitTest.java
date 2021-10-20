@@ -32,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.info.controller.PersonController;
 import com.gunyoung.info.controller.util.ModelAndPageView;
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.JoinDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
 import com.gunyoung.info.error.exceptions.access.NotMyResourceException;
 import com.gunyoung.info.error.exceptions.duplication.PersonDuplicateException;
@@ -47,7 +48,7 @@ import com.gunyoung.info.util.PersonTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class PersonControllerUnitTest {
+class PersonControllerUnitTest {
 	
 	@Mock
 	PersonService personService;
@@ -83,13 +84,13 @@ public class PersonControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
+	 * ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
 			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("메인 뷰 반환 -> OAuth2를 통해 접속한 PRE 유저")
-	public void indexViewByPageTestPRE() {
+	void indexViewByPageTestPRE() {
 		//Given
 		mockingAuthorityutilGetSessionUserAuthorities("ROLE_PRE");
 		
@@ -102,7 +103,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("메인 뷰 반환 -> 정상, 키워드 없음, PersonService check")
-	public void indexViewByPageTestNoKeywordCheckPersonService() {	
+	void indexViewByPageTestNoKeywordCheckPersonService() {	
 		//Given
 		mockingAuthorityutilGetSessionUserAuthorities("ROLE_USER");
 		
@@ -118,7 +119,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("메인 뷰 반환 -> 정상, 키워드 있음, PersonService check")
-	public void indexViewByPageTestYesKeywordCheckPersonService() {
+	void indexViewByPageTestYesKeywordCheckPersonService() {
 		//Given
 		mockingAuthorityutilGetSessionUserAuthorities("ROLE_USER");
 		
@@ -135,7 +136,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("메인 뷰 반환 -> 정상, 키워드 없음, ModelAndPageView check")
-	public void indexViewByPageTestNoKeywordCheckMav() {
+	void indexViewByPageTestNoKeywordCheckMav() {
 		//Given
 		mockingAuthorityutilGetSessionUserAuthorities("ROLE_USER");
 		
@@ -164,12 +165,12 @@ public class PersonControllerUnitTest {
 	}
 	
 	/*
-	 * public String loginView()
+	 * String loginView()
 	 */
 	
 	@Test
 	@DisplayName("로그인 뷰를 반환 -> 정상")
-	public void loginViewTest() {
+	void loginViewTest() {
 		//Given
 		
 		//When
@@ -180,84 +181,84 @@ public class PersonControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav)
+	 * ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("회원 가입 뷰를 반환 -> 정상")
-	public void joinViewTestCheckMav() {
+	void joinViewTestCheckMav() {
 		//Given
-		Person person = PersonTest.getPersonInstance();
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance();
 		
 		//When
-		personController.joinView(person, mav);
+		personController.joinView(joinDTO, mav);
 		
 		//Then
-		then(mav).should(times(1)).addObject("formModel", person);
+		then(mav).should(times(1)).addObject("formModel", joinDTO);
 		then(mav).should(times(1)).setViewName("join");
 	}
 	
 	/*
-	 * public ModelAndView join(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav)
+	 * ModelAndView join(@ModelAttribute("formModel") @Valid Person person, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("회원 가입 처리 -> 이미 존재하는 이메일로 회원가입 시도")
-	public void joinTestEmailDuplicated() {
+	void joinTestEmailDuplicated() {
 		//Given 
 		String exsitEmail = "exist@test.com";
 		mockingPersonServiceExistByEmail(exsitEmail, true);
 		
-		Person person = PersonTest.getPersonInstance(exsitEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(exsitEmail);
 		//When, Then
 		assertThrows(PersonDuplicateException.class, () -> {
-			personController.join(person);
+			personController.join(joinDTO);
 		});
 	}
 	
 	@Test
 	@DisplayName("회원 가입 처리 -> 정상, check Password Encode")
-	public void joinTestCheckPasswordEncoder() {
+	void joinTestCheckPasswordEncoder() {
 		//Given
 		String personEmail = "test@test.com";
 		mockingPersonServiceExistByEmail(personEmail, false);
-		Person person = PersonTest.getPersonInstance(personEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(personEmail);
 		
 		String encodedPassword = "245trgd4635";
-		given(passwordEncoder.encode(person.getPassword())).willReturn(encodedPassword);
+		given(passwordEncoder.encode(joinDTO.getPassword())).willReturn(encodedPassword);
 		
 		//When
-		personController.join(person);
+		personController.join(joinDTO);
 		
 		//Then
-		assertEquals(encodedPassword, person.getPassword());
+		assertEquals(encodedPassword, joinDTO.getPassword());
 	}
 	
 	@Test
 	@DisplayName("회원 가입 처리 -> 정상, check personService save")
-	public void joinTestCheckPersonServiceSave() {
+	void joinTestCheckPersonServiceSave() {
 		//Given
 		String personEmail = "test@test.com";
 		mockingPersonServiceExistByEmail(personEmail, false);
-		Person person = PersonTest.getPersonInstance(personEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(personEmail);
 		
 		//When
-		personController.join(person);
+		personController.join(joinDTO);
 		
 		//Then
-		then(personService).should(times(1)).save(person);
+		then(personService).should(times(1)).save(any(Person.class));
 	}
 	
 	@Test
 	@DisplayName("회원 가입 처리 -> 정상, redirect check")
-	public void joinTestCheckRedirectedURL() {
+	void joinTestCheckRedirectedURL() {
 		//Given
 		String personEmail = "test@test.com";
 		mockingPersonServiceExistByEmail(personEmail, false);
-		Person person = PersonTest.getPersonInstance(personEmail);
+		JoinDTO joinDTO = PersonTest.getJoinDTOInstance(personEmail);
 		
 		//When
-		ModelAndView result = personController.join(person);
+		ModelAndView result = personController.join(joinDTO);
 		
 		//Then
 		assertEquals("redirect:/", result.getViewName());
@@ -268,12 +269,12 @@ public class PersonControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
+	 * ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반환 -> 해당 접속자가 이미 가입")
-	public void oAuth2JoinViewTestPersonDuplicated() {
+	void oAuth2JoinViewTestPersonDuplicated() {
 		//Given
 		String existEmail = "exist@test.com";
 		mockingAuthorityUtilGetSessionUserEmail(existEmail);
@@ -288,7 +289,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("소셜로그인한 이메일이 회원가입 되어있지 않았을 때 회원가입하기 위한 페이지 반환 -> 정상, ModelAndView check")
-	public void oAuth2JoinViewTestCheckMav() {
+	void oAuth2JoinViewTestCheckMav() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		mockingAuthorityUtilGetSessionUserEmail(loginPersonEmail);
@@ -309,12 +310,12 @@ public class PersonControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
+	 * ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
 	 */
 	
 	@Test
 	@DisplayName("소셜 로그인한 이메일 회원 가입 처리 -> 접속한 이메일과 전송된 이메일이 불일치할 때")
-	public void oAuth2JoinTestNotMyResource() {
+	void oAuth2JoinTestNotMyResource() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		mockingAuthorityUtilGetSessionUserEmail(loginPersonEmail);
@@ -330,7 +331,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("소셜 로그인한 이메일 회원 가입 처리 -> 정상, check PasswordEncoder")
-	public void oAuth2JoinTestCheckPasswordEncoder() {
+	void oAuth2JoinTestCheckPasswordEncoder() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		OAuth2Join oAuth2Join = mockingAuthrorityUtilAndGetOAuth2JoinInstance(loginPersonEmail);
@@ -344,7 +345,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("소셜 로그인한 이메일 회원 가입 처리 -> 정상, check PersonService save")
-	public void oAuth2JoinTestCheckPersonServiceSave() {
+	void oAuth2JoinTestCheckPersonServiceSave() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		OAuth2Join oAuth2Join = mockingAuthrorityUtilAndGetOAuth2JoinInstance(loginPersonEmail);
@@ -358,7 +359,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("소셜 로그인한 이메일 회원 가입 처리 -> 정상, check SecurityContext")
-	public void oAuth2JoinTestCheckSecurityContext() {
+	void oAuth2JoinTestCheckSecurityContext() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		OAuth2Join oAuth2Join = mockingAuthrorityUtilAndGetOAuth2JoinInstance(loginPersonEmail);
@@ -372,7 +373,7 @@ public class PersonControllerUnitTest {
 	
 	@Test
 	@DisplayName("소셜 로그인한 이메일 회원 가입 처리 -> 정상, check RedirectedURL")
-	public void oAuth2JoinTestCheckRedirectedURL() {
+	void oAuth2JoinTestCheckRedirectedURL() {
 		//Given
 		String loginPersonEmail = "test@test.com";
 		OAuth2Join oAuth2Join = mockingAuthrorityUtilAndGetOAuth2JoinInstance(loginPersonEmail);

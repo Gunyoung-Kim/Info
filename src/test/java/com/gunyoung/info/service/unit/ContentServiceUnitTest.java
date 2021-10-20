@@ -35,7 +35,7 @@ import com.gunyoung.info.util.ContentTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ContentServiceUnitTest {
+class ContentServiceUnitTest {
 	
 	@Mock
 	ContentRepository contentRepository;
@@ -54,12 +54,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findById(Long id)
+	 * Content findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Content 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -74,7 +74,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Content 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long contentId = Long.valueOf(1);
 		
@@ -88,12 +88,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findByIdWithSpaceAndPerson(Long id)
+	 * Content findByIdWithSpaceAndPerson(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Content 찾기, Space Person 페치조인  -> 존재하지 않음")
-	public void findByIdWithSpaceAndPersonNonExist() {
+	void findByIdWithSpaceAndPersonNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -108,7 +108,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Content 찾기, Space Person 페치조인 -> 정상")
-	public void findByIdWithSpaceAndPersonTest() {
+	void findByIdWithSpaceAndPersonTest() {
 		//Given
 		Long contentId = Long.valueOf(1);
 		
@@ -122,12 +122,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public Content findByIdWithLinks(Long id)
+	 * Content findByIdWithLinks(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Content 찾기, Linke 페치조인 -> 존재하지 않음")
-	public void findByIdWithLinksTestNonExist() {
+	void findByIdWithLinksTestNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(24);
 		
@@ -142,7 +142,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Content 찾기, Linke 페치조인 -> 정상")
-	public void findByIdWithLinksTest() {
+	void findByIdWithLinksTest() {
 		//Given
 		Long contentId = Long.valueOf(24);
 		
@@ -156,12 +156,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Content> findAllBySpaceIdWithLinks(Long spaceId)
+	 * List<Content> findAllBySpaceIdWithLinks(Long spaceId)
 	 */
 	
 	@Test
 	@DisplayName("Space ID로 Content들 찾기, Links 페치 조인 -> 정상")
-	public void findAllBySpaceIdWithLinksTest() {
+	void findAllBySpaceIdWithLinksTest() {
 		//Given
 		Long spaceId = Long.valueOf(1);
 		
@@ -173,12 +173,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public Content save(Content content)
+	 * Content save(Content content)
 	 */
 	
 	@Test
 	@DisplayName("Content 생성 및 수정 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(contentRepository.save(content)).willReturn(content);
 		
@@ -190,12 +190,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 *  public void delete(Content content)
+	 *  void delete(Content content)
 	 */
 	
 	@Test
 	@DisplayName("Content 삭제 -> 정상, check contentRepo")
-	public void deleteTestCheckContentRepo() {
+	void deleteTestCheckContentRepo() {
 		//Given
 		
 		//When
@@ -207,7 +207,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("Content 삭제 -> 정상, check linkService")
-	public void deleteTestCheckLinkService() {
+	void deleteTestCheckLinkService() {
 		//Given
 		Long contentId = Long.valueOf(82);
 		content.setId(contentId);
@@ -220,12 +220,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteById(Long id)
+	 * void deleteById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID에 해당하는 Content 삭제 -> 존재하지 않았음")
-	public void deleteByIdNonExist() {
+	void deleteByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -240,7 +240,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID에 해당하는 Content 삭제 -> 정상")
-	public void deleteByIdTest() {
+	void deleteByIdTest() {
 		//Given
 		Long contentId = Long.valueOf(1);
 		
@@ -254,12 +254,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllBySpaceId(Long spaceId)
+	 * void deleteAllBySpaceId(Long spaceId)
 	 */
 	
 	@Test
 	@DisplayName("Space ID로 Content들 삭제 -> 정상, check contentRepo")
-	public void deleteAllBySpaceIdTestCheckContentRepo() {
+	void deleteAllBySpaceIdTestCheckContentRepo() {
 		//Given
 		Long spaceId = Long.valueOf(62);
 		List<Content> contentsForSpace = new ArrayList<>();
@@ -274,7 +274,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("Space ID로 Content들 삭제 -> 정상, check LinkService")
-	public void deleteAllBySpaceIdTestCheckLinkService() {
+	void deleteAllBySpaceIdTestCheckLinkService() {
 		//Given
 		Long spaceId = Long.valueOf(79);
 		int numOfContentsForSpace = 17;
@@ -299,12 +299,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public long countAll()
+	 * long countAll()
 	 */
 	
 	@Test
 	@DisplayName("모든 Content 개수 세기 -> 정상")
-	public void countAllTest() {
+	void countAllTest() {
 		//Given
 		long num = 1;
 		
@@ -318,12 +318,12 @@ public class ContentServiceUnitTest {
 	}
 	
 	/*
-	 * public boolean existsById(Long id)
+	 * boolean existsById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Content 존재 여부 반환 -> true")
-	public void existsByIdTrueTest() {
+	void existsByIdTrueTest() {
 		//Given
 		Long existId = Long.valueOf(1);
 		boolean isExist = true;
@@ -339,7 +339,7 @@ public class ContentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Content 존재 여부 반환 -> false")
-	public void existsByIdFalseTest() {
+	void existsByIdFalseTest() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		boolean isExist = false;

@@ -34,7 +34,7 @@ import com.gunyoung.info.services.domain.LinkServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class LinkServiceUnitTest {
+class LinkServiceUnitTest {
 	
 	@Mock 
 	LinkRepository linkRepository;
@@ -51,12 +51,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public Link findById(Long id)
+	 * Link findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Link 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -71,7 +71,7 @@ public class LinkServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Link 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long linkId = Long.valueOf(1);
 		
@@ -85,12 +85,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 *public List<Link> findAllByContentId(Long contentId)  
+	 *List<Link> findAllByContentId(Long contentId)  
 	 */
 	
 	@Test
 	@DisplayName("Content ID로 Link들 찾기 -> 정상")
-	public void findAllByContentIdTest() {
+	void findAllByContentIdTest() {
 		//Given
 		Long contentId = Long.valueOf(1);
 		
@@ -102,12 +102,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public Link save(Link link)
+	 * Link save(Link link)
 	 */
 	
 	@Test
 	@DisplayName("Link 생성 및 수정 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(linkRepository.save(link)).willReturn(link);
 		
@@ -119,12 +119,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Link> updateLinksForContent(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
+	 * List<Link> updateLinksForContent(Content content,Iterable<LinkDTO> linkDTOs, Iterable<Link> existContentLinks)
 	 */
 	
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 기존의 Link 삭제")
-	public void updateLinksForContentContentDelete() {
+	void updateLinksForContentContentDelete() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
@@ -146,7 +146,7 @@ public class LinkServiceUnitTest {
 	
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 기존의 Link 수정")
-	public void updateLinksForContentContentUpdate() {
+	void updateLinksForContentContentUpdate() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
@@ -177,7 +177,7 @@ public class LinkServiceUnitTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	@DisplayName("기존의 Content의 Link들을 LinkDTO를 통해 업데이트 -> 새로운 Link 추가")
-	public void updateLinksForContentNewLinkTest() {
+	void updateLinksForContentNewLinkTest() {
 		//Given
 		Content content = Content.builder().build();
 		List<LinkDTO> linkDTOs = new ArrayList<>();
@@ -196,12 +196,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 *  public void delete(Link link)
+	 *  void delete(Link link)
 	 */
 	
 	@Test
 	@DisplayName("Link 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		
 		//When
@@ -212,12 +212,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteById(Long id)
+	 * void deleteById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID에 해당하는 Link 삭제 -> 존재하지 않았음")
-	public void deleteByIdNonExist() {
+	void deleteByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -232,7 +232,7 @@ public class LinkServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID에 해당하는 Link 삭제 -> 정상")
-	public void deleteByIdTest() {
+	void deleteByIdTest() {
 		//Given
 		Long linkId = Long.valueOf(1);
 		
@@ -246,12 +246,12 @@ public class LinkServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByContentId(Long contentId)
+	 * void deleteAllByContentId(Long contentId)
 	 */
 	
 	@Test
 	@DisplayName("Content ID에 해당하는 Link들 삭제 -> 정상")
-	public void deleteAllByContentIdTest() {
+	void deleteAllByContentIdTest() {
 		//Given
 		Long contentId = Long.valueOf(24);
 		

@@ -1,6 +1,7 @@
 package com.gunyoung.info.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,7 +41,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PersonControllerTest {
+class PersonControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -73,12 +74,12 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value ="/", method =RequestMethod.GET)
-	 * 		public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) 
+	 * 		ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, ModelAndView mav) 
 	 */
 	
 	@Test
 	@DisplayName("메인 화면 (성공)")
-	public void indexTest() throws Exception {
+	void indexTest() throws Exception {
 		//Given
 		
 		//When
@@ -90,7 +91,7 @@ public class PersonControllerTest {
 	
 	@Test
 	@DisplayName("메인 화면 페이지 (성공)")
-	public void indexPageTest() throws Exception {
+	void indexPageTest() throws Exception {
 		//Given
 		int pageNum = 1;
 		
@@ -104,7 +105,7 @@ public class PersonControllerTest {
 	@WithMockUser(roles= {"PRE"})
 	@Test
 	@DisplayName("메인 화면 페이지 (성공- 소셜로그인했지만 아직 회원가입이 안되있을)")
-	public void indexWithPreUser() throws Exception {
+	void indexWithPreUser() throws Exception {
 		//Given
 		int pageNum = 1;
 		
@@ -118,13 +119,13 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	 * 		public String loginView() 
+	 * 		String loginView() 
 	 */
 	
 	@WithAnonymousUser
 	@Test
 	@DisplayName("로그인 화면 (성공)")
-	public void loginViewTest() throws Exception {
+	void loginViewTest() throws Exception {
 		
 		//When
 		mockMvc.perform(get("/login"))
@@ -136,12 +137,12 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/join" , method = RequestMethod.GET)
-	 * 		public ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav)
+	 * 		ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("회원가입 화면 (성공)")
-	public void joinViewTest() throws Exception {
+	void joinViewTest() throws Exception {
 		
 		//When
 		mockMvc.perform(get("/join"))
@@ -153,13 +154,13 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/join", method = RequestMethod.POST)
-	 * 		public ModelAndView join(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav)
+	 * 		ModelAndView join(@Valid @ModelAttribute("formModel") Person person,BindingResult result, ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("회원가입 (실패-이미 존재하는 이메일로 회원 가입시도: 잘못된 경로 대비)")
-	public void joinPostEmailDuplicated() throws Exception {
+	void joinPostEmailDuplicated() throws Exception {
 		//Given
 		long givenPersonNum = personRepository.count();
 		
@@ -183,7 +184,7 @@ public class PersonControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원가입 (실패-유효성 검증 실패, 이메일이 형식에 맞지 않음)")
-	public void joinPostNonValidateEmail() throws Exception {
+	void joinPostNonValidateEmail() throws Exception {
 		//Given
 		long givenPersonNum = personRepository.count();
 		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
@@ -205,7 +206,7 @@ public class PersonControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원가입 (실패-유효성 검증 실패, 비밀번호가 형식에 맞지않음- 공백)")
-	public void joinNonValidatePassword() throws Exception {
+	void joinNonValidatePassword() throws Exception {
 		//Given
 		long givenPersonNum = personRepository.count();
 		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
@@ -228,7 +229,7 @@ public class PersonControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원가입 (실패-유효성 검증 실패, 이름 공백)")
-	public void joinNonValidateFirstName() throws Exception {
+	void joinNonValidateFirstName() throws Exception {
 		//Given
 		long givenPersonNum = personRepository.count();
 		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
@@ -245,13 +246,13 @@ public class PersonControllerTest {
 		//Then
 				.andExpect(status().is4xxClientError());
 		
-		assertEquals(givenPersonNum,personRepository.count());
+		assertEquals(givenPersonNum, personRepository.count());
 	}
 	
 	@Test
 	@Transactional
 	@DisplayName("회원가입 (성공, person 개수 확인)")
-	public void joinTestCheckPersonNum() throws Exception {
+	void joinTestCheckPersonNum() throws Exception {
 		//Given
 		long personNum = personRepository.count();
 		MultiValueMap<String, String> paramMap = getJoinSuccessParamMap();
@@ -269,7 +270,7 @@ public class PersonControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원가입 POST (성공, Person DB에 존재 여부 확인)")
-	public void joinTestCheckIsInDB() throws Exception {
+	void joinTestCheckIsInDB() throws Exception {
 		//Given
 		MultiValueMap<String, String> paramMap = getJoinSuccessParamMap();
 		
@@ -280,13 +281,13 @@ public class PersonControllerTest {
 		//Then
 				.andExpect(redirectedUrl("/"));
 		
-		assertEquals(personRepository.existsByEmail("third@naver.com"),true);
+		assertTrue(personRepository.existsByEmail("third@naver.com"));
 	}
 	
 	@Test
 	@Transactional
 	@DisplayName("회원가입 POST (성공, 추가된 Person Role이 USER인지 확인)")
-	public void joinTestCheckIsROLE_USER() throws Exception {
+	void joinTestCheckIsROLE_USER() throws Exception {
 		//Given
 		MultiValueMap<String, String> paramMap = getJoinSuccessParamMap();
 		
@@ -297,7 +298,7 @@ public class PersonControllerTest {
 		//Then
 				.andExpect(redirectedUrl("/"));
 		
-		assertEquals(personRepository.findByEmail("third@naver.com").get().getRole(),RoleType.USER);
+		assertEquals(RoleType.USER, personRepository.findByEmail("third@naver.com").get().getRole());
 	}
 	
 	private MultiValueMap<String, String> getJoinSuccessParamMap() {
@@ -313,13 +314,13 @@ public class PersonControllerTest {
 	/* 
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
-	 *		public ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
+	 *		ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav)
 	 */
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"PRE"})
 	@Test
 	@Transactional
 	@DisplayName("소셜 로그인 회원가입 (실패-이미 회원가입 되어있는 회원의 접근)")
-	public void oAuth2JoinViewAlreadyJoin() throws Exception {
+	void oAuth2JoinViewAlreadyJoin() throws Exception {
 		//When
 		mockMvc.perform(get("/oauth2/join"))
 		
@@ -331,13 +332,13 @@ public class PersonControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
-	 * 		public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
+	 * 		ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel)
 	 */
 	@WithMockUser(username="none@google.com", roles= {"PRE"})
 	@Test
 	@Transactional
 	@DisplayName("소셜로그인 계정 회원가입 POST (실패- 이메일이 입력된 사항과 불일치)")
-	public void oAuth2JoinEmailNotMatch() throws Exception{
+	void oAuth2JoinEmailNotMatch() throws Exception{
 		//Given
 		long givenPersonNum = personRepository.count();
 		
@@ -361,7 +362,7 @@ public class PersonControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("소셜로그인 계정 회원가입 POST (성공, Person 개수 확인)")
-	public void oAuth2JoinTestCheckPersonNum() throws Exception {
+	void oAuth2JoinTestCheckPersonNum() throws Exception {
 		//Given
 		long givnePersonNum = personRepository.count();
 		
@@ -382,7 +383,7 @@ public class PersonControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("소셜로그인 계정 회원가입 POST (성공, Person DB에 있는지 확인)")
-	public void oAuth2JoinTestCheckIsInDB() throws Exception {
+	void oAuth2JoinTestCheckIsInDB() throws Exception {
 		//Given
 		MultiValueMap<String,String> paramMap = getOAuth2JoinSuccessParamMap();
 		
@@ -394,7 +395,7 @@ public class PersonControllerTest {
 				.andExpect(redirectedUrl("/"))
 				.andExpect(authenticated().withRoles("USER").withUsername("new@google.com"));
 		
-		assertEquals(personRepository.existsByEmail("new@google.com"),true);
+		assertTrue(personRepository.existsByEmail("new@google.com"));
 	}
 	
 	private MultiValueMap<String,String> getOAuth2JoinSuccessParamMap() {

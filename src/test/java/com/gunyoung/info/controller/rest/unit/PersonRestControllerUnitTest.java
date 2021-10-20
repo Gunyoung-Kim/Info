@@ -33,7 +33,7 @@ import com.gunyoung.info.util.PersonTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class PersonRestControllerUnitTest {
+class PersonRestControllerUnitTest {
 	
 	@Mock
 	PersonService personService;
@@ -54,12 +54,12 @@ public class PersonRestControllerUnitTest {
 	}
 	
 	/*
-	 * public String emailVerification(@RequestParam("email") String email)
+	 * String emailVerification(@RequestParam("email") String email)
 	 */
 	
 	@Test
 	@DisplayName("Email 중복 여부 반환 -> 정상, TRUE")
-	public void emailVerificationTestTrue() {
+	void emailVerificationTestTrue() {
 		//Given
 		String existEmail = "test@test.com";
 		given(personService.existsByEmail(existEmail)).willReturn(true);
@@ -73,7 +73,7 @@ public class PersonRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("Email 중복 여부 반환 -> 정상, false")
-	public void emailVerificationTestFalse() {
+	void emailVerificationTestFalse() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		given(personService.existsByEmail(nonExistEmail)).willReturn(false);
@@ -86,12 +86,12 @@ public class PersonRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void personWithdraw(@RequestParam("email") String targetPersonEmail)
+	 * void personWithdraw(@RequestParam("email") String targetPersonEmail)
 	 */
 	
 	@Test
 	@DisplayName("회원 탈퇴를 처리 -> 해당 계정이 DB에 존재하지 않을 때")
-	public void personWithdrawTestPersonNonExist() {
+	void personWithdrawTestPersonNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		given(personService.findByEmail(nonExistEmail)).willReturn(null);
@@ -104,7 +104,7 @@ public class PersonRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("회원 탈퇴를 처리 -> 로그인 계정이 탈퇴 계정과 일치하지 않을 때")
-	public void personWithdrawTestNotMyResource() {
+	void personWithdrawTestNotMyResource() {
 		//Given
 		String targetEmail = "test@test.com";
 		mockingPersonServiceFindByEmail(targetEmail);
@@ -120,7 +120,7 @@ public class PersonRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("회원 탈퇴를 처리 -> 정상, personService delete check")
-	public void personWithdrawTestCheckPersonServiceDelete() {
+	void personWithdrawTestCheckPersonServiceDelete() {
 		//Given
 		String targetEmail = "test@test.com";
 		Person targetPerson = mockingPersonServiceFindByEmail(targetEmail);

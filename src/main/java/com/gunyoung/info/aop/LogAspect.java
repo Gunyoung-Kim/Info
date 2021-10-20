@@ -36,7 +36,7 @@ public class LogAspect {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		Map<String, String[]> paramMap = request.getParameterMap();
 		String params = "";
-		if(paramMap.isEmpty() == false) {
+		if(!paramMap.isEmpty()) {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
 		
@@ -47,7 +47,7 @@ public class LogAspect {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
 			long afterProccedTime = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, afterProccedTime- beforeProceedTime);
+			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, remoteHost, afterProccedTime - beforeProceedTime);
 		}
 	}
 	

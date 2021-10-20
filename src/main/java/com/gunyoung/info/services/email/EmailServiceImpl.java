@@ -4,7 +4,9 @@ import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.gunyoung.info.dto.email.EmailDTO;
@@ -13,24 +15,31 @@ import lombok.RequiredArgsConstructor;
 
 @Service("emailService")
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
+	
+	private static final String CHAR_SET_FOR_MESSAGE = "utf-8";
 
 	private final JavaMailSender mailSender;
 	
+	private final Logger logger;
+	
 	@Override
-	public void sendEmail(EmailDTO email) {
+	@Async
+	public void sendEmail(EmailDTO email){
 		try {
 			MimeMessage msg = mailSender.createMimeMessage();
 			
 			msg.addRecipient(RecipientType.TO, new InternetAddress(email.getReceiveMail()));
 			msg.addFrom(new InternetAddress[] {
-					new InternetAddress(email.getSenderMail(),email.getSenderName())
+					new InternetAddress(email.getSenderMail(), email.getSenderName())
 			});
-			msg.setSubject(email.getSubject(), "utf-8");
-			msg.setText(email.getMessage(),"utf-8");
+			msg.setSubject(email.getSubject(), CHAR_SET_FOR_MESSAGE);
+			msg.setText(email.getMessage(), CHAR_SET_FOR_MESSAGE);
 			mailSender.send(msg);
-		} catch(Exception ex) {
+			logger.info("Email Send for {} to {} ", email.getSubject(), email.getReceiveMail());
+		} catch(Exception e) {
+			logger.debug("Exception occured while sending email", e);
 		}
 	}
-	
 }
+

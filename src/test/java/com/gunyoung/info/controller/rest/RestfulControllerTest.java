@@ -34,7 +34,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RestfulControllerTest {
+class RestfulControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -60,12 +60,12 @@ public class RestfulControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@GetMapping("/main/list")
-	 *		public List<MainListDTO> index()
+	 *		List<MainListDTO> index()
 	 */
 	
 	@Test
 	@DisplayName("메인 화면 리스트 반환 (성공)")
-	public void indexTest() throws Exception {
+	void indexTest() throws Exception {
 		//Given
 		long givenPersonNum = personRepository.count();
 		

@@ -15,14 +15,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.controller.util.ModelAndPageView;
 import com.gunyoung.info.domain.Person;
+import com.gunyoung.info.dto.JoinDTO;
 import com.gunyoung.info.dto.MainListDTO;
 import com.gunyoung.info.dto.email.EmailDTO;
 import com.gunyoung.info.dto.oauth2.OAuth2Join;
@@ -44,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class PersonController {
+	
 	public static final int INDEX_VIEW_PAGE_SIZE = 10;
 	
 	private final PersonService personService;
@@ -60,10 +62,10 @@ public class PersonController {
 	 *  @param page 메인 뷰에 보여줄 리스트의 페이지 값 (default=1)
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value ="/", method =RequestMethod.GET)
-	public ModelAndView indexViewByPage(@RequestParam(value="page",required=false,defaultValue="1") Integer page, 
-			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
-		if(isUserAuthoritiesContainsROLE_PRE()) {
+	@GetMapping(value ="/")
+	public ModelAndView indexViewByPage(@RequestParam(value = "page",required = false, defaultValue = "1") Integer page, 
+			@RequestParam(value = "keyword", required = false) String keyword, ModelAndPageView mav) {
+		if(isUserAuthoritiesContainsRolePre()) {
 			return new ModelAndView("redirect:/oauth2/join");
 		}
 		
@@ -80,7 +82,7 @@ public class PersonController {
 		return mav;
 	}
 	
-	private boolean isUserAuthoritiesContainsROLE_PRE() {
+	private boolean isUserAuthoritiesContainsRolePre() {
 		Collection<? extends GrantedAuthority> loginUserAuthorities = AuthorityUtil.getSessionUserAuthorities();
 		return loginUserAuthorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_PRE"));
 	}
@@ -106,7 +108,7 @@ public class PersonController {
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping(value = "/login")
 	public String loginView() {
 		return "login";
 	}
@@ -118,9 +120,9 @@ public class PersonController {
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/join" , method = RequestMethod.GET)
-	public ModelAndView joinView(@ModelAttribute("formModel") Person person, ModelAndView mav) {
-		mav.addObject("formModel", person);
+	@GetMapping(value="/join")
+	public ModelAndView joinView(@ModelAttribute("formModel") JoinDTO joinDTO, ModelAndView mav) {
+		mav.addObject("formModel", joinDTO);
 		
 		mav.setViewName("join");
 		return mav;
@@ -131,25 +133,24 @@ public class PersonController {
 	 *  - 기능: 회원 가입 처리
 	 * 	- View: join.html 
 	 *  </pre>
-	 *  @param person 회원가입을 위한 Person 객체
+	 *  @param joinDTO 회원가입을 위한 Person 객체
 	 *  @throws PersonDuplicateException 이미 존재하는 이메일로 회원가입 시도시 발생
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/join", method = RequestMethod.POST)
-	public ModelAndView join(@ModelAttribute("formModel") @Valid Person person) {
-		if(personService.existsByEmail(person.getEmail())) {
+	@PostMapping(value="/join")
+	public ModelAndView join(@ModelAttribute("formModel") @Valid JoinDTO joinDTO) {
+		if(personService.existsByEmail(joinDTO.getEmail())) {
 			throw new PersonDuplicateException(PersonErrorCode.PERSON_DUPLICATION_FOUNDED_ERROR.getDescription());
-		};
-		
-		encodePasswordAndSavePerson(person);
-		sendEmailForJoin(person.getEmail());
+		}
+		encodePasswordAndSavePerson(joinDTO);
+		sendEmailForJoin(joinDTO.getEmail());
 		
 		return new ModelAndView("redirect:/");
 	}
 	
-	private void encodePasswordAndSavePerson(Person person) {
-		person.setPassword(passwordEncoder.encode(person.getPassword()));
-		personService.save(person);
+	private void encodePasswordAndSavePerson(JoinDTO joinDTO) {
+		joinDTO.setPassword(passwordEncoder.encode(joinDTO.getPassword()));
+		personService.save(joinDTO.createPerson());
 	}
 	
 	/**
@@ -161,7 +162,7 @@ public class PersonController {
 	 *  @author kimgun-yeong 
 	 */
 	
-	@RequestMapping(value= "/oauth2/join" , method = RequestMethod.GET) 
+	@GetMapping(value= "/oauth2/join") 
 	public ModelAndView oAuth2JoinView(@ModelAttribute("formModel") @Valid OAuth2Join formModel, ModelAndView mav) {
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		if(personService.existsByEmail(loginUserEmail)) {
@@ -188,16 +189,15 @@ public class PersonController {
 	 *   @author kimgun-yeong
 	 */	
 	
-	@RequestMapping(value="/oauth2/join", method = RequestMethod.POST) 
+	@PostMapping(value="/oauth2/join") 
 	public ModelAndView oAuth2Join(@ModelAttribute("formModel") @Valid OAuth2Join formModel) {
 		if(isSessionUserEmailAndEmailInFormMisMatch(formModel.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}
-		
 		Person person = getNewSavedPersonWithEncodedPassword(formModel);
-		setNewAuthenticationInSecurityContext(person);
+		setNewAuthenticationInSecurityContext(person);		
 		sendEmailForJoin(formModel.getEmail());
-		
+
 		return new ModelAndView("redirect:/");
 	}
 	
@@ -215,14 +215,14 @@ public class PersonController {
 	}
 	
 	private void setNewAuthenticationInSecurityContext(Person person) {
-		List<GrantedAuthority> newAuthorityList = getNewAuthroritiesForROLE_USER();
+		List<GrantedAuthority> newAuthorityList = getNewAuthroritiesForRoleUser();
 		
 		UserDetails newUserDetails = new UserDetailsVO(person.getEmail(),person.getPassword(),person.getRole());
 		Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails,null,newAuthorityList);
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 	}
 	
-	private List<GrantedAuthority> getNewAuthroritiesForROLE_USER() {
+	private List<GrantedAuthority> getNewAuthroritiesForRoleUser() {
 		List<GrantedAuthority> newAuthorityList = new ArrayList<>();
 		newAuthorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
 		return newAuthorityList;

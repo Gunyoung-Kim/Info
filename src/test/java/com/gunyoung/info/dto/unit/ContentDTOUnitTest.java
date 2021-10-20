@@ -22,7 +22,7 @@ import com.gunyoung.info.util.LinkTest;
  * @author kimgun-yeong
  *
  */
-public class ContentDTOUnitTest {
+class ContentDTOUnitTest {
 	
 	private ContentDTO contentDTO;
 	
@@ -32,12 +32,12 @@ public class ContentDTOUnitTest {
 	}
  	
 	/*
-	 * public void settingHostIdAndContentField(Long hostId, Content content)
+	 * void settingHostIdAndContentField(Long hostId, Content content)
 	 */
 	
 	@Test
 	@DisplayName("Content Host Person Id, Content 필드들로 ContentDTO 필드 값 설정 -> 정상,필드 값 확인")
-	public void settingHostIdAndContentFieldTestCheckField() {
+	void settingHostIdAndContentFieldTestCheckField() {
 		//Given
 		Content content = ContentTest.getContentInstance();
 		
@@ -61,12 +61,12 @@ public class ContentDTOUnitTest {
 	}
 	
 	/*
-	 * public void settingLinks(List<Link> links)
+	 * void settingLinks(List<Link> links)
 	 */
 	
 	@Test
 	@DisplayName("Link 리스트를 통해 links 필드 설정 -> 정상")
-	public void settingLinksTest() {
+	void settingLinksTest() {
 		//Given
 		Long givenLinkNum = Long.valueOf(14);
 		List<Link> givenLinks = new ArrayList<>();
@@ -86,12 +86,12 @@ public class ContentDTOUnitTest {
 	}
 	
 	/*
-	 * public void updateContentOnly(Content content)
+	 * void updateContentOnly(Content content)
 	 */
 	
 	@Test
 	@DisplayName("ContentDTO에 담긴 정보로 Content만 업데이트 -> 정상, 필드 값 확인")
-	public void updateContentOnlyTestCheckField() {
+	void updateContentOnlyTestCheckField() {
 		//Given
 		Content content = Content.builder().build();
 		
@@ -103,12 +103,12 @@ public class ContentDTOUnitTest {
 	}
 	
 	/*
-	 * public Content createContentOnly()
+	 * Content createContentOnly()
 	 */
 	
 	@Test
 	@DisplayName("ContentDTO에 담긴 정보로 Content 생성 후 반환-> 정상, 필드 값 확인")
-	public void createContentOnlyTestCheckField() {
+	void createContentOnlyTestCheckField() {
 		//Given
 		
 		//When
@@ -130,12 +130,12 @@ public class ContentDTOUnitTest {
 	
 	
 	/*
-	 * public List<Link> createLinkListOnlyWithContent(Content content)
+	 * List<Link> createLinkListOnlyWithContent(Content content)
 	 */
 	
 	@Test
 	@DisplayName("ContentDTO에 담긴 정보로 Link 리스트 생성 후 반환 -> 정상")
-	public void createLinkListOnlyWithContentTest() {
+	void createLinkListOnlyWithContentTest() {
 		//Given
 		Content content = ContentTest.getContentInstance();
 		

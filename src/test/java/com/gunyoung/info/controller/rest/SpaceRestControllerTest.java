@@ -34,7 +34,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SpaceRestControllerTest {
+class SpaceRestControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -67,14 +67,14 @@ public class SpaceRestControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/updateprofile", method = RequestMethod.PUT)
-	 * 		public void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileDTO profileDTO)
+	 * 		void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileDTO profileDTO)
 	 */
 	
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Transactional
 	@Test
 	@DisplayName("프로필 업데이트 (실패-유효성 검사 불통과)")
-	public void updateProfilePostNonValidate() throws Exception {
+	void updateProfilePostNonValidate() throws Exception {
 		//Given
 		String givenPersonFirstName = person.getFirstName();
 		MultiValueMap<String, String> paramMap = getUpdateProfileFailByEmptyFirstNameParamMap();
@@ -108,7 +108,7 @@ public class SpaceRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("프로필 업데이트 (성공)")
-	public void updateProfilePostTest() throws Exception {
+	void updateProfilePostTest() throws Exception {
 		//Given
 		String changedFirstName = "변화";
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();

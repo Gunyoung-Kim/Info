@@ -22,3 +22,6 @@ application-server2.properties
 
 ### lombok config ###
 lombok.config
+
+### for develop test classes ###
+**/src/test/java/com/gunyoung/info/develop/

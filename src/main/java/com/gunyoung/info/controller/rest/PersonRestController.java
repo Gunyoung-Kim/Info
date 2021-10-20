@@ -1,7 +1,7 @@
 package com.gunyoung.info.controller.rest;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +30,7 @@ public class PersonRestController {
 	 *  @param email 중복여부를 확인하려는 email 값
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/join/emailverification", method=RequestMethod.GET)
+	@GetMapping(value="/join/emailverification")
 	public String emailVerification(@RequestParam("email") String email) {
 		return String.valueOf(personService.existsByEmail(email));
 	}
@@ -42,13 +42,12 @@ public class PersonRestController {
 	 *  @throws NotMyResourceException 로그인 계정이 탈퇴 계정과 일치하지 않을 때
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/withdraw", method=RequestMethod.DELETE)
+	@DeleteMapping(value="/withdraw")
 	public void personWithdraw(@RequestParam("email") String targetPersonEmail) {
 		Person targetPerson = personService.findByEmail(targetPersonEmail);
 		if(targetPerson == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		if(isSessionPersonAndDeletePersonMisMatch(targetPerson.getEmail())) {
 			throw new NotMyResourceException(PersonErrorCode.RESOURCE_IS_NOT_MINE_ERROR.getDescription());
 		}

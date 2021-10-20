@@ -27,17 +27,17 @@ import com.gunyoung.info.error.exceptions.nonexist.PrivacyPolicyNotFoundedExcept
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ErrorControllerUnitTest {
+class ErrorControllerUnitTest {
 	
 	@InjectMocks
 	private ErrorController errorController;
 	
 	/*
-	 * public ErrorMsg personNotFounded(PersonNotFoundedException e)
+	 * ErrorMsg personNotFounded(PersonNotFoundedException e)
 	 */
 	
 	@Test
-	public void personNotFoundedTest() {
+	void personNotFoundedTest() {
 		//Given
 		String errorMsg = "person not founded";
 		PersonNotFoundedException exception = new PersonNotFoundedException(errorMsg);
@@ -51,11 +51,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg contentNotFounded(PersonNotFoundedException e)
+	 * ErrorMsg contentNotFounded(PersonNotFoundedException e)
 	 */
 	
 	@Test
-	public void contentNotFoundedTest() {
+	void contentNotFoundedTest() {
 		//Given
 		String errorMsg = "content not founded";
 		ContentNotFoundedException exception = new ContentNotFoundedException(errorMsg);
@@ -69,11 +69,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e)
+	 * ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e)
 	 */
 	
 	@Test
-	public void privacyPolicyNotFoundedTest() {
+	void privacyPolicyNotFoundedTest() {
 		//Given
 		String errorMsg = "privacyPolicy not founded";
 		PrivacyPolicyNotFoundedException exception = new PrivacyPolicyNotFoundedException(errorMsg);
@@ -87,11 +87,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg personDuplicated(PersonDuplicateException e)
+	 * ErrorMsg personDuplicated(PersonDuplicateException e)
 	 */
 	
 	@Test
-	public void personDuplicatedTest() {
+	void personDuplicatedTest() {
 		//Given
 		String errorMsg = "person duplication founded";
 		PersonDuplicateException exception = new PersonDuplicateException(errorMsg);
@@ -105,11 +105,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg contentNumLimitExceeded(ContentNumLimitExceedException e)
+	 * ErrorMsg contentNumLimitExceeded(ContentNumLimitExceedException e)
 	 */
 	
 	@Test
-	public void contentNumLimitExceededTest() {
+	void contentNumLimitExceededTest() {
 		//Given
 		String errorMsg = "content number limited!";
 		ContentNumLimitExceedException exception = new ContentNumLimitExceedException(errorMsg);
@@ -123,11 +123,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg notMyResource(NotMyResourceException e)
+	 * ErrorMsg notMyResource(NotMyResourceException e)
 	 */
 	
 	@Test
-	public void notMyResourceTest() {
+	void notMyResourceTest() {
 		//Given
 		String errorMsg = "not my resource";
 		NotMyResourceException exception = new NotMyResourceException(errorMsg);

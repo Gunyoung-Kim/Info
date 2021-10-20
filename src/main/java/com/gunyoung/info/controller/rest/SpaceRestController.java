@@ -3,8 +3,7 @@ package com.gunyoung.info.controller.rest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.info.domain.Person;
@@ -33,7 +32,7 @@ public class SpaceRestController {
 	 * @throws PersonNotFoundedException 전달된 ProfileDTO에 있는 이메일이 DB에 존재하지 않을때 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/updateprofile", method = RequestMethod.PUT)
+	@PutMapping(value="/space/updateprofile")
 	public void updateProfilePost(@ModelAttribute("formModel") @Valid ProfileDTO profileDTO) {
 		Person person = personService.findByEmailWithSpace(profileDTO.getEmail());
 		if(person == null) {

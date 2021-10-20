@@ -1,6 +1,6 @@
 # INFO [![Build Status](https://travis-ci.com/Gunyoung-Kim/Info.svg?branch=master)](https://travis-ci.com/Gunyoung-Kim/Info)
 
-최신 버전 : ver 0.1.3 (2021.10.1)
+최신 버전 : ver 0.1.4 (2021.10.20)
 
 ## 프로젝트 목적
 
@@ -60,7 +60,18 @@
 
 - 테스트 커버리지 : 100%
 
-<img width="657" alt="info_test_cover_0_1_2" src="https://user-images.githubusercontent.com/60494603/130809422-a41bb2c7-a840-47c8-96b4-e498a4dfdbb5.png">
+- How to
+
+```bash
+
+# 통합 테스트 + 단위 테스트 -> instructions: 100%, branches: 100%
+$ ./mvnw clean package
+
+# 단위 테스트 -> instructions: 100%, branches: 100%
+$ ./mvnw clean package -DexcludedGruops=integration
+```
+
+<img width="655" alt="infoT_0_1_4" src="https://user-images.githubusercontent.com/60494603/138023639-da5791f8-7bcf-41b2-bb39-8407d2e2950a.png">
 
 ---
 

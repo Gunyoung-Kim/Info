@@ -3,10 +3,9 @@ package com.gunyoung.info.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Content;
@@ -46,13 +45,13 @@ public class ContentController {
 	 * 세션 유저의 포트폴리오에 프로젝트 추가화면으로 리다이렉트
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/makecontent", method = RequestMethod.GET)
+	@GetMapping(value="/space/makecontent")
 	public ModelAndView createMyContentView() {
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person loginUser = personService.findByEmailWithSpace(loginUserEmail);
 		if(loginUser == null) {
 			return new ModelAndView("redirect:/login");
-		};
+		}
 		
 		Long loginUserId = loginUser.getId();
 		return new ModelAndView("redirect:/space/makecontent/" + loginUserId);
@@ -71,14 +70,14 @@ public class ContentController {
 	 *  @author kimgun-yeong
 	 *  
 	 */
-	@RequestMapping(value="/space/makecontent/{personId}", method = RequestMethod.GET)
+	@GetMapping(value="/space/makecontent/{personId}")
 	public ModelAndView createContentView(@PathVariable Long personId,@ModelAttribute("formModel") Content content, ModelAndView mav) {
 		// 해당 스페이스가 현재 접속자의 것인지 확인하는 작업
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person loginUser = personService.findByEmailWithSpace(loginUserEmail);
 		if(loginUser == null) {
 			throw new PersonNotFoundedException(PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.getDescription());
-		};
+		}
 		
 		Long loginUserId = loginUser.getId();
 		if(!personId.equals(loginUserId)) {
@@ -109,7 +108,7 @@ public class ContentController {
 	 * @throws NotMyResourceException 현재 로그인 유저 != 해당 프로젝트 작성자
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/updatecontent/{contentId}", method= RequestMethod.GET)
+	@GetMapping(value="/space/updatecontent/{contentId}")
 	public ModelAndView updateContentView(@PathVariable Long contentId, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav) {
 		Content content = contentService.findByIdWithSpaceAndPerson(contentId);
 		if(content == null) {

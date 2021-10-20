@@ -22,13 +22,11 @@ public class OAuth2Join {
 	 * @author kimgun-yeong
 	 */
 	public Person createPersonFromOAuth2Join(String encodedPassword) {
-		Person person = Person.builder()
+		return Person.builder()
 				.email(this.email)
 				.password(encodedPassword)
 				.firstName(this.firstName)
 				.lastName(this.lastName)
 				.build();
-		
-		return person;
 	}
 }

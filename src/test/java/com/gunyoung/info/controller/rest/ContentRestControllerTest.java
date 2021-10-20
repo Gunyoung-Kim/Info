@@ -42,7 +42,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ContentRestControllerTest {
+class ContentRestControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 	
@@ -74,13 +74,13 @@ public class ContentRestControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/makecontent/{userId}", method = RequestMethod.POST)
-	 *      public void createContent(@PathVariable Long userId,@Valid @ModelAttribute("formModel") Content content)
+	 *      void createContent(@PathVariable Long userId,@Valid @ModelAttribute("formModel") Content content)
 	 */
 	
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 추가 (실패-콘텐트 유효성 검사 통과 못함)")
-	public void createContentPostNonValidate() throws Exception {
+	void createContentPostNonValidate() throws Exception {
 		//Given
 		long givenContentNum = contentRepository.count();
 		
@@ -105,7 +105,7 @@ public class ContentRestControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 추가 (실패-로그인 계정과 일치하지 않음)")
-	public void createContentPostTestEmailNotMatch() throws Exception {
+	void createContentPostTestEmailNotMatch() throws Exception {
 		//Given
 		long givenContentNum = contentRepository.count();
 		
@@ -132,7 +132,7 @@ public class ContentRestControllerTest {
 	@WithMockUser(username="nonexist@daum.net", roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 ID)")
-	public void createContentPostEmailNotExists() throws Exception {
+	void createContentPostEmailNotExists() throws Exception {
 		//Given
 		long givenContentNum = contentRepository.count();
 		Long nonExistPersonId = PersonTest.getNonExistPersonId(personRepository);
@@ -157,7 +157,7 @@ public class ContentRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 추가 (실패-개인 최대 프로젝트 개수 초과)")
-	public void createContentPostOverLimit() throws Exception {
+	void createContentPostOverLimit() throws Exception {
 		//Given
 		Long personId = person.getId();
 		Space space = person.getSpace();
@@ -192,7 +192,7 @@ public class ContentRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 추가 (정상)")
-	public void createContentPostTest() throws Exception {
+	void createContentPostTest() throws Exception {
 		//Given
 		long givenContentNum = contentRepository.count();
 		Long personId = person.getId();
@@ -216,13 +216,13 @@ public class ContentRestControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.PUT) 
-	 * 		public void updateContentPost(@PathVariable long id, @ModelAttribute ContentDTO contentDto)
+	 * 		void updateContentPost(@PathVariable long id, @ModelAttribute ContentDTO contentDto)
 	 */
 	
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 (실패-입력된 id에 해당하는 content가 DB에 없을때")
-	public void updateContentPostNonExist() throws Exception{
+	void updateContentPostNonExist() throws Exception{
 		//Given
 		Long nonExistContentId = ContentTest.getNonExistContentId(contentRepository);
 		
@@ -243,7 +243,7 @@ public class ContentRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 업데이트 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
-	public void updateContentPostWrongUser() throws Exception {
+	void updateContentPostWrongUser() throws Exception {
 		//Given
 		Person anotherPerson = PersonTest.getPersonInstance("second@test.com");
 		personRepository.save(anotherPerson);
@@ -276,7 +276,7 @@ public class ContentRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 업데이트 (정상)")
-	public void updateContentPostTest() throws Exception {
+	void updateContentPostTest() throws Exception {
 		//Given
 		Content content = ContentTest.getContentInstance("title");
 		contentRepository.save(content);
@@ -303,13 +303,13 @@ public class ContentRestControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/deletecontent/{id}", method = RequestMethod.DELETE)
-	 * 		public ModelAndView deleteContent(@PathVariable long id)
+	 * 		ModelAndView deleteContent(@PathVariable long id)
 	 */
 	
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 삭제 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
-	public void deleteContentWrongUser() throws Exception {
+	void deleteContentWrongUser() throws Exception {
 		//Given
 		Person anotherPerson = PersonTest.getPersonInstance("second@test.com");
 		personRepository.save(anotherPerson);
@@ -332,7 +332,7 @@ public class ContentRestControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 삭제 (실패-입력된 id에 해당하는 content가 DB에 없을때)")
-	public void deleteContentNonExist() throws Exception{
+	void deleteContentNonExist() throws Exception{
 		//Given
 		Long nonExistContentId = ContentTest.getNonExistContentId(contentRepository);
 		
@@ -346,7 +346,7 @@ public class ContentRestControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 삭제 (정상)")
-	public void deleteContentTest() throws Exception {
+	void deleteContentTest() throws Exception {
 		//Given
 		Space space = person.getSpace();
 		Content content = ContentTest.getContentInstance("title");

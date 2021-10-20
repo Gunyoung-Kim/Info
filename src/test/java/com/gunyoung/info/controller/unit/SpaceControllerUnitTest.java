@@ -38,7 +38,7 @@ import com.gunyoung.info.util.PersonTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class SpaceControllerUnitTest {
+class SpaceControllerUnitTest {
 	
 	@Mock
 	PersonService personService;
@@ -66,12 +66,12 @@ public class SpaceControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView myspaceView()
+	 * ModelAndView myspaceView()
 	 */
 	
 	@Test
 	@DisplayName("현재 로그인되있는 사용자 본인의 포트폴리오 페이지 반환 -> 세션 email의 Person 없음")
-	public void myspaceViewTestPersonNonExist() {
+	void myspaceViewTestPersonNonExist() {
 		//Given
 		String nonExistPersonEmail = "nonexist@test.com";
 		mockingAuthorityUtilGetSessionUserEmail(nonExistPersonEmail);
@@ -86,7 +86,7 @@ public class SpaceControllerUnitTest {
 	
 	@Test
 	@DisplayName("현재 로그인되있는 사용자 본인의 포트폴리오 페이지 반환 -> 정상")
-	public void myspaceViewTestCheckViewName() {
+	void myspaceViewTestCheckViewName() {
 		//Given
 		String sessionPersonEmail = PersonTest.DEFAULT_PERSON_EMAIL;
 		mockingAuthorityUtilGetSessionUserEmail(sessionPersonEmail);
@@ -105,12 +105,12 @@ public class SpaceControllerUnitTest {
 	}
 
 	/*
-	 * public ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav)
+	 * ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("개인 포트폴리오 페이지 반환 -> 존재하지 않는 Person ID")
-	public void spaceViewTestPersonNonExist() {
+	void spaceViewTestPersonNonExist() {
 		//Given
 		Long nonExistPersonId = Long.valueOf(88);
 		given(personService.findByIdWithSpace(nonExistPersonId)).willReturn(null);
@@ -123,7 +123,7 @@ public class SpaceControllerUnitTest {
 	
 	@Test
 	@DisplayName("개인 포트폴리오 페이지 반환 -> 정상, 주인이 요청, ModelAndView check")
-	public void spaceViewForHostTestCheckMav() {
+	void spaceViewForHostTestCheckMav() {
 		//Given
 		Long personId = Long.valueOf(62);
 		Person person = mockingPersonServiceFindByIdWithSpace(personId);
@@ -157,12 +157,12 @@ public class SpaceControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView updateProfileView(ModelAndView mav)
+	 * ModelAndView updateProfileView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("현재 로그인한 유저의 프로필을 변경하기 위한 뷰를 반환 -> 현재 로그인된 유저의 이메일이 DB에 없으면 ")
-	public void updateProfileViewTestPersonNonExist() {
+	void updateProfileViewTestPersonNonExist() {
 		//Given
 		String nonExistPersonEmail = "nonexist@test.com";
 		mockingAuthorityUtilGetSessionUserEmail(nonExistPersonEmail);
@@ -177,7 +177,7 @@ public class SpaceControllerUnitTest {
 	
 	@Test
 	@DisplayName("현재 로그인한 유저의 프로필을 변경하기 위한 뷰를 반환 -> 정상, Check ModelandView")
-	public void updateProfileViewTestCheckMav() {
+	void updateProfileViewTestCheckMav() {
 		//Given
 		String personEmail = "test@test.com";
 		mockingAuthorityUtilGetSessionUserEmail(personEmail);

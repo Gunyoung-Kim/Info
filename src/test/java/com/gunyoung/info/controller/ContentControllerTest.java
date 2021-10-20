@@ -38,7 +38,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ContentControllerTest {
+class ContentControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -71,14 +71,14 @@ public class ContentControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/space/makecontent/{userId}", method = RequestMethod.GET)
-	 *  	public ModelAndView createContentView(@PathVariable Long userId,@ModelAttribute("formModel") Content content, ModelAndView mav)
+	 *  	ModelAndView createContentView(@PathVariable Long userId,@ModelAttribute("formModel") Content content, ModelAndView mav)
 	 */
 
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 추가 (실패-로그인 계정과 일치하지 않음)")
-	public void createContentTestEmailNotMatch() throws Exception {
+	void createContentTestEmailNotMatch() throws Exception {
 		//Given
 		String anoterPersonEmail = "second@test.com";
 		Person anotherPerson = PersonTest.getPersonInstance(anoterPersonEmail);
@@ -97,7 +97,7 @@ public class ContentControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 추가 (실패-일치하지만 DB에 저장되지 않은 Person ID)")
-	public void createContentEmailNotExists() throws Exception {
+	void createContentEmailNotExists() throws Exception {
 		//Given
 		Long nonExistPersonId = PersonTest.getNonExistPersonId(personRepository);
 		
@@ -112,7 +112,7 @@ public class ContentControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 추가 (실패-개인 최대 프로젝트 개수 초과)")
-	public void createContentEmailOverLimit() throws Exception {
+	void createContentEmailOverLimit() throws Exception {
 		//Given
 		Long personId = person.getId();
 		Space space = person.getSpace();
@@ -138,7 +138,7 @@ public class ContentControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 추가 (정상)")
-	public void craeteContentTest() throws Exception{
+	void craeteContentTest() throws Exception{
 		//Given
 		Long personId = person.getId();
 		
@@ -153,14 +153,14 @@ public class ContentControllerTest {
 	/*
 	 *  - 대상 메소드: 
 	 *  	@RequestMapping(value="/space/updatecontent/{id}", method= RequestMethod.GET)
-	 *		public ModelAndView updateContentView(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
+	 *		ModelAndView updateContentView(@PathVariable long id, @ModelAttribute("formModel") ContentDTO contentDto, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@Transactional
 	@DisplayName("콘텐트 업데이트 (실패-입력된 id에 해당하는 content가 DB에 없을때)")
-	public void updateContentNonExist() throws Exception{
+	void updateContentNonExist() throws Exception{
 		//Given
 		Long nonExistContentId = ContentTest.getNonExistContentId(contentRepository);
 		
@@ -174,7 +174,7 @@ public class ContentControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles={"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 (실패-해당 id의 콘텐트가 현재 접속자의 것이 아닐때)")
-	public void updateContentWrongUser() throws Exception {
+	void updateContentWrongUser() throws Exception {
 		//Given
 		String anoterPersonEmail = "second@test.com";
 		Person anotherPerson = PersonTest.getPersonInstance(anoterPersonEmail);
@@ -198,7 +198,7 @@ public class ContentControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("콘텐트 업데이트 (정상)")
-	public void updateContentTest() throws Exception {
+	void updateContentTest() throws Exception {
 		//Given
 		Space space = person.getSpace();
 		Content content = ContentTest.getContentInstance();

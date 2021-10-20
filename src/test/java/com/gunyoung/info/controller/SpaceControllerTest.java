@@ -34,7 +34,7 @@ import com.gunyoung.info.util.PersonTest;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SpaceControllerTest {
+class SpaceControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -67,13 +67,13 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space", method= RequestMethod.GET)
-	 * 		public ModelAndView myspaceView(ModelAndView mav)
+	 * 		ModelAndView myspaceView(ModelAndView mav)
 	 */
 	
 	@WithAnonymousUser
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 안되있을때)") 
-	public void myspaceViewAnonymousTest() throws Exception {
+	void myspaceViewAnonymousTest() throws Exception {
 		//When
 		mockMvc.perform(get("/space"))
 		
@@ -84,7 +84,7 @@ public class SpaceControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"})
 	@Test
 	@DisplayName("내 포트폴리오 열람 (정상-로그인 되어있을때)")
-	public void mySpaceViewUserTest() throws Exception {
+	void mySpaceViewUserTest() throws Exception {
 		//Given
 		Long personId = person.getId();
 		
@@ -98,13 +98,13 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/{userId}", method= RequestMethod.GET)
-	 *  	public ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav)
+	 *  	ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav)
 	 */
 	
 	@WithAnonymousUser
 	@Test
 	@DisplayName("포트폴리오 열람 (실패-해당 Id의 Person DB에 없을때)")
-	public void spaceEmailNonExists() throws Exception {
+	void spaceEmailNonExists() throws Exception {
 		//Given
 		Long nonExistPersonId = PersonTest.getNonExistPersonId(personRepository);
 		
@@ -118,7 +118,7 @@ public class SpaceControllerTest {
 	@WithMockUser(username="second@naver.com",roles = {"USER"}) //anonymous 로 해도 동
 	@Test
 	@DisplayName("포트폴리오 열람 (성공-접속자가 해당 포트폴리오 주인이 아닐때)")
-	public void spaceNotHostTest() throws Exception {
+	void spaceNotHostTest() throws Exception {
 		//Given
 		Person host = person;
 		Long hostId = host.getId();
@@ -134,7 +134,7 @@ public class SpaceControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles = {"USER"}) 
 	@Test
 	@DisplayName("포트폴리오 열람 (성공-접속자가 해당 포트폴리오 주인일때)")
-	public void spaceTest() throws Exception {
+	void spaceTest() throws Exception {
 		//Given
 		Long personId = person.getId();
 		
@@ -149,13 +149,13 @@ public class SpaceControllerTest {
 	/*
 	 *  - 대상 메소드:
 	 *  	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
-	 *		public ModelAndView updateProfileView(@ModelAttribute("formModel") ProfileDTO profileDTO, ModelAndView mav)
+	 *		ModelAndView updateProfileView(@ModelAttribute("formModel") ProfileDTO profileDTO, ModelAndView mav)
 	 */
 	
 	@WithMockUser(username="none@none.com", roles= {"USER"})
 	@Test
 	@DisplayName("프로필 업데이트 (실패-현재 로그인 유저의 이메일이 DB에 없을때)")
-	public void updateProfileEmailNonExist() throws Exception {
+	void updateProfileEmailNonExist() throws Exception {
 		//When
 		mockMvc.perform(get("/space/updateprofile"))
 		
@@ -166,7 +166,7 @@ public class SpaceControllerTest {
 	@WithAnonymousUser
 	@Test
 	@DisplayName("프로필 업데이트 (성공-로그인 되어 있지 않을 때)")
-	public void updateProfileAnonymousTest() throws Exception {
+	void updateProfileAnonymousTest() throws Exception {
 		//When
 		mockMvc.perform(get("/space/updateprofile"))
 		
@@ -177,7 +177,7 @@ public class SpaceControllerTest {
 	@WithMockUser(username=MAIN_PERSON_EMAIL, roles= {"USER"}) 
 	@Test
 	@DisplayName("프로필 업데이트 (성공-로그인 되어 있을때)")
-	public void updateProfileTest() throws Exception {
+	void updateProfileTest() throws Exception {
 		//When
 		mockMvc.perform(get("/space/updateprofile"))
 		

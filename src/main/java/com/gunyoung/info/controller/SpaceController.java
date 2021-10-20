@@ -3,9 +3,8 @@ package com.gunyoung.info.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.info.domain.Content;
@@ -40,7 +39,7 @@ public class SpaceController {
 	 *  </pre>
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space", method= RequestMethod.GET)
+	@GetMapping(value="/space")
 	public ModelAndView myspaceView() {
 		String loginUserEmail = AuthorityUtil.getSessionUserEmail();
 		Person loginUser = personService.findByEmail(loginUserEmail);
@@ -64,7 +63,7 @@ public class SpaceController {
 	 *  @throws PersonNotFoundedException url에 입력된 id의 Person DB에 없으면
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/{userId}", method= RequestMethod.GET)
+	@GetMapping(value="/space/{userId}")
 	public ModelAndView spaceView(@PathVariable Long userId, ModelAndView mav) {
 		Person spaceHost = personService.findByIdWithSpace(userId);
 		if(spaceHost == null) {
@@ -102,7 +101,7 @@ public class SpaceController {
 	 *  @throws PersonNotFoundedException 현재 로그인된 유저의 이메일이 DB에 없으면
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/space/updateprofile", method = RequestMethod.GET)
+	@GetMapping(value="/space/updateprofile")
 	public ModelAndView updateProfileView(ModelAndView mav) {
 		String userEmail = AuthorityUtil.getSessionUserEmail();
 		Person user = personService.findByEmailWithSpace(userEmail);
